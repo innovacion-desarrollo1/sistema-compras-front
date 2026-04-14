@@ -1,0 +1,154 @@
+// DUANA Design Tokens
+// Based on design-system-duana skill
+// 60-30-10 Color Rule + Semaphore Alert System
+
+// ============================================================================
+// NEUTRALS (60% usage — backgrounds, content)
+// ============================================================================
+
+$color-white: #FFFFFF;
+$color-gray-50: #F9FAFB;   // Subtle backgrounds (cards, panels)
+$color-gray-100: #F3F4F6;  // Card backgrounds
+$color-gray-200: #E5E7EB;  // Borders, dividers
+$color-gray-300: #D1D5DB;  // Disabled states
+$color-gray-400: #9CA3AF;  // Placeholders
+$color-gray-500: #6B7280;  // Secondary icons
+$color-gray-600: #4B5563;  // Secondary text
+$color-gray-700: #374151;  // Primary text (light backgrounds)
+$color-gray-800: #1F2937;  // Dark text
+$color-gray-900: #111827;  // Primary text (dark mode)
+
+// ============================================================================
+// CORPORATE BLUE (30% usage — navigation, headers, primary actions)
+// ============================================================================
+
+$color-blue-50: #EFF6FF;   // Hover states
+$color-blue-100: #DBEAFE;  // Selected backgrounds
+$color-blue-200: #BFDBFE;  // Light borders
+$color-blue-300: #93C5FD;  // Subtle accents
+$color-blue-400: #60A5FA;  // Medium buttons
+$color-blue-500: #3B82F6;  // Primary buttons (MAIN BRAND COLOR)
+$color-blue-600: #2563EB;  // Primary hover
+$color-blue-700: #1D4ED8;  // Active states
+$color-blue-800: #1E40AF;  // Headers
+$color-blue-900: #1E3A8A;  // Navigation bars
+
+// ============================================================================
+// SEMAPHORE ALERT SYSTEM (10% usage — status chips, alerts)
+// ============================================================================
+
+// Verde — Stock OK, No action needed
+$semaphore-verde: #10B981;        // Green-500
+$semaphore-verde-bg: #D1FAE5;     // Green-100
+$semaphore-verde-text: #065F46;   // Green-800 (WCAG AAA compliant)
+$semaphore-verde-border: #6EE7B7; // Green-300
+
+// Amarillo — Warning, Review needed
+$semaphore-amarillo: #F59E0B;     // Amber-500
+$semaphore-amarillo-bg: #FEF3C7;  // Amber-100
+$semaphore-amarillo-text: #92400E; // Amber-800 (WCAG AAA compliant)
+$semaphore-amarillo-border: #FCD34D; // Amber-300
+
+// Naranja — Class C governance, Approval required
+$semaphore-naranja: #F97316;      // Orange-500
+$semaphore-naranja-bg: #FFEDD5;   // Orange-100
+$semaphore-naranja-text: #9A3412; // Orange-800 (WCAG AAA compliant)
+$semaphore-naranja-border: #FDBA74; // Orange-300
+
+// Rojo — Critical alert, Immediate action
+$semaphore-rojo: #EF4444;         // Red-500
+$semaphore-rojo-bg: #FEE2E2;      // Red-100
+$semaphore-rojo-text: #991B1B;    // Red-800 (WCAG AAA compliant)
+$semaphore-rojo-border: #FCA5A5;  // Red-300
+
+// Negro — Stockout, Emergency
+$semaphore-negro: #1F2937;        // Gray-800
+$semaphore-negro-bg: #F3F4F6;     // Gray-100
+$semaphore-negro-text: #111827;   // Gray-900 (WCAG AAA compliant)
+$semaphore-negro-border: #D1D5DB; // Gray-300
+
+// ============================================================================
+// SPACING (8px grid system)
+// ============================================================================
+
+$spacing-xs: 4px;   // Tight spacing (chip padding)
+$spacing-sm: 8px;   // Small spacing (button padding)
+$spacing-md: 16px;  // Medium spacing (card padding)
+$spacing-lg: 24px;  // Large spacing (section gaps)
+$spacing-xl: 32px;  // Extra large (page margins)
+$spacing-2xl: 48px; // Section dividers
+
+// ============================================================================
+// TYPOGRAPHY
+// ============================================================================
+
+$font-family-primary: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+$font-family-mono: 'Consolas', 'Monaco', 'Courier New', monospace;
+
+// Font Sizes
+$font-size-xs: 10px;  // Overline labels
+$font-size-sm: 12px;  // Captions, tags
+$font-size-md: 14px;  // Body text, buttons
+$font-size-lg: 16px;  // Subtitles, form inputs
+$font-size-xl: 18px;  // Subheadings
+$font-size-2xl: 20px; // Section headers
+$font-size-3xl: 24px; // Page titles
+$font-size-4xl: 32px; // Hero text
+
+// Font Weights
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+// Line Heights
+$line-height-tight: 1.25;   // Headlines
+$line-height-normal: 1.5;   // Body text
+$line-height-relaxed: 1.75; // Dense paragraphs
+
+// ============================================================================
+// BORDERS & SHADOWS
+// ============================================================================
+
+// Border Radius
+$border-radius-sm: 4px;  // Small elements (chips, tags)
+$border-radius-md: 8px;  // Cards, buttons
+$border-radius-lg: 12px; // Modals, panels
+$border-radius-xl: 16px; // Large containers
+
+// Shadows
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+// ============================================================================
+// BREAKPOINTS (Responsive Design)
+// ============================================================================
+
+$breakpoint-sm: 640px;   // Mobile landscape
+$breakpoint-md: 768px;   // Tablets
+$breakpoint-lg: 1024px;  // Desktops (2-column → 1-column)
+$breakpoint-xl: 1280px;  // Large desktops
+$breakpoint-2xl: 1536px; // Extra large screens
+
+// ============================================================================
+// Z-INDEX LAYERS
+// ============================================================================
+
+$z-index-dropdown: 1000;
+$z-index-sticky: 1020;
+$z-index-fixed: 1030;
+$z-index-modal-backdrop: 1040;
+$z-index-modal: 1050;
+$z-index-popover: 1060;
+$z-index-tooltip: 1070;
+
+// ============================================================================
+// TRANSITIONS
+// ============================================================================
+
+$transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);    // Hover states
+$transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);    // Default
+$transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);    // Modals, panels
+$transition-slowest: 500ms cubic-bezier(0.4, 0, 0.2, 1); // Page transitions

@@ -1,0 +1,121 @@
+<mat-card class="suggestion-card">
+  <!-- Product Header -->
+  <mat-card-header class="product-header">
+    <div class="product-info">
+      <mat-card-title>{{ suggestion.producto_nombre }}</mat-card-title>
+      <mat-card-subtitle>
+        <span class="separator">ID:</span>
+        <span class="product-id">{{ suggestion.producto_id }}</span>
+      </mat-card-subtitle>
+    </div>
+    
+    <!-- Stock Semaphore Badge -->
+    <mat-chip-set>
+      <mat-chip 
+        [ngClass]="'chip-' + getStockSemaphore()"
+        class="stock-badge">
+        <mat-icon>{{ getSemaphoreIcon() }}</mat-icon>
+        <span *ngIf="suggestion.es_clase_c">Clase C</span>
+        <span *ngIf="!suggestion.es_clase_c">Normal</span>
+      </mat-chip>
+    </mat-chip-set>
+  </mat-card-header>
+
+  <mat-card-content>
+    <!-- Quantity Section -->
+    <div class="suggestion-section">
+      <h3>
+        <mat-icon>add_shopping_cart</mat-icon>
+        Cantidad Sugerida
+      </h3>
+      <div class="quantity-display">
+        <span class="quantity-value">{{ suggestion.cantidad_sugerida }} {{ suggestion.unidad_medida }}</span>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Supplier Section -->
+    <div class="suggestion-section">
+      <h3>
+        <mat-icon>local_shipping</mat-icon>
+        Proveedor Recomendado
+      </h3>
+      <div class="supplier-display">
+        <div class="supplier-name">
+          {{ suggestion.proveedor_nombre }}
+        </div>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Cost Section -->
+    <div class="suggestion-section">
+      <h3>
+        <mat-icon>attach_money</mat-icon>
+        Detalle de Costos
+      </h3>
+      <div class="cost-breakdown">
+        <div class="cost-row net-cost">
+          <span><strong>Precio Unitario:</strong></span>
+          <span><strong>${{ suggestion.precio_unitario | number:'1.2-2' }}</strong></span>
+        </div>
+        <mat-divider class="total-divider"></mat-divider>
+        <div class="cost-row total">
+          <span><strong>Costo Total Orden:</strong></span>
+          <span class="total-value">${{ suggestion.costo_total | number:'1.2-2' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Governance Alert (Clase C Only) -->
+    <div *ngIf="suggestion.es_clase_c" class="governance-alert">
+      <mat-card class="alert-card">
+        <mat-card-header>
+          <mat-icon>gavel</mat-icon>
+          <mat-card-title>Aprobación Requerida (Clase C)</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Este producto requiere aprobación gerencial antes de emitir la orden.</p>
+          <div class="approval-status">
+            <strong>Estado:</strong>
+            <mat-chip-set>
+              <mat-chip [ngClass]="getApprovalStatusClass()">
+                {{ suggestion.estado_aprobacion || 'PENDIENTE' }}
+              </mat-chip>
+            </mat-chip-set>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </mat-card-content>
+
+  <!-- Action Buttons -->
+  <mat-card-actions class="action-buttons">
+    <button 
+      mat-raised-button 
+      color="primary"
+      (click)="onAccept()"
+      [disabled]="suggestion.es_clase_c && suggestion.estado_aprobacion !== 'APROBADO'">
+      <mat-icon>check_circle</mat-icon>
+      Aceptar
+    </button>
+    
+    <button 
+      mat-raised-button 
+      color="accent"
+      (click)="onAdjust()">
+      <mat-icon>tune</mat-icon>
+      Ajustar
+    </button>
+    
+    <button 
+      mat-raised-button 
+      color="warn"
+      (click)="onReject()">
+      <mat-icon>cancel</mat-icon>
+      Rechazar
+    </button>
+  </mat-card-actions>
+</mat-card>

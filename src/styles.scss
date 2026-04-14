@@ -1,0 +1,184 @@
+/* ============================================================================
+   DUANA Global Styles
+   Sistema de Gestión de Órdenes y Seguimiento
+   ============================================================================ */
+
+// ============================================================================
+// MATERIAL THEME & TYPOGRAPHY
+// ============================================================================
+
+@use '@angular/material' as mat;
+@use './styles/themes/duana-theme' as duana;
+
+// Include Material core styles (required)
+@include mat.core();
+
+// Apply DUANA theme to all Material components
+@include duana.duana-theme-export();
+
+// ============================================================================
+// DESIGN TOKENS
+// ============================================================================
+
+@import './styles/themes/design-tokens';
+
+// ============================================================================
+// GLOBAL RESETS & BASE STYLES
+// ============================================================================
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: $font-family-primary;
+  font-size: $font-size-md;
+  line-height: $line-height-normal;
+  color: $color-gray-900;
+  background-color: $color-gray-50;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+}
+
+// ============================================================================
+// SEMAPHORE CHIP UTILITIES
+// ============================================================================
+
+.chip-verde {
+  background-color: $semaphore-verde-bg !important;
+  color: $semaphore-verde-text !important;
+  border: 1px solid $semaphore-verde-border !important;
+}
+
+.chip-amarillo {
+  background-color: $semaphore-amarillo-bg !important;
+  color: $semaphore-amarillo-text !important;
+  border: 1px solid $semaphore-amarillo-border !important;
+}
+
+.chip-naranja {
+  background-color: $semaphore-naranja-bg !important;
+  color: $semaphore-naranja-text !important;
+  border: 1px solid $semaphore-naranja-border !important;
+}
+
+.chip-rojo {
+  background-color: $semaphore-rojo-bg !important;
+  color: $semaphore-rojo-text !important;
+  border: 1px solid $semaphore-rojo-border !important;
+}
+
+.chip-negro {
+  background-color: $semaphore-negro-bg !important;
+  color: $semaphore-negro-text !important;
+  border: 1px solid $semaphore-negro-border !important;
+}
+
+// ============================================================================
+// UTILITY CLASSES
+// ============================================================================
+
+// Spacing
+.mt-xs { margin-top: $spacing-xs; }
+.mt-sm { margin-top: $spacing-sm; }
+.mt-md { margin-top: $spacing-md; }
+.mt-lg { margin-top: $spacing-lg; }
+.mt-xl { margin-top: $spacing-xl; }
+
+.mb-xs { margin-bottom: $spacing-xs; }
+.mb-sm { margin-bottom: $spacing-sm; }
+.mb-md { margin-bottom: $spacing-md; }
+.mb-lg { margin-bottom: $spacing-lg; }
+.mb-xl { margin-bottom: $spacing-xl; }
+
+.p-xs { padding: $spacing-xs; }
+.p-sm { padding: $spacing-sm; }
+.p-md { padding: $spacing-md; }
+.p-lg { padding: $spacing-lg; }
+.p-xl { padding: $spacing-xl; }
+
+// Typography
+.text-primary { color: $color-blue-700; }
+.text-secondary { color: $color-gray-600; }
+.text-success { color: $semaphore-verde; }
+.text-warning { color: $semaphore-amarillo; }
+.text-danger { color: $semaphore-rojo; }
+
+.text-xs { font-size: $font-size-xs; }
+.text-sm { font-size: $font-size-sm; }
+.text-md { font-size: $font-size-md; }
+.text-lg { font-size: $font-size-lg; }
+.text-xl { font-size: $font-size-xl; }
+
+.font-medium { font-weight: $font-weight-medium; }
+.font-semibold { font-weight: $font-weight-semibold; }
+.font-bold { font-weight: $font-weight-bold; }
+
+// ============================================================================
+// MATERIAL COMPONENT OVERRIDES
+// ============================================================================
+
+// Cards
+.mat-mdc-card {
+  border-radius: $border-radius-md;
+  box-shadow: $shadow-sm;
+  transition: box-shadow $transition-base;
+  
+  &:hover {
+    box-shadow: $shadow-md;
+  }
+}
+
+// Buttons
+.mat-mdc-raised-button,
+.mat-mdc-unelevated-button {
+  border-radius: $border-radius-md;
+  font-weight: $font-weight-medium;
+  text-transform: none;
+  transition: all $transition-fast;
+}
+
+// Form Fields
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+// Chips
+.mat-mdc-chip {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  border-radius: $border-radius-sm;
+}
+
+// Tables
+.mat-mdc-table {
+  border-radius: $border-radius-md;
+  overflow: hidden;
+}
+
+.mat-mdc-header-cell {
+  font-weight: $font-weight-semibold;
+  color: $color-gray-700;
+  background-color: $color-gray-100;
+}
+
+.mat-mdc-row:hover {
+  background-color: $color-blue-50;
+  transition: background-color $transition-fast;
+}
+
+// ============================================================================
+// ACCESSIBILITY
+// ============================================================================
+
+:focus-visible {
+  outline: 2px solid $color-blue-500;
+  outline-offset: 2px;
+}

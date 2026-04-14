@@ -1,0 +1,29 @@
+// DUANA Material Theme Configuration
+// Azure/Blue corporate theme with semaphore alert colors
+// WCAG AAA compliant - See design-system-duana skill
+
+@use '@angular/material' as mat;
+
+// ============================================================================
+// THEME CREATION (Material 3)
+// ============================================================================
+
+$duana-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$azure-palette,
+    tertiary: mat.$blue-palette,
+  ),
+  typography: (
+    brand-family: 'Inter, Segoe UI, Roboto, Helvetica Neue, sans-serif',
+    plain-family: 'Inter, Segoe UI, Roboto, Helvetica Neue, sans-serif',
+  ),
+  density: (
+    scale: 0
+  )
+));
+
+// Export theme for global usage
+@mixin duana-theme-export {
+  @include mat.all-component-themes($duana-theme);
+}

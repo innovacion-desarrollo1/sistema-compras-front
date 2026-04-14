@@ -1,0 +1,70 @@
+<mat-form-field appearance="outline" class="product-search-field">
+  <mat-label>Buscar Producto (Nombre, Molécula o Código)</mat-label>
+  <input 
+    type="text"
+    matInput
+    [formControl]="searchControl"
+    [matAutocomplete]="auto"
+    placeholder="ej: Acetaminofen, Paracetamol, MED-001"
+    aria-label="Búsqueda de productos">
+  <mat-icon matPrefix>search</mat-icon>
+  <button 
+    *ngIf="searchControl.value" 
+    matSuffix 
+    mat-icon-button 
+    aria-label="Limpiar"
+    (click)="searchControl.setValue('')">
+    <mat-icon>close</mat-icon>
+  </button>
+  
+  <mat-autocomplete 
+    #auto="matAutocomplete" 
+    [displayWith]="displayFn"
+    (optionSelected)="onProductSelect($event.option.value)"
+    class="product-autocomplete-panel">
+    
+    <!-- Virtual Scroll for Performance -->
+    <cdk-virtual-scroll-viewport itemSize="60" class="autocomplete-viewport">
+      <mat-option 
+        *cdkVirtualFor="let producto of filteredProducts$ | async" 
+        [value]="producto"
+        class="product-option">
+        
+        <div class="product-option-content">
+          <!-- Main Info -->
+          <div class="product-main">
+            <span class="product-name">{{ producto.nombre_comercial }}</span>
+            <span class="product-molecule">{{ producto.molecula }}</span>
+          </div>
+          
+          <!-- Secondary Info -->
+          <div class="product-meta">
+            <span class="product-code">Código: {{ producto.codigo }}</span>
+            
+            <!-- Semaphore Chip -->
+            <mat-chip-set>
+              <mat-chip 
+                [ngClass]="'chip-' + getSemaphoreColor(producto)"
+                class="product-semaphore">
+                <mat-icon>{{ getSemaphoreIcon(producto) }}</mat-icon>
+                <span *ngIf="producto.es_clase_c">Clase C</span>
+                <span *ngIf="!producto.es_clase_c">Stock: {{ producto.stock_actual }}</span>
+              </mat-chip>
+            </mat-chip-set>
+          </div>
+        </div>
+      </mat-option>
+    </cdk-virtual-scroll-viewport>
+    
+    <!-- No Results Message -->
+    <mat-option 
+      *ngIf="(filteredProducts$ | async)?.length === 0 && searchControl.value" 
+      disabled
+      class="no-results">
+      <mat-icon>search_off</mat-icon>
+      No se encontraron productos para "{{ searchControl.value }}"
+    </mat-option>
+  </mat-autocomplete>
+  
+  <mat-hint>Buscar por nombre comercial, molécula o código interno</mat-hint>
+</mat-form-field>

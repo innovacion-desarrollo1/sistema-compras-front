@@ -1,0 +1,83 @@
+@import '../../../../../styles/themes/design-tokens';
+
+.product-search-field {
+  width: 100%;
+  font-size: 16px; // Accessibility: prevent mobile zoom
+}
+
+.product-autocomplete-panel {
+  max-height: 400px;
+}
+
+.autocomplete-viewport {
+  height: 300px;
+}
+
+.product-option {
+  height: 60px !important;
+  padding: 8px 16px;
+  
+  &:hover {
+    background-color: $color-blue-50;
+  }
+}
+
+.product-option-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.product-main {
+  display: flex;
+  flex-direction: column;
+  
+  .product-name {
+    font-weight: $font-weight-semibold;
+    color: $color-gray-900;
+    font-size: $font-size-md;
+  }
+  
+  .product-molecule {
+    font-size: $font-size-sm;
+    color: $color-gray-600;
+    font-style: italic;
+  }
+}
+
+.product-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  .product-code {
+    font-size: $font-size-xs;
+    color: $color-gray-500;
+    font-family: 'Courier New', monospace;
+  }
+}
+
+.product-semaphore {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: $border-radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  height: 20px !important;
+  
+  mat-icon {
+    font-size: 14px;
+    height: 14px;
+    width: 14px;
+  }
+}
+
+.no-results {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: $color-gray-500;
+  font-style: italic;
+}
