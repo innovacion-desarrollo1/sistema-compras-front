@@ -1,0 +1,210 @@
+// ==================================================
+// SEMAPHORE UTILITY CLASSES
+// Based on design-system-duana skill
+// ==================================================
+
+@use '../themes/design-tokens' as tokens;
+
+// ==================================================
+// SEMAPHORE CHIPS (60-30-10 Rule compliant)
+// ==================================================
+
+.semaphore-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: tokens.$font-size-sm;
+  font-weight: tokens.$font-weight-semibold;
+  transition: all 0.2s ease-in-out;
+  
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+  
+  // VERDE — Stock OK, No action needed
+  &-verde {
+    background-color: tokens.$semaphore-verde-bg;
+    color: tokens.$semaphore-verde-text;
+    border: 1px solid tokens.$semaphore-verde-border;
+    
+    mat-icon {
+      color: tokens.$semaphore-verde;
+    }
+  }
+  
+  // AMARILLO — Warning, Review needed
+  &-amarillo {
+    background-color: tokens.$semaphore-amarillo-bg;
+    color: tokens.$semaphore-amarillo-text;
+    border: 1px solid tokens.$semaphore-amarillo-border;
+    
+    mat-icon {
+      color: tokens.$semaphore-amarillo;
+    }
+  }
+  
+  // NARANJA — Class C governance, Approval required
+  &-naranja {
+    background-color: tokens.$semaphore-naranja-bg;
+    color: tokens.$semaphore-naranja-text;
+    border: 1px solid tokens.$semaphore-naranja-border;
+    
+    mat-icon {
+      color: tokens.$semaphore-naranja;
+    }
+  }
+  
+  // ROJO — Critical alert, Immediate action
+  &-rojo {
+    background-color: tokens.$semaphore-rojo-bg;
+    color: tokens.$semaphore-rojo-text;
+    border: 1px solid tokens.$semaphore-rojo-border;
+    
+    mat-icon {
+      color: tokens.$semaphore-rojo;
+    }
+  }
+  
+  // NEGRO — Stockout, Emergency
+  &-negro {
+    background-color: tokens.$semaphore-negro-bg;
+    color: tokens.$semaphore-negro-text;
+    border: 1px solid tokens.$semaphore-negro-border;
+    
+    mat-icon {
+      color: tokens.$semaphore-negro;
+    }
+  }
+}
+
+// ==================================================
+// ALERT BACKGROUNDS (for cards/sections)
+// ==================================================
+
+.alert-bg {
+  padding: tokens.$spacing-md;
+  border-radius: tokens.$border-radius-md;
+  
+  &-verde {
+    background-color: tokens.$semaphore-verde-bg;
+    border-left: 4px solid tokens.$semaphore-verde;
+  }
+  
+  &-amarillo {
+    background-color: tokens.$semaphore-amarillo-bg;
+    border-left: 4px solid tokens.$semaphore-amarillo;
+  }
+  
+  &-naranja {
+    background-color: tokens.$semaphore-naranja-bg;
+    border-left: 4px solid tokens.$semaphore-naranja;
+  }
+  
+  &-rojo {
+    background-color: tokens.$semaphore-rojo-bg;
+    border-left: 4px solid tokens.$semaphore-rojo;
+  }
+  
+  &-negro {
+    background-color: tokens.$semaphore-negro-bg;
+    border-left: 4px solid tokens.$semaphore-negro;
+  }
+}
+
+// ==================================================
+// STATUS BADGES (ranking, governance)
+// ==================================================
+
+.status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: tokens.$border-radius-sm;
+  font-size: tokens.$font-size-xs;
+  font-weight: tokens.$font-weight-bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  
+  &-approved {
+    background-color: tokens.$semaphore-verde-bg;
+    color: tokens.$semaphore-verde-text;
+  }
+  
+  &-pending {
+    background-color: tokens.$semaphore-amarillo-bg;
+    color: tokens.$semaphore-amarillo-text;
+  }
+  
+  &-rejected {
+    background-color: tokens.$semaphore-rojo-bg;
+    color: tokens.$semaphore-rojo-text;
+  }
+  
+  &-clase-c {
+    background-color: tokens.$semaphore-naranja-bg;
+    color: tokens.$semaphore-naranja-text;
+  }
+}
+
+// ==================================================
+// PROGRESS BARS (KPI visualization)
+// ==================================================
+
+.kpi-bar {
+  height: 8px;
+  border-radius: tokens.$border-radius-sm;
+  
+  &-good ::ng-deep .mat-mdc-progress-bar-fill::after {
+    background-color: tokens.$semaphore-verde !important;
+  }
+  
+  &-ok ::ng-deep .mat-mdc-progress-bar-fill::after {
+    background-color: tokens.$semaphore-amarillo !important;
+  }
+  
+  &-poor ::ng-deep .mat-mdc-progress-bar-fill::after {
+    background-color: tokens.$semaphore-rojo !important;
+  }
+}
+
+// ==================================================
+// RANKING BADGES
+// ==================================================
+
+.ranking-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: tokens.$font-size-md;
+  font-weight: tokens.$font-weight-bold;
+  background-color: tokens.$color-gray-200;
+  color: tokens.$color-gray-700;
+  
+  &.top-rank {
+    background: linear-gradient(135deg, tokens.$semaphore-verde-bg 0%, tokens.$semaphore-verde 100%);
+    color: tokens.$color-white;
+    box-shadow: 0 2px 8px rgba(tokens.$semaphore-verde, 0.3);
+  }
+}
+
+// ==================================================
+// RESPONSIVE VISIBILITY UTILITIES
+// ==================================================
+
+@media (max-width: tokens.$breakpoint-md) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+}
+
+@media (min-width: tokens.$breakpoint-md) {
+  .hide-on-desktop {
+    display: none !important;
+  }
+}

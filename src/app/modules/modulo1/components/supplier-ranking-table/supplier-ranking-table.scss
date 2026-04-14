@@ -131,7 +131,7 @@
   margin-bottom: 8px;
   
   &.top-rank {
-    background: linear-gradient(135deg, $semaphore-verde-bg 0%, darken($semaphore-verde-bg, 10%) 100%);
+    background: linear-gradient(135deg, $semaphore-verde-bg 0%, $semaphore-verde-border 100%);
     color: $semaphore-verde-text;
     box-shadow: 0 2px 8px rgba($semaphore-verde-border, 0.3);
   }
@@ -240,37 +240,54 @@
   mat-divider {
     margin: 4px 0;
   }
+
+  // Chip de alerta de costo alto
+  .costo-alert-chip {
+    margin-top: 8px;
+    font-size: 11px;
+    height: 24px;
+    
+    mat-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+      margin-right: 2px;
+    }
+  }
 }
 
 // ==============================
 // KPIS COLUMN
 // ==============================
 .kpis-cell {
-  min-width: 180px;
+  min-width: 220px;
 }
 
 .kpis-compact {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .kpi-item-compact {
   display: grid;
-  grid-template-columns: 40px 1fr 50px;
+  grid-template-columns: 80px 1fr 50px;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   
   .kpi-label-compact {
     font-size: 11px;
     font-weight: 600;
     color: $color-gray-600;
     text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   
   .kpi-bar-compact {
-    height: 6px;
-    border-radius: 3px;
+    height: 8px;
+    border-radius: 4px;
   }
   
   .kpi-value-compact {
@@ -324,12 +341,30 @@
 // ==============================
 .actions-cell {
   text-align: right;
-  width: 180px;
+  width: 280px;
+}
+
+.actions-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
 }
 
 .select-btn {
   mat-icon {
     margin-right: 4px;
+  }
+}
+
+.update-precio-btn {
+  font-size: 13px;
+  
+  mat-icon {
+    margin-right: 4px;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
   }
 }
 

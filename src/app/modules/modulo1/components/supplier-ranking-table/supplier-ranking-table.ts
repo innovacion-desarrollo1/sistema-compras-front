@@ -11,10 +11,13 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SupplierRankingService, ProveedorRanking } from '../../../../core/services/supplier-ranking.service';
 import { BonificacionService, Bonificacion } from '../../../../core/services/bonificacion.service';
+import { CostoProveedorService } from '../../../../core/services/costo-proveedor.service';
 import { CreateBonificacionDialog } from '../create-bonificacion-dialog/create-bonificacion-dialog';
+import { UpdateCostoDialog } from '../update-costo-dialog/update-costo-dialog';
 
 @Component({
   selector: 'app-supplier-ranking-table',
@@ -31,7 +34,8 @@ import { CreateBonificacionDialog } from '../create-bonificacion-dialog/create-b
     MatProgressSpinnerModule,
     MatCheckboxModule,
     MatDividerModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSnackBarModule
   ],
   templateUrl: './supplier-ranking-table.html',
   styleUrls: ['./supplier-ranking-table.scss'],
@@ -66,6 +70,8 @@ export class SupplierRankingTableComponent implements OnInit, OnChanges {
   constructor(
     private rankingService: SupplierRankingService,
     private bonificacionService: BonificacionService,
+    private costoProveedorService: CostoProveedorService,
+    private snackBar: MatSnackBar,
     private dialog: MatDialog
   ) {}
 
@@ -243,4 +249,47 @@ export class SupplierRankingTableComponent implements OnInit, OnChanges {
   isExpandableRow = (): boolean => {
     return true; // All rows can be expanded
   };
+
+  /**
+   * Abre el dialog para actualizar el precio de un proveedor
+   */
+  openUpdateCostoDialog(supplier: ProveedorRanking): void {
+    const dialogRef = this.dialog.open(UpdateCostoDialog, {
+      width: '500px',
+      data: {
+        proveedor_id: supplier.proveedor_id,
+        proveedor_nombre: supplier.proveedor_nombre,
+        producto_id: this.productoId,
+        costo_actual: supplier.costo_real_neto
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Actualizar costo a través del servicio
+        this.costoProveedorService.updateCosto(result).subscribe({
+          next: () => {
+            console.log('[Supplier Ranking] Costo actualizado exitosamente:', result);
+            
+            // Recargar ranking para reflejar el nuevo precio
+            this.loadRanking();
+            
+            this.snackBar.open(
+              `Precio actualizado para ${supplier.proveedor_nombre}: $${result.costo_anterior} → $${result.nuevo_costo}`,
+              'Cerrar',
+              { duration: 5000 }
+            );
+          },
+          error: (err) => {
+            console.error('[Supplier Ranking] Error al actualizar costo:', err);
+            this.snackBar.open(
+              'Error al actualizar el precio. Intente nuevamente.',
+              'Cerrar',
+              { duration: 3000 }
+            );
+          }
+        });
+      }
+    });
+  }
 }

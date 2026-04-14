@@ -99,34 +99,6 @@
         <div class="metric-sublabel">unidades/día</div>
       </div>
 
-      <!-- Lead Time Sistema -->
-      <div class="metric-card">
-        <div class="metric-header">
-          <mat-icon 
-            matTooltip="Tiempo de entrega del sistema (días)"
-            matTooltipPosition="above">
-            schedule
-          </mat-icon>
-          <span class="metric-label">LT Sistema</span>
-        </div>
-        <div class="metric-value">{{ molecula.lt_sistema_dias }}</div>
-        <div class="metric-sublabel">días de entrega</div>
-      </div>
-
-      <!-- EOQ -->
-      <div class="metric-card">
-        <div class="metric-header">
-          <mat-icon 
-            matTooltip="Economic Order Quantity: cantidad económica de pedido"
-            matTooltipPosition="above">
-            shopping_cart
-          </mat-icon>
-          <span class="metric-label">EOQ</span>
-        </div>
-        <div class="metric-value">{{ molecula.eoq | number:'1.0-0' }}</div>
-        <div class="metric-sublabel">cantidad económica</div>
-      </div>
-
       <!-- Pendientes Diarios -->
       <div class="metric-card">
         <div class="metric-header">

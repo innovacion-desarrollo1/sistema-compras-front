@@ -48,7 +48,7 @@ export class ApprovalWorkflowService {
       fecha_solicitud: new Date()
     };
     
-    return of(mockRequest).pipe(delay(300));
+    return of(mockRequest).pipe();
   }
 
   /**

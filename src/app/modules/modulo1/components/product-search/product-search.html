@@ -11,17 +11,17 @@
     <mat-hint>Seleccione el periodo que desea cubrir con esta orden</mat-hint>
   </mat-form-field>
 
-  <!-- Búsqueda de Molécula -->
+  <!-- Búsqueda de Producto por ID -->
   <mat-form-field appearance="outline" class="molecula-search-field">
-    <mat-label>Buscar Molécula (Principio Activo)</mat-label>
+    <mat-label>Buscar Producto por ID o Nombre</mat-label>
     <input 
       type="text"
       matInput
       [formControl]="searchControl"
       [matAutocomplete]="auto"
-      placeholder="ej: ACETAMINOFEN, IBUPROFENO, AMOXICILINA"
-      aria-label="Búsqueda de moléculas">
-    <mat-icon matPrefix>science</mat-icon>
+      placeholder="ej: 12345, ACETAMINOFEN 500MG, IBUPROFENO"
+      aria-label="Búsqueda de productos">
+    <mat-icon matPrefix>search</mat-icon>
     <button 
       *ngIf="searchControl.value" 
       matSuffix 
@@ -54,14 +54,12 @@
             <!-- Información Secundaria -->
             <div class="molecula-meta">
               <!-- Chip de Semáforo -->
-              <mat-chip-set>
-                <mat-chip 
-                  [ngClass]="'chip-' + getSemaphoreColor(molecula)"
-                  class="molecula-semaphore">
-                  <mat-icon>{{ getSemaphoreIcon(molecula) }}</mat-icon>
-                  <span>{{ getSemaphoreText(molecula) }}</span>
-                </mat-chip>
-              </mat-chip-set>
+              <mat-chip 
+                [ngClass]="'semaphore-chip-' + getSemaphoreColor(molecula)"
+                class="molecula-semaphore">
+                <mat-icon>{{ getSemaphoreIcon(molecula) }}</mat-icon>
+                <span>{{ getSemaphoreText(molecula) }}</span>
+              </mat-chip>
             </div>
           </div>
         </mat-option>
@@ -73,10 +71,10 @@
         disabled
         class="no-results">
         <mat-icon>search_off</mat-icon>
-        No se encontraron moléculas para "{{ searchControl.value }}"
+        No se encontraron productos para "{{ searchControl.value }}"
       </mat-option>
     </mat-autocomplete>
     
-    <mat-hint>Buscar por nombre de molécula o código</mat-hint>
+    <mat-hint>Buscar por ID, nombre del producto o principio activo</mat-hint>
   </mat-form-field>
 </div>

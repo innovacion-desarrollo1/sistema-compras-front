@@ -80,6 +80,21 @@
                 <span class="label">Neto:</span>
                 <span class="value highlight">${{ supplier.costo_real_neto | number:'1.0-0' }}</span>
               </div>
+              <div class="costo-line">
+                <span class="label">Unitario:</span>
+                <span class="value">${{ supplier.costo_unitario | number:'1.0-0' }}</span>
+              </div>
+              <div class="costo-line">
+                <span class="label">Último:</span>
+                <span class="value">${{ supplier.ultimo_costo | number:'1.0-0' }}</span>
+              </div>
+              <!-- Alerta si está más caro que promedio -->
+              <mat-chip 
+                *ngIf="supplier.esta_mas_caro_promedio"
+                class="semaphore-chip-rojo costo-alert-chip">
+                <mat-icon>warning</mat-icon>
+                Más caro que promedio
+              </mat-chip>
             </div>
           </td>
         </ng-container>
@@ -88,29 +103,29 @@
         <ng-container matColumnDef="kpis">
           <th mat-header-cell *matHeaderCellDef class="kpis-header">
             <mat-icon>analytics</mat-icon>
-            KPIs
+            Desempeño
           </th>
           <td mat-cell *matCellDef="let supplier" class="kpis-cell">
             <div class="kpis-compact">
               <div class="kpi-item-compact">
-                <span class="kpi-label-compact">OTIF:</span>
+                <span class="kpi-label-compact" matTooltip="Entregas completas y a tiempo">Entregas:</span>
                 <mat-progress-bar 
                   mode="determinate" 
-                  [value]="supplier.otif"
-                  [ngClass]="getKpiClass(supplier.otif)"
+                  [value]="supplier.entregas_completas_tiempo"
+                  [ngClass]="getKpiClass(supplier.entregas_completas_tiempo)"
                   class="kpi-bar-compact">
                 </mat-progress-bar>
-                <span class="kpi-value-compact">{{ supplier.otif | number:'1.0-0' }}%</span>
+                <span class="kpi-value-compact">{{ supplier.entregas_completas_tiempo | number:'1.0-0' }}%</span>
               </div>
               <div class="kpi-item-compact">
-                <span class="kpi-label-compact">LT:</span>
+                <span class="kpi-label-compact" matTooltip="Cumplimiento de plazo de entrega">Plazo:</span>
                 <mat-progress-bar 
                   mode="determinate" 
-                  [value]="supplier.lt_compliance"
-                  [ngClass]="getKpiClass(supplier.lt_compliance)"
+                  [value]="supplier.cumplimiento_plazo_entrega"
+                  [ngClass]="getKpiClass(supplier.cumplimiento_plazo_entrega)"
                   class="kpi-bar-compact">
                 </mat-progress-bar>
-                <span class="kpi-value-compact">{{ supplier.lt_compliance | number:'1.0-0' }}%</span>
+                <span class="kpi-value-compact">{{ supplier.cumplimiento_plazo_entrega | number:'1.0-0' }}%</span>
               </div>
             </div>
           </td>
@@ -142,16 +157,27 @@
 
         <!-- Actions Column -->
         <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef class="actions-header">Acción</th>
+          <th mat-header-cell *matHeaderCellDef class="actions-header">Acciones</th>
           <td mat-cell *matCellDef="let supplier" class="actions-cell">
-            <button 
-              mat-raised-button 
-              color="primary"
-              (click)="selectSupplierForOrder(supplier)"
-              class="select-btn">
-              <mat-icon>shopping_cart</mat-icon>
-              Generar Orden
-            </button>
+            <div class="actions-group">
+              <button 
+                mat-raised-button 
+                color="primary"
+                (click)="selectSupplierForOrder(supplier)"
+                class="select-btn">
+                <mat-icon>shopping_cart</mat-icon>
+                Generar Orden
+              </button>
+              <button 
+                mat-stroked-button 
+                color="accent"
+                (click)="openUpdateCostoDialog(supplier)"
+                class="update-precio-btn"
+                matTooltip="Actualizar precio de este proveedor">
+                <mat-icon>edit</mat-icon>
+                Actualizar Precio
+              </button>
+            </div>
           </td>
         </ng-container>
 

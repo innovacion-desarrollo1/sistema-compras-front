@@ -5,12 +5,24 @@ export interface ProveedorRanking {
   ranking: number;
   proveedor_id: number;
   proveedor_nombre: string;
-  costo_real_neto: number;
+  
+  // Costos
   precio_lista: number;
   bonificaciones_total: number;
+  costo_real_neto: number; // Costo final con bonificaciones
+  costo_unitario: number; // Costo por unidad
+  ultimo_costo: number; // Último costo de compra registrado
+  
+  // Análisis de costos
+  costo_promedio_inventario: number; // Promedio de todos los productos con este ID
+  costo_promedio_ponderado: number; // Promedio ponderado de precio adquirido
+  esta_mas_caro_promedio: boolean; // Semaforización: TRUE si ofrece más caro del promedio
+  
+  // KPIs simplificados (sin términos técnicos)
   kpi_score: number; // 0-100
-  otif: number; // On-Time In-Full percentage
-  lt_compliance: number; // Lead Time compliance percentage
+  entregas_completas_tiempo: number; // Porcentaje de entregas completas y a tiempo (antes OTIF)
+  cumplimiento_plazo_entrega: number; // Cumplimiento del plazo de entrega (antes LT compliance)
+  
   score_final_80_20: number; // Lower is better
   requiere_aprobacion: boolean; // Clase C flag
   bonificaciones_aplicadas: string[];
@@ -39,7 +51,13 @@ export class SupplierRankingService {
    * Generate mock supplier ranking data for development
    */
   private _getMockRanking(productoId: number): Observable<ProveedorRanking[]> {
-    const suppliers: ProveedorRanking[] = [
+    // Valores base para análisis de costos (simularían venir de la DB)
+    const costoPromedioInventario = 1200; // Promedio de todos los productos por este ID
+    const costoPromedioponderado = 1250; // Promedio ponderado de compras previas
+    
+    // Base de proveedores variados
+    const allSuppliers: ProveedorRanking[] = [
+      // TOP TIER - Excelentes KPIs, precios competitivos
       {
         ranking: 1,
         proveedor_id: 101,
@@ -47,11 +65,16 @@ export class SupplierRankingService {
         precio_lista: 1500,
         bonificaciones_total: 250,
         costo_real_neto: 1250,
+        costo_unitario: 1250,
+        ultimo_costo: 1220,
+        costo_promedio_inventario: costoPromedioInventario,
+        costo_promedio_ponderado: costoPromedioponderado,
+        esta_mas_caro_promedio: false, // 1250 = promedio
         kpi_score: 92,
-        otif: 95.5,
-        lt_compliance: 88.5,
-        score_final_80_20: 1268.4, // 80% cost + 20% KPI penalty
-        requiere_aprobacion: productoId === 3, // Amoxicilina
+        entregas_completas_tiempo: 95.5,
+        cumplimiento_plazo_entrega: 88.5,
+        score_final_80_20: 1268.4,
+        requiere_aprobacion: [3, 7, 9, 10, 13].includes(productoId),
         bonificaciones_aplicadas: ['8+2 promo', 'Volume discount 10%']
       },
       {
@@ -61,13 +84,19 @@ export class SupplierRankingService {
         precio_lista: 1450,
         bonificaciones_total: 145,
         costo_real_neto: 1305,
+        costo_unitario: 1305,
+        ultimo_costo: 1280,
+        costo_promedio_inventario: costoPromedioInventario,
+        costo_promedio_ponderado: costoPromedioponderado,
+        esta_mas_caro_promedio: true, // 1305 > 1250
         kpi_score: 85,
-        otif: 89.0,
-        lt_compliance: 81.0,
+        entregas_completas_tiempo: 89.0,
+        cumplimiento_plazo_entrega: 81.0,
         score_final_80_20: 1329.0,
         requiere_aprobacion: false,
         bonificaciones_aplicadas: ['Early payment 10%']
       },
+      // MID TIER - KPIs medios, precios variados
       {
         ranking: 3,
         proveedor_id: 103,
@@ -75,10 +104,15 @@ export class SupplierRankingService {
         precio_lista: 1600,
         bonificaciones_total: 160,
         costo_real_neto: 1440,
+        costo_unitario: 1440,
+        ultimo_costo: 1420,
+        costo_promedio_inventario: costoPromedioInventario,
+        costo_promedio_ponderado: costoPromedioponderado,
+        esta_mas_caro_promedio: true, // 1440 > 1250
         kpi_score: 68,
-        otif: 72.0,
-        lt_compliance: 64.0,
-        score_final_80_20: 1536.0, // Poor KPI increases final score
+        entregas_completas_tiempo: 72.0,
+        cumplimiento_plazo_entrega: 64.0,
+        score_final_80_20: 1536.0,
         requiere_aprobacion: false,
         bonificaciones_aplicadas: ['Volume discount 10%']
       },
@@ -89,14 +123,119 @@ export class SupplierRankingService {
         precio_lista: 1350,
         bonificaciones_total: 0,
         costo_real_neto: 1350,
+        costo_unitario: 1350,
+        ultimo_costo: 1330,
+        costo_promedio_inventario: costoPromedioInventario,
+        costo_promedio_ponderado: costoPromedioponderado,
+        esta_mas_caro_promedio: true, // 1350 > 1250
         kpi_score: 78,
-        otif: 82.0,
-        lt_compliance: 74.0,
+        entregas_completas_tiempo: 82.0,
+        cumplimiento_plazo_entrega: 74.0,
         score_final_80_20: 1394.0,
+        requiere_aprobacion: false,
+        bonificaciones_aplicadas: []
+      },
+      // LOW TIER - KPIs bajos pero precios muy competitivos
+      {
+        ranking: 5,
+        proveedor_id: 105,
+        proveedor_nombre: 'Distribuciones Medifar S.A.S.',
+        precio_lista: 1100,
+        bonificaciones_total: 220,
+        costo_real_neto: 880,
+        costo_unitario: 880,
+        ultimo_costo: 900,
+        costo_promedio_inventario: costoPromedioInventario,
+        costo_promedio_ponderado: costoPromedioponderado,
+        esta_mas_caro_promedio: false, // 880 < 1250 ✅ MUY BARATO
+        kpi_score: 58,
+        entregas_completas_tiempo: 62.0,
+        cumplimiento_plazo_entrega: 54.0,
+        score_final_80_20: 1012.0,
+        requiere_aprobacion: false,
+        bonificaciones_aplicadas: ['Liquidación 20%']
+      },
+      {
+        ranking: 6,
+        proveedor_id: 106,
+        proveedor_nombre: 'Droguerías Pasteur Ltda.',
+        precio_lista: 1800,
+        bonificaciones_total: 90,
+        costo_real_neto: 1710,
+        costo_unitario: 1710,
+        ultimo_costo: 1695,
+        costo_promedio_inventario: costoPromedioInventario,
+        costo_promedio_ponderado: costoPromedioponderado,
+        esta_mas_caro_promedio: true, // 1710 > 1250 ⚠️ MUY CARO
+        kpi_score: 94,
+        entregas_completas_tiempo: 97.0,
+        cumplimiento_plazo_entrega: 91.0,
+        score_final_80_20: 1722.0,
+        requiere_aprobacion: false,
+        bonificaciones_aplicadas: ['Descuento 5%']
+      },
+      // PREMIUM - Excelentes KPIs, precios altos
+      {
+        ranking: 7,
+        proveedor_id: 107,
+        proveedor_nombre: 'Laboratorios Baxter Colombia S.A.',
+        precio_lista: 2200,
+        bonificaciones_total: 330,
+        costo_real_neto: 1870,
+        costo_unitario: 1870,
+        ultimo_costo: 1850,
+        costo_promedio_inventario: costoPromedioInventario,
+        costo_promedio_ponderado: costoPromedioponderado,
+        esta_mas_caro_promedio: true, // 1870 > 1250 ⚠️ PREMIUM
+        kpi_score: 96,
+        entregas_completas_tiempo: 98.5,
+        cumplimiento_plazo_entrega: 93.5,
+        score_final_80_20: 1872.8,
+        requiere_aprobacion: [10, 13].includes(productoId),
+        bonificaciones_aplicadas: ['Promo Q2 15%']
+      },
+      // BUDGET - Precio muy bajo, KPIs muy malos
+      {
+        ranking: 8,
+        proveedor_id: 108,
+        proveedor_nombre: 'Farmacias Económicas del Valle',
+        precio_lista: 950,
+        bonificaciones_total: 0,
+        costo_real_neto: 950,
+        costo_unitario: 950,
+        ultimo_costo: 970,
+        costo_promedio_inventario: costoPromedioInventario,
+        costo_promedio_ponderado: costoPromedioponderado,
+        esta_mas_caro_promedio: false, // 950 < 1250 ✅ MUY BARATO
+        kpi_score: 42,
+        entregas_completas_tiempo: 48.0,
+        cumplimiento_plazo_entrega: 36.0,
+        score_final_80_20: 1190.0,
         requiere_aprobacion: false,
         bonificaciones_aplicadas: []
       }
     ];
+
+    // Variar proveedores según ID de producto para realismo
+    let suppliers: ProveedorRanking[];
+    
+    if (productoId <= 5) {
+      // Productos comunes: todos los proveedores
+      suppliers = allSuppliers;
+    } else if (productoId <= 10) {
+      // Productos medios: 6 proveedores
+      suppliers = allSuppliers.slice(0, 6);
+    } else if (productoId <= 15) {
+      // Productos especiales: 5 proveedores
+      suppliers = allSuppliers.filter((_, i) => i !== 3 && i !== 7).slice(0, 5);
+    } else {
+      // Productos raros: 4 proveedores premium
+      suppliers = [allSuppliers[0], allSuppliers[1], allSuppliers[5], allSuppliers[6]];
+    }
+
+    // Re-rank based on score
+    suppliers.sort((a, b) => a.score_final_80_20 - b.score_final_80_20);
+    suppliers.forEach((s, i) => s.ranking = i + 1);
 
     return of(suppliers);
   }

@@ -5,7 +5,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ProductSearch } from '../product-search/product-search';
-import { DemandForecastChart } from '../demand-forecast-chart/demand-forecast-chart';
 import { OrderSuggestionCard } from '../order-suggestion-card/order-suggestion-card';
 import { CostSimulationTable } from '../cost-simulation-table/cost-simulation-table';
 import { SupplierRankingTableComponent } from '../supplier-ranking-table/supplier-ranking-table';
@@ -25,7 +24,6 @@ import { Molecula } from '../../../../core/services/molecula.service';
     MatCardModule,
     MatProgressSpinnerModule,
     ProductSearch,
-    DemandForecastChart,
     OrderSuggestionCard,
     CostSimulationTable,
     SupplierRankingTableComponent,

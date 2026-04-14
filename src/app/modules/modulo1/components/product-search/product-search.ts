@@ -73,20 +73,26 @@ export class ProductSearch implements OnInit {
   }
 
   getSemaphoreColor(molecula: Molecula): string {
-    if (molecula.es_clase_c) return 'naranja'; // Alerta de gobernanza
-    if (molecula.familia === 1) return 'verde'; // Familia 1 = alta rotación
-    if (molecula.familia === 3) return 'amarillo'; // Familia 3 = crítica
-    return 'verde';
+    if (molecula.es_clase_c) return 'naranja'; // Clase C governance
+    if (molecula.cobertura_dias === 0) return 'negro'; // Stockout
+    if (molecula.cobertura_dias < 5) return 'rojo'; // Critical
+    if (molecula.cobertura_dias < 10) return 'amarillo'; // Warning
+    return 'verde'; // OK
   }
 
   getSemaphoreIcon(molecula: Molecula): string {
-    if (molecula.es_clase_c) return 'warning';
-    if (molecula.familia === 3) return 'priority_high';
-    return 'medication';
+    if (molecula.es_clase_c) return 'gavel';
+    if (molecula.cobertura_dias === 0) return 'block';
+    if (molecula.cobertura_dias < 5) return 'priority_high';
+    if (molecula.cobertura_dias < 10) return 'warning';
+    return 'check_circle';
   }
 
   getSemaphoreText(molecula: Molecula): string {
-    if (molecula.es_clase_c) return 'Clase C';
-    return `${molecula.productos_count} productos`;
+    if (molecula.es_clase_c) return 'Clase C - Requiere Aprobación';
+    if (molecula.cobertura_dias === 0) return 'Sin Stock';
+    if (molecula.cobertura_dias < 5) return `CRÍTICO (${molecula.cobertura_dias.toFixed(1)} días)`;
+    if (molecula.cobertura_dias < 10) return `Bajo (${molecula.cobertura_dias.toFixed(1)} días)`;
+    return `OK (${molecula.cobertura_dias.toFixed(1)} días)`;
   }
 }

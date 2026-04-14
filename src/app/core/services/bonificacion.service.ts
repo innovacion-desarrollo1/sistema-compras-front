@@ -27,11 +27,11 @@ export class BonificacionService {
   public appliedBonifications$ = this.appliedBonificationsSubject.asObservable();
 
   private mockBonificaciones: Bonificacion[] = [
-    // Proveedor 1: Droguería del Norte
+    // Proveedor 101: Droguería Coopidrogas (TOP TIER)
     {
       id: 1,
-      proveedor_id: 1,
-      proveedor_nombre: 'Droguería del Norte SA',
+      proveedor_id: 101,
+      proveedor_nombre: 'Droguería Coopidrogas S.A.',
       molecula_id: 1, // Acetaminofen
       tipo: 'PORCENTAJE',
       valor: 10,
@@ -42,8 +42,8 @@ export class BonificacionService {
     },
     {
       id: 2,
-      proveedor_id: 1,
-      proveedor_nombre: 'Droguería del Norte SA',
+      proveedor_id: 101,
+      proveedor_nombre: 'Droguería Coopidrogas S.A.',
       molecula_id: 1,
       tipo: 'UNIDADES_GRATIS',
       valor: 0,
@@ -54,11 +54,11 @@ export class BonificacionService {
       unidades_compradas: 10,
       unidades_gratis: 2
     },
-    // Proveedor 2: Farmacias Unidas
+    // Proveedor 102: La Cruz Verde
     {
       id: 3,
-      proveedor_id: 2,
-      proveedor_nombre: 'Farmacias Unidas Ltda',
+      proveedor_id: 102,
+      proveedor_nombre: 'Distribuidora La Cruz Verde S.A.S.',
       molecula_id: 1,
       tipo: 'PORCENTAJE',
       valor: 8,
@@ -69,8 +69,8 @@ export class BonificacionService {
     },
     {
       id: 4,
-      proveedor_id: 2,
-      proveedor_nombre: 'Farmacias Unidas Ltda',
+      proveedor_id: 102,
+      proveedor_nombre: 'Distribuidora La Cruz Verde S.A.S.',
       molecula_id: 1,
       tipo: 'DESCUENTO_FIJO',
       valor: 500,
@@ -79,17 +79,156 @@ export class BonificacionService {
       fecha_fin: new Date('2026-04-30'),
       es_vigente: true
     },
-    // Proveedor 3: Laboratorios Andinos
+    // Proveedor 3: Laboratorios Phoenix
     {
       id: 5,
-      proveedor_id: 3,
-      proveedor_nombre: 'Laboratorios Andinos SAS',
+      proveedor_id: 103,
+      proveedor_nombre: 'Laboratorios Phoenix S.A.',
       molecula_id: 1,
       tipo: 'PORCENTAJE',
-      valor: 5,
-      descripcion: '5% descuento de lealtad (cliente frecuente)',
+      valor: 10,
+      descripcion: '10% descuento de lealtad (cliente frecuente)',
       fecha_inicio: new Date('2026-01-01'),
       fecha_fin: null,
+      es_vigente: true
+    },
+    // Proveedor 4: Farmaenlace - sin bonificaciones visibles
+    // Proveedor 5: Distribuciones Medifar - liquidación agresiva
+    {
+      id: 6,
+      proveedor_id: 105,
+      proveedor_nombre: 'Distribuciones Medifar S.A.S.',
+      molecula_id: 1,
+      tipo: 'PORCENTAJE',
+      valor: 20,
+      descripcion: 'Liquidación de inventario 20%',
+      fecha_inicio: new Date('2026-04-01'),
+      fecha_fin: new Date('2026-04-30'),
+      es_vigente: true
+    },
+    {
+      id: 7,
+      proveedor_id: 105,
+      proveedor_nombre: 'Distribuciones Medifar S.A.S.',
+      molecula_id: 1,
+      tipo: 'UNIDADES_GRATIS',
+      valor: 0,
+      descripcion: 'Compra 5, lleva 7 (promoción flash)',
+      fecha_inicio: new Date('2026-04-10'),
+      fecha_fin: new Date('2026-04-20'),
+      es_vigente: true,
+      unidades_compradas: 5,
+      unidades_gratis: 2
+    },
+    // Proveedor 6: Droguerías Pasteur - pocas bonificaciones
+    {
+      id: 8,
+      proveedor_id: 106,
+      proveedor_nombre: 'Droguerías Pasteur Ltda.',
+      molecula_id: 1,
+      tipo: 'DESCUENTO_FIJO',
+      valor: 100,
+      descripcion: '$100 descuento por pedido mayor a 1000 unidades',
+      fecha_inicio: new Date('2026-01-01'),
+      fecha_fin: null,
+      es_vigente: true
+    },
+    // Proveedor 7: Baxter - bonificaciones premium
+    {
+      id: 9,
+      proveedor_id: 107,
+      proveedor_nombre: 'Laboratorios Baxter Colombia S.A.',
+      molecula_id: 1,
+      tipo: 'PORCENTAJE',
+      valor: 15,
+      descripcion: '15% descuento Q2 2026 (campaña semestral)',
+      fecha_inicio: new Date('2026-04-01'),
+      fecha_fin: new Date('2026-06-30'),
+      es_vigente: true
+    },
+    {
+      id: 10,
+      proveedor_id: 107,
+      proveedor_nombre: 'Laboratorios Baxter Colombia S.A.',
+      molecula_id: 1,
+      tipo: 'UNIDADES_GRATIS',
+      valor: 0,
+      descripcion: 'Compra 20, lleva 24 (bonificación mayorista)',
+      fecha_inicio: new Date('2026-01-01'),
+      fecha_fin: null,
+      es_vigente: true,
+      unidades_compradas: 20,
+      unidades_gratis: 4
+    },
+    // Proveedor 8: Farmacias Económicas - sin bonificaciones
+    
+    // === BONIFICACIONES PARA OTROS PRODUCTOS ===
+    
+    // Ibuprofeno (id: 2)
+    {
+      id: 11,
+      proveedor_id: 101,
+      proveedor_nombre: 'Droguería Coopidrogas S.A.',
+      molecula_id: 2,
+      tipo: 'PORCENTAJE',
+      valor: 12,
+      descripcion: '12% descuento por volumen',
+      fecha_inicio: new Date('2026-01-01'),
+      fecha_fin: new Date('2026-12-31'),
+      es_vigente: true
+    },
+    {
+      id: 12,
+      proveedor_id: 102,
+      proveedor_nombre: 'Distribuidora La Cruz Verde S.A.S.',
+      molecula_id: 2,
+      tipo: 'UNIDADES_GRATIS',
+      valor: 0,
+      descripcion: 'Compra 12, lleva 14',
+      fecha_inicio: new Date('2026-04-01'),
+      fecha_fin: new Date('2026-05-31'),
+      es_vigente: true,
+      unidades_compradas: 12,
+      unidades_gratis: 2
+    },
+    
+    // Amoxicilina (id: 3) - Clase C
+    {
+      id: 13,
+      proveedor_id: 101,
+      proveedor_nombre: 'Droguería Coopidrogas S.A.',
+      molecula_id: 3,
+      tipo: 'PORCENTAJE',
+      valor: 8,
+      descripcion: '8% descuento corporativo',
+      fecha_inicio: new Date('2026-01-01'),
+      fecha_fin: null,
+      es_vigente: true
+    },
+    
+    // Metformina (id: 4)
+    {
+      id: 14,
+      proveedor_id: 101,
+      proveedor_nombre: 'Droguería Coopidrogas S.A.',
+      molecula_id: 4,
+      tipo: 'DESCUENTO_FIJO',
+      valor: 200,
+      descripcion: '$200 descuento por pedido >500 unidades',
+      fecha_inicio: new Date('2026-01-01'),
+      fecha_fin: null,
+      es_vigente: true
+    },
+    {
+      id: 15,
+      proveedor_id: 105,
+      proveedor_nombre: 'Distribuciones Medifar S.A.S.',
+      molecula_id: 4,
+      tipo: 'PORCENTAJE',
+      valor: 25,
+      descripcion: 'Liquidación 25% - últimas unidades',
+      fecha_inicio: new Date('2026-04-01'),
+      fecha_fin: new Date('2026-04-15'),
       es_vigente: true
     }
   ];
