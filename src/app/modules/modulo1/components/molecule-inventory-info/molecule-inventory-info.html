@@ -1,0 +1,184 @@
+<mat-card class="inventory-card" *ngIf="molecula">
+  <mat-card-header>
+    <mat-card-title>
+      <mat-icon>inventory_2</mat-icon>
+      Información de Inventario - {{ molecula.nombre }}
+    </mat-card-title>
+    <mat-card-subtitle>
+      {{ getFamilyName() }}
+      <mat-chip 
+        *ngIf="molecula.es_clase_c" 
+        class="semaphore-chip-naranja clase-c-chip">
+        <mat-icon>gavel</mat-icon>
+        Clase C - Requiere Aprobación
+      </mat-chip>
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <!-- Stock Status Alert -->
+    <div class="status-banner" [ngClass]="'status-' + getStockSemaphoreColor()">
+      <mat-icon>{{ getStockIcon() }}</mat-icon>
+      <div class="status-text">
+        <span class="status-label">{{ getStockStatusText() }}</span>
+        <span class="status-detail">{{ stockPercentage | number:'1.0-1' }}% del nivel óptimo</span>
+      </div>
+    </div>
+
+    <!-- Inventory Metrics Grid -->
+    <div class="metrics-grid">
+      <!-- Stock Actual -->
+      <div class="metric-card stock-actual">
+        <div class="metric-header">
+          <mat-icon>inventory</mat-icon>
+          <span class="metric-label">Stock Actual</span>
+        </div>
+        <div class="metric-value">{{ molecula.stock_actual | number:'1.0-0' }}</div>
+        <div class="metric-sublabel">unidades disponibles</div>
+      </div>
+
+      <!-- Stock Mínimo (ROP) -->
+      <div class="metric-card">
+        <div class="metric-header">
+          <mat-icon 
+            matTooltip="Reorder Point: punto en el que se debe reordenar"
+            matTooltipPosition="above">
+            priority_high
+          </mat-icon>
+          <span class="metric-label">Stock Mínimo (ROP)</span>
+        </div>
+        <div class="metric-value">{{ molecula.stock_minimo | number:'1.0-0' }}</div>
+        <div class="metric-sublabel">punto de reorden</div>
+      </div>
+
+      <!-- Stock de Seguridad (SS) -->
+      <div class="metric-card">
+        <div class="metric-header">
+          <mat-icon 
+            matTooltip="Safety Stock: inventario de seguridad para variaciones"
+            matTooltipPosition="above">
+            shield
+          </mat-icon>
+          <span class="metric-label">Stock de Seguridad (SS)</span>
+        </div>
+        <div class="metric-value">{{ molecula.stock_seguridad | number:'1.0-0' }}</div>
+        <div class="metric-sublabel">buffer de seguridad</div>
+      </div>
+
+      <!-- Precio Promedio -->
+      <div class="metric-card">
+        <div class="metric-header">
+          <mat-icon>monetization_on</mat-icon>
+          <span class="metric-label">Precio Promedio</span>
+        </div>
+        <div class="metric-value">${{ molecula.precio_promedio | number:'1.0-0' }}</div>
+        <div class="metric-sublabel">costo unitario</div>
+      </div>
+
+      <!-- Cobertura en Días -->
+      <div class="metric-card">
+        <div class="metric-header">
+          <mat-icon 
+            matTooltip="Días que puede abastecer con stock actual"
+            matTooltipPosition="above">
+            calendar_today
+          </mat-icon>
+          <span class="metric-label">Cobertura</span>
+        </div>
+        <div class="metric-value">{{ molecula.cobertura_dias | number:'1.1-1' }}</div>
+        <div class="metric-sublabel">días de inventario</div>
+      </div>
+
+      <!-- Demanda Promedio Diaria -->
+      <div class="metric-card">
+        <div class="metric-header">
+          <mat-icon>trending_up</mat-icon>
+          <span class="metric-label">Demanda Diaria</span>
+        </div>
+        <div class="metric-value">{{ molecula.demanda_promedio_diaria | number:'1.0-0' }}</div>
+        <div class="metric-sublabel">unidades/día</div>
+      </div>
+
+      <!-- Lead Time Sistema -->
+      <div class="metric-card">
+        <div class="metric-header">
+          <mat-icon 
+            matTooltip="Tiempo de entrega del sistema (días)"
+            matTooltipPosition="above">
+            schedule
+          </mat-icon>
+          <span class="metric-label">LT Sistema</span>
+        </div>
+        <div class="metric-value">{{ molecula.lt_sistema_dias }}</div>
+        <div class="metric-sublabel">días de entrega</div>
+      </div>
+
+      <!-- EOQ -->
+      <div class="metric-card">
+        <div class="metric-header">
+          <mat-icon 
+            matTooltip="Economic Order Quantity: cantidad económica de pedido"
+            matTooltipPosition="above">
+            shopping_cart
+          </mat-icon>
+          <span class="metric-label">EOQ</span>
+        </div>
+        <div class="metric-value">{{ molecula.eoq | number:'1.0-0' }}</div>
+        <div class="metric-sublabel">cantidad económica</div>
+      </div>
+
+      <!-- Pendientes Diarios -->
+      <div class="metric-card">
+        <div class="metric-header">
+          <mat-icon 
+            matTooltip="Demanda pendiente de despacho diaria"
+            matTooltipPosition="above">
+            pending_actions
+          </mat-icon>
+          <span class="metric-label">Pendientes</span>
+        </div>
+        <div class="metric-value">{{ molecula.pendientes_diarios | number:'1.0-0' }}</div>
+        <div class="metric-sublabel">unidades pendientes</div>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Suggested Order Calculation -->
+    <div class="calculation-section">
+      <h4>
+        <mat-icon>calculate</mat-icon>
+        Cálculo de Cantidad Sugerida
+      </h4>
+      <div class="formula">
+        <div class="formula-line">
+          <span class="formula-label">Cantidad Sugerida = </span>
+          <span class="formula-value">ROP + SS - Stock Actual - Pendientes</span>
+        </div>
+        <div class="formula-line">
+          <span class="formula-label"></span>
+          <span class="formula-value">
+            = {{ molecula.stock_minimo | number:'1.0-0' }} 
+            + {{ molecula.stock_seguridad | number:'1.0-0' }} 
+            - {{ molecula.stock_actual | number:'1.0-0' }} 
+            - {{ molecula.pendientes_diarios | number:'1.0-0' }}
+          </span>
+        </div>
+        <div class="formula-line result">
+          <span class="formula-label">Resultado: </span>
+          <span class="formula-value highlight">
+            {{ cantidadSugerida | number:'1.0-0' }} unidades
+            <mat-chip class="semaphore-chip-verde" *ngIf="cantidadSugerida > 0">
+              <mat-icon>notifications_active</mat-icon>
+              Ordenar Ahora
+            </mat-chip>
+            <mat-chip class="semaphore-chip-gris" *ngIf="cantidadSugerida === 0">
+              <mat-icon>check</mat-icon>
+              No Requiere Orden
+            </mat-chip>
+          </span>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

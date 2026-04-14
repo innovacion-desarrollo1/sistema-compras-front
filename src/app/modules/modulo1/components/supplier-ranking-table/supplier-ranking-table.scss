@@ -1,0 +1,611 @@
+﻿@import '../../../../../styles/themes/design-tokens';
+
+// ==============================
+// CARD WRAPPER
+// ==============================
+.ranking-card {
+  margin: 16px 0;
+  
+  mat-card-header {
+    mat-card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 20px;
+      font-weight: 600;
+      
+      mat-icon {
+        color: $color-blue-600;
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      }
+    }
+    
+    mat-card-subtitle {
+      margin-top: 8px;
+      color: $color-gray-600;
+    }
+  }
+}
+
+// ==============================
+// TABLE CONTAINER
+// ==============================
+.table-container {
+  margin: 16px 0;
+  overflow-x: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+// ==============================
+// MAT-TABLE
+// ==============================
+.suppliers-table {
+  width: 100%;
+  background: white;
+  
+  // Header Styling
+  th {
+    background-color: $color-blue-100;
+    color: $color-blue-900;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 16px 12px;
+    border-bottom: 2px solid $color-blue-300;
+    
+    mat-icon {
+      vertical-align: middle;
+      margin-right: 4px;
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+  
+  // Cell Styling
+  td {
+    padding: 16px 12px;
+    font-size: 14px;
+    vertical-align: middle;
+    border-bottom: 1px solid $color-gray-200;
+  }
+  
+  // Main Row Styling
+  .supplier-row {
+    transition: background-color 0.2s ease;
+    
+    &:hover {
+      background-color: $color-gray-50;
+      cursor: pointer;
+    }
+    
+    &.top-supplier-row {
+      background-color: rgba($semaphore-verde-bg, 0.1);
+      border-left: 4px solid $semaphore-verde-border;
+    }
+    
+    &.expanded {
+      background-color: $color-blue-50;
+    }
+  }
+  
+  // Detail Row (Expanded Bonifications)
+  .detail-row {
+    height: 0;
+    overflow: hidden;
+    
+    &.detail-row-hidden {
+      display: none;
+    }
+    
+    td {
+      padding: 0;
+      border-bottom: none;
+    }
+  }
+}
+
+// ==============================
+// RANKING COLUMN
+// ==============================
+.ranking-cell {
+  text-align: center;
+  width: 100px;
+}
+
+.ranking-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: $color-gray-200;
+  color: $color-gray-700;
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 8px;
+  
+  &.top-rank {
+    background: linear-gradient(135deg, $semaphore-verde-bg 0%, darken($semaphore-verde-bg, 10%) 100%);
+    color: $semaphore-verde-text;
+    box-shadow: 0 2px 8px rgba($semaphore-verde-border, 0.3);
+  }
+}
+
+.recommended-chip {
+  font-size: 10px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    margin-right: 2px;
+  }
+}
+
+// ==============================
+// PROVEEDOR COLUMN
+// ==============================
+.proveedor-cell {
+  min-width: 200px;
+}
+
+.proveedor-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  
+  .proveedor-nombre {
+    font-weight: 600;
+    font-size: 15px;
+    color: $color-blue-900;
+  }
+  
+  .proveedor-score {
+    font-size: 12px;
+    color: $color-gray-600;
+  }
+}
+
+.clase-c-chip {
+  margin-top: 4px;
+  font-size: 11px;
+  height: 22px;
+  
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    margin-right: 2px;
+  }
+}
+
+// ==============================
+// COSTOS COLUMN
+// ==============================
+.costos-cell {
+  min-width: 140px;
+}
+
+.costos-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  
+  .costo-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    
+    .label {
+      color: $color-gray-600;
+      font-weight: 500;
+    }
+    
+    .value {
+      font-weight: 600;
+      color: $color-gray-900;
+    }
+    
+    &.bonif .value {
+      color: $semaphore-verde-text;
+    }
+    
+    &.total {
+      margin-top: 4px;
+      padding-top: 4px;
+      
+      .label {
+        font-weight: 700;
+        color: $color-blue-900;
+      }
+      
+      .value.highlight {
+        font-size: 16px;
+        font-weight: 700;
+        color: $color-blue-700;
+      }
+    }
+  }
+  
+  mat-divider {
+    margin: 4px 0;
+  }
+}
+
+// ==============================
+// KPIS COLUMN
+// ==============================
+.kpis-cell {
+  min-width: 180px;
+}
+
+.kpis-compact {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.kpi-item-compact {
+  display: grid;
+  grid-template-columns: 40px 1fr 50px;
+  align-items: center;
+  gap: 8px;
+  
+  .kpi-label-compact {
+    font-size: 11px;
+    font-weight: 600;
+    color: $color-gray-600;
+    text-transform: uppercase;
+  }
+  
+  .kpi-bar-compact {
+    height: 6px;
+    border-radius: 3px;
+  }
+  
+  .kpi-value-compact {
+    font-size: 12px;
+    font-weight: 600;
+    color: $color-gray-900;
+    text-align: right;
+  }
+}
+
+// KPI Color Coding
+.kpi-good ::ng-deep .mdc-linear-progress__bar-inner {
+  border-color: $semaphore-verde-border !important;
+}
+
+.kpi-ok ::ng-deep .mdc-linear-progress__bar-inner {
+  border-color: $semaphore-amarillo-border !important;
+}
+
+.kpi-poor ::ng-deep .mdc-linear-progress__bar-inner {
+  border-color: $semaphore-rojo-border !important;
+}
+
+// ==============================
+// BONIFICACIONES COLUMN
+// ==============================
+.bonif-cell {
+  min-width: 160px;
+}
+
+.bonif-toggle-btn {
+  font-size: 12px;
+  padding: 4px 12px;
+  
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    margin-right: 4px;
+  }
+  
+  .applied-badge {
+    color: $semaphore-verde-text;
+    font-weight: 700;
+    margin-left: 4px;
+  }
+}
+
+// ==============================
+// ACTIONS COLUMN
+// ==============================
+.actions-cell {
+  text-align: right;
+  width: 180px;
+}
+
+.select-btn {
+  mat-icon {
+    margin-right: 4px;
+  }
+}
+
+// ==============================
+// EXPANDED ROW (BONIFICACIONES DETAIL)
+// ==============================
+.expanded-row {
+  background-color: $color-gray-50;
+  border-left: 4px solid $color-blue-500;
+}
+
+.bonificaciones-detail {
+  overflow: hidden;
+  padding: 0;
+}
+
+.bonificaciones-content {
+  padding: 20px;
+  background-color: white;
+  border-radius: 4px;
+  margin: 12px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+  
+  .bonificaciones-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    
+    h4 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+      color: $color-blue-900;
+      font-weight: 600;
+      font-size: 16px;
+      
+      mat-icon {
+        color: $color-blue-600;
+      }
+    }
+    
+    button {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 13px;
+      
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+  
+  h4 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 16px 0;
+    color: $color-blue-900;
+    font-weight: 600;
+    font-size: 16px;
+    
+    mat-icon {
+      color: $color-blue-600;
+    }
+  }
+}
+
+.no-bonif-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  color: $color-gray-600;
+  font-style: italic;
+  
+  mat-icon {
+    color: $color-gray-400;
+  }
+}
+
+.bonificaciones-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 12px;
+}
+
+.bonif-card {
+  padding: 12px;
+  border: 1px solid $color-gray-300;
+  border-radius: 6px;
+  background-color: $color-gray-50;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    border-color: $color-blue-400;
+    box-shadow: 0 2px 6px rgba($color-blue-600, 0.15);
+  }
+}
+
+.bonif-checkbox {
+  width: 100%;
+  
+  ::ng-deep .mdc-form-field {
+    width: 100%;
+  }
+  
+  ::ng-deep .mdc-label {
+    width: 100%;
+  }
+}
+
+.bonif-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.bonif-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.bonif-desc {
+  font-weight: 600;
+  font-size: 14px;
+  color: $color-gray-900;
+}
+
+.bonif-type-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  height: 24px;
+  padding: 0 8px;
+  
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+  
+  &.bonif-tipo-porcentaje {
+    background-color: rgba($semaphore-verde-bg, 0.8);
+    color: $semaphore-verde-text;
+  }
+  
+  &.bonif-tipo-descuento_fijo {
+    background-color: rgba($semaphore-amarillo-bg, 0.8);
+    color: $semaphore-amarillo-text;
+  }
+  
+  &.bonif-tipo-unidades_gratis {
+    background-color: rgba($color-blue-100, 0.8);
+    color: $color-blue-900;
+  }
+}
+
+.bonif-validity {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: $color-gray-600;
+  
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
+}
+
+// ==============================
+// LOADING & EMPTY STATES
+// ==============================
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 48px;
+  
+  p {
+    color: $color-gray-600;
+    font-style: italic;
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  
+  mat-icon {
+    font-size: 72px;
+    width: 72px;
+    height: 72px;
+    color: $color-gray-400;
+    margin-bottom: 16px;
+  }
+  
+  p {
+    color: $color-gray-600;
+    font-size: 16px;
+  }
+}
+
+// ==============================
+// SEMAPHORE CHIPS (DESIGN SYSTEM)
+// ==============================
+.semaphore-chip-verde {
+  background-color: $semaphore-verde-bg;
+  color: $semaphore-verde-text;
+  border: 1px solid $semaphore-verde-border;
+}
+
+.semaphore-chip-amarillo {
+  background-color: $semaphore-amarillo-bg;
+  color: $semaphore-amarillo-text;
+  border: 1px solid $semaphore-amarillo-border;
+}
+
+.semaphore-chip-naranja {
+  background-color: $semaphore-naranja-bg;
+  color: $semaphore-naranja-text;
+  border: 1px solid $semaphore-naranja-border;
+}
+
+.semaphore-chip-rojo {
+  background-color: $semaphore-rojo-bg;
+  color: $semaphore-rojo-text;
+  border: 1px solid $semaphore-rojo-border;
+}
+
+.semaphore-chip-gris {
+  background-color: $color-gray-200;
+  color: $color-gray-700;
+  border: 1px solid $color-gray-400;
+}
+
+// ==============================
+// RESPONSIVE ADJUSTMENTS
+// ==============================
+@media (max-width: 1200px) {
+  .bonificaciones-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .suppliers-table {
+    th, td {
+      padding: 8px 6px;
+      font-size: 12px;
+    }
+  }
+  
+  .proveedor-cell {
+    min-width: 150px;
+  }
+  
+  .costos-cell,
+  .kpis-cell,
+  .bonif-cell {
+    min-width: 120px;
+  }
+}

@@ -7,11 +7,11 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatSelectModule } from '@angular/material/select';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { Observable } from 'rxjs';
 import { debounceTime, switchMap, startWith } from 'rxjs/operators';
-import { Producto } from '../../services/suggestion-state.service';
-import { ProductService } from '../../../../core/services/product.service';
+import { MoleculaService, Molecula } from '../../../../core/services/molecula.service';
 
 @Component({
   selector: 'app-product-search',
@@ -25,6 +25,7 @@ import { ProductService } from '../../../../core/services/product.service';
     MatIconModule,
     MatButtonModule,
     MatChipsModule,
+    MatSelectModule,
     ScrollingModule
   ],
   templateUrl: './product-search.html',
@@ -32,48 +33,60 @@ import { ProductService } from '../../../../core/services/product.service';
 })
 export class ProductSearch implements OnInit {
   searchControl = new FormControl('');
-  filteredProducts$!: Observable<Producto[]>;
+  periodoControl = new FormControl('4'); // Default: 4 semanas
+  filteredMoleculas$!: Observable<Molecula[]>;
   
-  @Output() productSelected = new EventEmitter<Producto>();
+  @Output() moleculaSelected = new EventEmitter<{molecula: Molecula, periodo_semanas: number}>();
 
-  constructor(private productService: ProductService) {}
+  periodos = [
+    { value: '2', label: '2 semanas' },
+    { value: '4', label: '4 semanas (1 mes)' },
+    { value: '8', label: '8 semanas (2 meses)' },
+    { value: '12', label: '12 semanas (3 meses)' }
+  ];
+
+  constructor(private moleculaService: MoleculaService) {}
 
   ngOnInit(): void {
-    this.filteredProducts$ = this.searchControl.valueChanges.pipe(
+    this.filteredMoleculas$ = this.searchControl.valueChanges.pipe(
       startWith(''),
-      debounceTime(300), // Wait 300ms after user stops typing
-      switchMap(query => this._filterProducts(query || ''))
+      debounceTime(300), // Esperar 300ms después de que el usuario deja de escribir
+      switchMap(query => this._filterMoleculas(query || ''))
     );
   }
 
-  private _filterProducts(query: string): Observable<Producto[]> {
+  private _filterMoleculas(query: string): Observable<Molecula[]> {
     if (typeof query === 'object') {
-      return this.productService.searchProducts('');
+      return this.moleculaService.searchMoleculas('');
     }
-    return this.productService.searchProducts(query);
+    return this.moleculaService.searchMoleculas(query);
   }
 
-  displayFn(producto: Producto | string): string {
-    if (typeof producto === 'string') return producto;
-    return producto ? `${producto.nombre_comercial} - ${producto.molecula}` : '';
+  displayFn(molecula: Molecula | string): string {
+    if (typeof molecula === 'string') return molecula;
+    return molecula ? `${molecula.nombre}` : '';
   }
 
-  onProductSelect(producto: Producto): void {
-    this.productSelected.emit(producto);
+  onMoleculaSelect(molecula: Molecula): void {
+    const periodo_semanas = parseInt(this.periodoControl.value || '4');
+    this.moleculaSelected.emit({ molecula, periodo_semanas });
   }
 
-  getSemaphoreColor(producto: Producto): string {
-    if (producto.es_clase_c) return 'naranja'; // Governance alert
-    if (producto.stock_actual === 0) return 'negro'; // Stockout
-    if (producto.stock_actual <= 100) return 'rojo'; // Critical (assuming min stock ~100)
-    if (producto.stock_actual <= 300) return 'amarillo'; // Warning
-    return 'verde'; // OK
+  getSemaphoreColor(molecula: Molecula): string {
+    if (molecula.es_clase_c) return 'naranja'; // Alerta de gobernanza
+    if (molecula.familia === 1) return 'verde'; // Familia 1 = alta rotación
+    if (molecula.familia === 3) return 'amarillo'; // Familia 3 = crítica
+    return 'verde';
   }
 
-  getSemaphoreIcon(producto: Producto): string {
-    if (producto.es_clase_c) return 'warning';
-    if (producto.stock_actual === 0) return 'block';
-    if (producto.stock_actual <= 100) return 'priority_high';
-    return 'check_circle';
+  getSemaphoreIcon(molecula: Molecula): string {
+    if (molecula.es_clase_c) return 'warning';
+    if (molecula.familia === 3) return 'priority_high';
+    return 'medication';
+  }
+
+  getSemaphoreText(molecula: Molecula): string {
+    if (molecula.es_clase_c) return 'Clase C';
+    return `${molecula.productos_count} productos`;
   }
 }

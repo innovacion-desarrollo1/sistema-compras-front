@@ -1,1 +1,233 @@
-<p>supplier-ranking-table works!</p>
+<mat-card class="ranking-card">
+  <mat-card-header>
+    <mat-card-title>
+      <mat-icon>store</mat-icon>
+      2. Comparar Proveedores y Aplicar Bonificaciones
+    </mat-card-title>
+    <mat-card-subtitle>
+      Todos los proveedores ranqueados por score 80/20 en una sola vista
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Cargando ranking de proveedores...</p>
+    </div>
+
+    <!-- Suppliers Comparison Table -->
+    <div *ngIf="!isLoading && suppliers.length > 0" class="table-container">
+      <table mat-table [dataSource]="suppliers" multiTemplateDataRows class="suppliers-table">
+        
+        <!-- Ranking Column -->
+        <ng-container matColumnDef="ranking">
+          <th mat-header-cell *matHeaderCellDef class="ranking-header">
+            <mat-icon>military_tech</mat-icon>
+            Rank
+          </th>
+          <td mat-cell *matCellDef="let supplier; let i = index" class="ranking-cell">
+            <div class="ranking-badge" [ngClass]="{'top-rank': isTopSupplier(i)}">
+              {{ i + 1 }}
+            </div>
+            <mat-chip 
+              *ngIf="isTopSupplier(i)" 
+              class="semaphore-chip-verde recommended-chip">
+              <mat-icon>star</mat-icon>
+              Recomendado
+            </mat-chip>
+          </td>
+        </ng-container>
+
+        <!-- Proveedor Column -->
+        <ng-container matColumnDef="proveedor">
+          <th mat-header-cell *matHeaderCellDef class="proveedor-header">
+            <mat-icon>business</mat-icon>
+            Proveedor
+          </th>
+          <td mat-cell *matCellDef="let supplier" class="proveedor-cell">
+            <div class="proveedor-info">
+              <span class="proveedor-nombre">{{ supplier.proveedor_nombre }}</span>
+              <span class="proveedor-score">Score: {{ supplier.score_final_80_20 | number:'1.2-2' }}</span>
+              <mat-chip 
+                *ngIf="supplier.requiere_aprobacion"
+                class="semaphore-chip-naranja clase-c-chip">
+                <mat-icon>warning</mat-icon>
+                Clase C
+              </mat-chip>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Costos Column -->
+        <ng-container matColumnDef="costos">
+          <th mat-header-cell *matHeaderCellDef class="costos-header">
+            <mat-icon>attach_money</mat-icon>
+            Costos
+          </th>
+          <td mat-cell *matCellDef="let supplier" class="costos-cell">
+            <div class="costos-breakdown">
+              <div class="costo-line">
+                <span class="label">Lista:</span>
+                <span class="value">${{ supplier.precio_lista | number:'1.0-0' }}</span>
+              </div>
+              <div class="costo-line bonif">
+                <span class="label">Bonif:</span>
+                <span class="value">-${{ supplier.bonificaciones_total | number:'1.0-0' }}</span>
+              </div>
+              <mat-divider></mat-divider>
+              <div class="costo-line total">
+                <span class="label">Neto:</span>
+                <span class="value highlight">${{ supplier.costo_real_neto | number:'1.0-0' }}</span>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- KPIs Column -->
+        <ng-container matColumnDef="kpis">
+          <th mat-header-cell *matHeaderCellDef class="kpis-header">
+            <mat-icon>analytics</mat-icon>
+            KPIs
+          </th>
+          <td mat-cell *matCellDef="let supplier" class="kpis-cell">
+            <div class="kpis-compact">
+              <div class="kpi-item-compact">
+                <span class="kpi-label-compact">OTIF:</span>
+                <mat-progress-bar 
+                  mode="determinate" 
+                  [value]="supplier.otif"
+                  [ngClass]="getKpiClass(supplier.otif)"
+                  class="kpi-bar-compact">
+                </mat-progress-bar>
+                <span class="kpi-value-compact">{{ supplier.otif | number:'1.0-0' }}%</span>
+              </div>
+              <div class="kpi-item-compact">
+                <span class="kpi-label-compact">LT:</span>
+                <mat-progress-bar 
+                  mode="determinate" 
+                  [value]="supplier.lt_compliance"
+                  [ngClass]="getKpiClass(supplier.lt_compliance)"
+                  class="kpi-bar-compact">
+                </mat-progress-bar>
+                <span class="kpi-value-compact">{{ supplier.lt_compliance | number:'1.0-0' }}%</span>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Bonificaciones Column -->
+        <ng-container matColumnDef="bonificaciones">
+          <th mat-header-cell *matHeaderCellDef class="bonif-header">
+            <mat-icon>discount</mat-icon>
+            Bonificaciones
+          </th>
+          <td mat-cell *matCellDef="let supplier" class="bonif-cell">
+            <button 
+              mat-stroked-button 
+              [color]="hasBonificaciones(supplier.proveedor_id) ? 'primary' : 'basic'"
+              (click)="toggleBonificacionesRow(supplier.proveedor_id)"
+              class="bonif-toggle-btn">
+              <mat-icon>{{ isRowExpanded(supplier.proveedor_id) ? 'expand_less' : 'expand_more' }}</mat-icon>
+              <span *ngIf="!hasBonificaciones(supplier.proveedor_id)">Sin bonificaciones</span>
+              <span *ngIf="hasBonificaciones(supplier.proveedor_id)">
+                {{ getBonificacionesCount(supplier.proveedor_id) }} disponibles
+                <span *ngIf="getAppliedBonificacionesCount(supplier.proveedor_id) > 0" class="applied-badge">
+                  ({{ getAppliedBonificacionesCount(supplier.proveedor_id) }} aplicadas)
+                </span>
+              </span>
+            </button>
+          </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="actions-header">Acción</th>
+          <td mat-cell *matCellDef="let supplier" class="actions-cell">
+            <button 
+              mat-raised-button 
+              color="primary"
+              (click)="selectSupplierForOrder(supplier)"
+              class="select-btn">
+              <mat-icon>shopping_cart</mat-icon>
+              Generar Orden
+            </button>
+          </td>
+        </ng-container>
+
+        <!-- Expanded Row for Bonificaciones -->
+        <ng-container matColumnDef="expandedDetail">
+          <td mat-cell *matCellDef="let supplier" [attr.colspan]="displayedColumns.length" class="expanded-row">
+            <div class="bonificaciones-detail" 
+                 [@detailExpand]="isRowExpanded(supplier.proveedor_id) ? 'expanded' : 'collapsed'"
+                 style="overflow: hidden;">
+              
+              <div class="bonificaciones-content">
+                <div class="bonificaciones-header">
+                  <h4><mat-icon>discount</mat-icon> Bonificaciones Disponibles</h4>
+                  <button mat-raised-button color="accent" (click)="openCreateBonificacionDialog(supplier)">
+                    <mat-icon>add_circle</mat-icon>
+                    Crear Bonificación
+                  </button>
+                </div>
+                
+                <div *ngIf="isRowExpanded(supplier.proveedor_id) && getBonificaciones(supplier.proveedor_id).length === 0" class="no-bonif-message">
+                  <mat-icon>info</mat-icon>
+                  <span>No hay bonificaciones vigentes para este proveedor</span>
+                </div>
+
+                <div *ngIf="isRowExpanded(supplier.proveedor_id) && getBonificaciones(supplier.proveedor_id).length > 0" class="bonificaciones-grid">
+                  <div *ngFor="let bonif of getBonificaciones(supplier.proveedor_id)" class="bonif-card">
+                    <mat-checkbox 
+                      [checked]="bonif.aplicada_a_orden"
+                      (change)="toggleBonificacion(bonif, $event)"
+                      color="primary"
+                      class="bonif-checkbox">
+                      <div class="bonif-details">
+                        <div class="bonif-header-row">
+                          <span class="bonif-desc">{{ bonif.descripcion }}</span>
+                          <mat-chip class="bonif-type-chip" [ngClass]="'bonif-tipo-' + bonif.tipo.toLowerCase()">
+                            <mat-icon *ngIf="bonif.tipo === 'PORCENTAJE'">percent</mat-icon>
+                            <mat-icon *ngIf="bonif.tipo === 'DESCUENTO_FIJO'">attach_money</mat-icon>
+                            <mat-icon *ngIf="bonif.tipo === 'UNIDADES_GRATIS'">card_giftcard</mat-icon>
+                            <span *ngIf="bonif.tipo === 'PORCENTAJE'">{{ bonif.valor }}%</span>
+                            <span *ngIf="bonif.tipo === 'DESCUENTO_FIJO'">${{ bonif.valor }}</span>
+                            <span *ngIf="bonif.tipo === 'UNIDADES_GRATIS'">{{ bonif.unidades_compradas }}+{{ bonif.unidades_gratis }}</span>
+                          </mat-chip>
+                        </div>
+                        <div class="bonif-validity">
+                          <mat-icon>calendar_today</mat-icon>
+                          <span>Válida hasta: {{ bonif.fecha_fin ? (bonif.fecha_fin | date:'dd/MM/yyyy') : 'Permanente' }}</span>
+                        </div>
+                      </div>
+                    </mat-checkbox>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Header and Rows -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row 
+            *matRowDef="let supplier; columns: displayedColumns"
+            class="supplier-row"
+            [class.top-supplier-row]="supplier.proveedor_id === suppliers[0]?.proveedor_id"
+            [class.expanded]="isRowExpanded(supplier.proveedor_id)">
+        </tr>
+        <tr mat-row 
+            *matRowDef="let supplier; columns: ['expandedDetail']; when: isExpandableRow" 
+            class="detail-row"
+            [class.detail-row-hidden]="!isRowExpanded(supplier.proveedor_id)">
+        </tr>
+      </table>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && suppliers.length === 0" class="empty-state">
+      <mat-icon>store_off</mat-icon>
+      <p>No se encontraron proveedores para esta molécula</p>
+    </div>
+  </mat-card-content>
+</mat-card>

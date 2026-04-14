@@ -7,36 +7,57 @@
 
 .dashboard-header {
   box-shadow: $shadow-md;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 24px;
   
-  mat-icon {
-    margin-right: $spacing-sm;
+  .logo {
+    height: 48px;
+    width: auto;
+    object-fit: contain;
   }
   
-  span {
+  .title {
     font-weight: $font-weight-semibold;
     font-size: $font-size-xl;
+    flex: 0 1 auto;
   }
-}
-
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: $spacing-lg;
-  padding: $spacing-lg;
-  max-width: 1920px;
-  margin: 0 auto;
   
-  // Responsive: 1-column on tablets and below
-  @media (max-width: $breakpoint-lg) {
-    grid-template-columns: 1fr;
+  .spacer {
+    flex: 1 1 auto;
+  }
+  
+  mat-icon {
+    color: white;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    
+    &:hover {
+      opacity: 0.8;
+    }
   }
 }
 
-.left-column,
-.right-column {
+// Main content - single column layout for better visibility
+.dashboard-content {
   display: flex;
   flex-direction: column;
   gap: $spacing-lg;
+  padding: $spacing-lg;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+// Suggestion + Simulation Grid (2 columns when both visible)
+.suggestion-simulation-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-lg;
+  
+  @media (max-width: $breakpoint-lg) {
+    grid-template-columns: 1fr;
+  }
 }
 
 // Card Styles
@@ -60,6 +81,9 @@ mat-card {
       
       mat-icon {
         color: $color-blue-500;
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
       }
     }
   }
@@ -68,35 +92,6 @@ mat-card {
 .search-card {
   mat-card-content {
     padding-top: $spacing-md;
-  }
-}
-
-.product-info-card {
-  .product-detail {
-    p {
-      margin: $spacing-sm 0;
-      font-size: $font-size-md;
-      
-      strong {
-        color: $color-gray-700;
-      }
-    }
-    
-    .clase-c-warning {
-      display: flex;
-      align-items: center;
-      gap: $spacing-xs;
-      color: $semaphore-naranja-text;
-      background-color: $semaphore-naranja-bg;
-      padding: $spacing-sm;
-      border-radius: $border-radius-sm;
-      border-left: 4px solid $semaphore-naranja;
-      margin-top: $spacing-md;
-      
-      mat-icon {
-        color: $semaphore-naranja;
-      }
-    }
   }
 }
 
@@ -190,4 +185,10 @@ mat-card {
       color: $color-gray-600;
     }
   }
+}
+// Bottom Section: History Timeline
+.history-section {
+  padding: 0 16px 16px;
+  max-width: 1920px;
+  margin: 0 auto;
 }

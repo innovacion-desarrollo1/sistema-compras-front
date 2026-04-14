@@ -1,11 +1,22 @@
 @import '../../../../../styles/themes/design-tokens';
 
-.product-search-field {
-  width: 100%;
-  font-size: 16px; // Accessibility: prevent mobile zoom
+.search-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.product-autocomplete-panel {
+.periodo-field {
+  width: 100%;
+  max-width: 300px;
+}
+
+.molecula-search-field {
+  width: 100%;
+  font-size: 16px; // Accesibilidad: prevenir zoom en móviles
+}
+
+.molecula-autocomplete-panel {
   max-height: 400px;
 }
 
@@ -13,7 +24,7 @@
   height: 300px;
 }
 
-.product-option {
+.molecula-option {
   height: 60px !important;
   padding: 8px 16px;
   
@@ -22,42 +33,37 @@
   }
 }
 
-.product-option-content {
+.molecula-option-content {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.product-main {
+.molecula-main {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   
-  .product-name {
+  .molecula-name {
     font-weight: $font-weight-semibold;
     color: $color-gray-900;
     font-size: $font-size-md;
   }
   
-  .product-molecule {
-    font-size: $font-size-sm;
-    color: $color-gray-600;
-    font-style: italic;
-  }
-}
-
-.product-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  
-  .product-code {
+  .molecula-code {
     font-size: $font-size-xs;
     color: $color-gray-500;
     font-family: 'Courier New', monospace;
   }
 }
 
-.product-semaphore {
+.molecula-meta {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.molecula-semaphore {
   display: inline-flex !important;
   align-items: center;
   gap: 4px;
@@ -68,6 +74,7 @@
   height: 20px !important;
   
   mat-icon {
+
     font-size: 14px;
     height: 14px;
     width: 14px;

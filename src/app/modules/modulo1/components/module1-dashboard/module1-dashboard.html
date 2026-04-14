@@ -2,86 +2,56 @@
   
   <!-- Header -->
   <mat-toolbar color="primary" class="dashboard-header">
-    <mat-icon>shopping_cart</mat-icon>
-    <span>Módulo 1 — Motor de Sugerencias Manuales</span>
+    <img src="assets/images/Logo-DUANA.png" alt="DUANA" class="logo">
+    <span class="title">Motor de Sugerencias Manuales</span>
+    <span class="spacer"></span>
+    <mat-icon>account_circle</mat-icon>
   </mat-toolbar>
 
-  <!-- Main Content Grid -->
-  <div class="dashboard-grid">
+  <!-- Main Content -->
+  <div class="dashboard-content">
     
-    <!-- Left Column: Search + Future Components -->
-    <div class="left-column">
+    <!-- Step 1: Molecula Search + Period Selection -->
+    <mat-card class="search-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>science</mat-icon>
+          Paso 1: Seleccionar Molécula y Periodo
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <app-product-search
+          (moleculaSelected)="onMoleculaSelected($event)">
+        </app-product-search>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Step 2: Molecule Inventory Information -->
+    <app-molecule-inventory-info
+      *ngIf="selectedMolecula"
+      [molecula]="selectedMolecula"
+      [periodoSemanas]="periodoSemanas">
+    </app-molecule-inventory-info>
+
+    <!-- Step 3: Supplier Comparison & Bonifications -->
+    <app-supplier-ranking-table 
+      *ngIf="showSupplierRanking && selectedMolecula" 
+      [productoId]="selectedMolecula.id"
+      [periodoSemanas]="periodoSemanas"
+      (supplierSelected)="onSupplierSelected($event)">
+    </app-supplier-ranking-table>
+
+    <!-- Step 4: Demand Forecast Chart -->
+<!--     <app-demand-forecast-chart 
+      *ngIf="showDemandForecast && selectedMolecula" 
+      [productoId]="selectedMolecula.id">
+    </app-demand-forecast-chart> -->
+
+    <!-- Two Column Layout for Suggestion & Simulation -->
+    <div class="suggestion-simulation-grid" *ngIf="showSuggestionCard && currentSuggestion">
       
-      <!-- Product Search -->
-      <mat-card class="search-card">
-        <mat-card-header>
-          <mat-card-title>
-            <mat-icon>search</mat-icon>
-            1. Seleccionar Producto
-          </mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <app-product-search
-            (productSelected)="onProductSelected($event)">
-          </app-product-search>
-        </mat-card-content>
-      </mat-card>
-
-      <!-- Selected Product Info -->
-      <mat-card *ngIf="selectedProduct" class="product-info-card">
-        <mat-card-header>
-          <mat-card-title>Producto Seleccionado</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="product-detail">
-            <p><strong>Nombre:</strong> {{ selectedProduct.nombre_comercial }}</p>
-            <p><strong>Molécula:</strong> {{ selectedProduct.molecula }}</p>
-            <p><strong>Código:</strong> {{ selectedProduct.codigo }}</p>
-            <p><strong>Stock Actual:</strong> {{ selectedProduct.stock_actual }} {{ selectedProduct.unidad_medida }}</p>
-            <p *ngIf="selectedProduct.es_clase_c" class="clase-c-warning">
-              <mat-icon>warning</mat-icon>
-              <strong>Producto Clase C - Requiere Aprobación</strong>
-            </p>
-          </div>
-        </mat-card-content>
-      </mat-card>
-
-      <!-- Demand Forecast Chart -->
-      <app-demand-forecast-chart 
-        *ngIf="showDemandForecast && selectedProduct" 
-        [productoId]="selectedProduct.id">
-      </app-demand-forecast-chart>
-
-      <!-- Supplier Ranking Table (Placeholder) -->
-      <mat-card *ngIf="showSupplierRanking" class="suppliers-card">
-        <mat-card-header>
-          <mat-card-title>
-            <mat-icon>store</mat-icon>
-            3. Ranking de Proveedores (80/20)
-          </mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <p class="placeholder-text">
-            <mat-icon>construction</mat-icon>
-            Tabla de proveedores (próximo componente)
-          </p>
-        </mat-card-content>
-      </mat-card>
-    </div>
-
-    <!-- Right Column: Suggestion + Simulation + Approval -->
-    <div class="right-column">
-      
-      <!-- Loading Spinner -->
-      <mat-card *ngIf="isLoading" class="loading-card">
-        <mat-card-content class="loading-content">
-          <mat-spinner diameter="50"></mat-spinner>
-          <p>Generando sugerencia...</p>
-        </mat-card-content>
-      </mat-card>
-
       <!-- Order Suggestion Card -->
-      <ng-container *ngIf="showSuggestionCard && !isLoading && currentSuggestion">
+      <ng-container *ngIf="!isLoading && currentSuggestion">
         <app-order-suggestion-card
           [suggestion]="currentSuggestion"
           (accepted)="onSuggestionAccepted($event)"
@@ -98,31 +68,25 @@
         [proveedorId]="currentSuggestion.proveedor_id || 1"
         (scenarioSelected)="onScenarioSelected($event)">
       </app-cost-simulation-table>
-
-      <!-- Approval Workflow (Placeholder) -->
-      <mat-card *ngIf="showApprovalWorkflow" class="approval-card">
-        <mat-card-header>
-          <mat-card-title>
-            <mat-icon>approval</mat-icon>
-            6. Flujo de Aprobación Clase C
-          </mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <p class="placeholder-text">
-            <mat-icon>construction</mat-icon>
-            Workflow de aprobación (próximo componente)
-          </p>
-        </mat-card-content>
-      </mat-card>
-
-      <!-- Empty State -->
-      <mat-card *ngIf="!selectedProduct && !isLoading" class="empty-state-card">
-        <mat-card-content class="empty-state">
-          <mat-icon>info</mat-icon>
-          <h2>Bienvenido al Motor de Sugerencias</h2>
-          <p>Selecciona un producto en el buscador para comenzar</p>
-        </mat-card-content>
-      </mat-card>
     </div>
+
+    <!-- Loading State for Suggestion -->
+    <mat-card *ngIf="isLoading" class="loading-card">
+      <mat-card-content class="loading-content">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Generando sugerencia...</p>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Approval Workflow -->
+    <app-approval-workflow
+      *ngIf="showApprovalWorkflow && approvalRequestId"
+      [requestId]="approvalRequestId"
+      (approved)="onApprovalGranted($event)"
+      (rejected)="onApprovalDenied($event)">
+    </app-approval-workflow>
+
+    <!-- Suggestion History -->
+    <app-suggestion-history></app-suggestion-history>
   </div>
 </div>

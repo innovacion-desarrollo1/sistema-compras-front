@@ -8,7 +8,12 @@ import { ProductSearch } from '../product-search/product-search';
 import { DemandForecastChart } from '../demand-forecast-chart/demand-forecast-chart';
 import { OrderSuggestionCard } from '../order-suggestion-card/order-suggestion-card';
 import { CostSimulationTable } from '../cost-simulation-table/cost-simulation-table';
+import { SupplierRankingTableComponent } from '../supplier-ranking-table/supplier-ranking-table';
+import { ApprovalWorkflow } from '../approval-workflow/approval-workflow';
+import { SuggestionHistory } from '../suggestion-history/suggestion-history';
+import { MoleculeInventoryInfo } from '../molecule-inventory-info/molecule-inventory-info';
 import { Producto, SugerenciaOrden, SuggestionStateService } from '../../services/suggestion-state.service';
+import { Molecula } from '../../../../core/services/molecula.service';
 
 @Component({
   selector: 'app-module1-dashboard',
@@ -22,13 +27,19 @@ import { Producto, SugerenciaOrden, SuggestionStateService } from '../../service
     ProductSearch,
     DemandForecastChart,
     OrderSuggestionCard,
-    CostSimulationTable
+    CostSimulationTable,
+    SupplierRankingTableComponent,
+    ApprovalWorkflow,
+    SuggestionHistory,
+    MoleculeInventoryInfo
   ],
   templateUrl: './module1-dashboard.html',
   styleUrl: './module1-dashboard.scss',
 })
 export class Module1Dashboard {
   // State flags
+  selectedMolecula: Molecula | null = null;
+  periodoSemanas: number = 4;
   selectedProduct: Producto | null = null;
   currentSuggestion: SugerenciaOrden | null = null;
   approvalRequestId: number | null = null;
@@ -44,54 +55,56 @@ export class Module1Dashboard {
   constructor(private stateService: SuggestionStateService) {}
 
   // Event Handlers
-  onProductSelected(producto: Producto): void {
-    console.log('Product selected:', producto);
-    this.selectedProduct = producto;
-    this.stateService.updateSelectedProduct(producto);
+  onMoleculaSelected(event: {molecula: Molecula, periodo_semanas: number}): void {
+    console.log('Molécula seleccionada:', event.molecula, 'Periodo:', event.periodo_semanas, 'semanas');
+    this.selectedMolecula = event.molecula;
+    this.periodoSemanas = event.periodo_semanas;
     
     // Reset downstream state
     this.resetSuggestion();
     
-    // Trigger dependent components (will implement these next)
+    // Trigger dependent components
     this.showDemandForecast = true;
-    this.showSupplierRanking = true;
-    this.showSuggestionCard = true; // Simulate suggestion generation
-    
-    // TODO: Generate actual suggestion from backend
-    this._mockGenerateSuggestion(producto);
+    this.showSupplierRanking = true; // Show supplier ranking immediately
   }
 
-  private _mockGenerateSuggestion(producto: Producto): void {
-    // Simulate API call delay
+  // Cuando el usuario selecciona un proveedor (con bonificaciones aplicadas)
+  onSupplierSelected(data: any): void {
+    console.log('Proveedor seleccionado:', data);
+    // La orden se genera cuando el usuario selecciona proveedor
+    // data contiene: proveedor + bonificaciones aplicadas
+    this._generateSuggestion(data);
+  }
+
+  private _generateSuggestion(supplierData: any): void {
+    // Generación instantánea de orden basada en proveedor y bonificaciones
     this.isLoading = true;
-    setTimeout(() => {
-      const mockSuggestion: SugerenciaOrden = {
-        id: Math.floor(Math.random() * 10000),
-        producto_id: producto.id,
-        producto_nombre: producto.nombre_comercial,
-        cantidad_sugerida: Math.floor(Math.random() * 500) + 100,
-        unidad_medida: producto.unidad_medida,
-        proveedor_id: 1,
-        proveedor_nombre: 'Proveedor Demo SA',
-        precio_unitario: Math.random() * 5000 + 1000,
-        costo_total: 0, // Will calculate
-        es_clase_c: producto.es_clase_c,
-        estado_aprobacion: producto.es_clase_c ? 'PENDIENTE' : null,
-        created_at: new Date()
-      };
-      
-      mockSuggestion.costo_total = mockSuggestion.cantidad_sugerida * mockSuggestion.precio_unitario;
-      
-      this.currentSuggestion = mockSuggestion;
-      this.stateService.updateSuggestion(mockSuggestion);
-      this.showSuggestionCard = true;
-      this.showCostSimulation = true;
-      this.isLoading = false;
-      
-      if (mockSuggestion.es_clase_c) {
-        this.showApprovalWorkflow = true;
-      }
-    }, 1000);
+    
+    const mockSuggestion: SugerenciaOrden = {
+      id: Math.floor(Math.random() * 10000),
+      producto_id: 1, // TODO: link to actual product from molecula
+      producto_nombre: this.selectedMolecula?.nombre || '',
+      cantidad_sugerida: supplierData.cantidad_calculada || 300,
+      unidad_medida: 'unidades',
+      proveedor_id: supplierData.proveedor_id,
+      proveedor_nombre: supplierData.proveedor_nombre,
+      precio_unitario: supplierData.precio_unitario || 1000,
+      costo_total: supplierData.costo_total_con_bonificaciones || 0,
+      es_clase_c: this.selectedMolecula?.es_clase_c || false,
+      estado_aprobacion: this.selectedMolecula?.es_clase_c ? 'PENDIENTE' : null,
+      created_at: new Date()
+    };
+    
+    this.currentSuggestion = mockSuggestion;
+    this.stateService.updateSuggestion(mockSuggestion);
+    this.showSuggestionCard = true;
+    this.showCostSimulation = true;
+    this.isLoading = false;
+    
+    if (mockSuggestion.es_clase_c) {
+      this.showApprovalWorkflow = true;
+      this.approvalRequestId = mockSuggestion.id ?? null;
+    }
   }
 
   onSuggestionAccepted(suggestion: SugerenciaOrden): void {
@@ -99,15 +112,14 @@ export class Module1Dashboard {
       alert('No se puede aceptar sugerencia Clase C sin aprobación');
       return;
     }
-    console.log('Suggestion accepted:', suggestion);
-    // TODO: Emit order to ERP
+    console.log('Sugerencia aceptada:', suggestion);
     alert(`Orden creada exitosamente: ${suggestion.cantidad_sugerida} ${suggestion.unidad_medida} de ${suggestion.producto_nombre}`);
     this.resetWorkflow();
   }
 
   onSuggestionAdjusted(data: { suggestion: SugerenciaOrden, newQuantity: number }): void {
-    console.log('Suggestion adjusted:', data);
-    // TODO: Recalculate with new quantity
+    console.log('Sugerencia ajustada:', data);
+
     if (this.currentSuggestion) {
       this.currentSuggestion.cantidad_sugerida = data.newQuantity;
       this.currentSuggestion.costo_total = data.newQuantity * this.currentSuggestion.precio_unitario;
@@ -139,6 +151,23 @@ export class Module1Dashboard {
     this.showSuggestionCard = false;
     this.showCostSimulation = false;
     this.showApprovalWorkflow = false;
+  }
+
+  onApprovalGranted(event: any): void {
+    console.log('Approval granted:', event);
+    if (this.currentSuggestion) {
+      this.currentSuggestion.estado_aprobacion = 'APROBADO';
+      alert('Aprobación concedida. Ahora puedes emitir la orden.');
+    }
+  }
+
+  onApprovalDenied(event: any): void {
+    console.log('Approval denied:', event);
+    if (this.currentSuggestion) {
+      this.currentSuggestion.estado_aprobacion = 'RECHAZADO';
+      alert(`Aprobación rechazada: ${event.comentarios || 'Sin comentarios'}`);
+      this.resetWorkflow();
+    }
   }
 
   resetWorkflow(): void {

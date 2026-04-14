@@ -1,0 +1,111 @@
+﻿@import '../../../../../styles/themes/design-tokens';
+
+.approval-status-card {
+  margin: 16px 0;
+}
+
+mat-card-header {
+  mat-card-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    mat-icon {
+      color: $color-blue-600;
+      font-size: 24px;
+    }
+  }
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 32px;
+  p {
+    color: $color-gray-600;
+    font-style: italic;
+  }
+}
+
+.request-info {
+  margin: 16px 0;
+  h4 {
+    font-size: 18px;
+    font-weight: 600;
+    color: $color-blue-900;
+    margin-bottom: 12px;
+  }
+  p {
+    margin: 8px 0;
+    font-size: 14px;
+    color: $color-gray-700;
+  }
+}
+
+.approval-stepper {
+  margin: 16px 0;
+}
+
+.pending-state {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background-color: $semaphore-amarillo-bg;
+  border-left: 4px solid $semaphore-amarillo-border;
+  border-radius: 4px;
+  p {
+    color: $semaphore-amarillo-text;
+    font-weight: 500;
+  }
+}
+
+.estado-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-weight: 600;
+  margin: 12px 0;
+  mat-icon {
+    font-size: 20px;
+  }
+}
+
+.decision-details {
+  margin-top: 16px;
+  padding: 16px;
+  background-color: $color-gray-50;
+  border-radius: 8px;
+  p {
+    margin: 8px 0;
+  }
+  &.rejection {
+    background-color: $semaphore-rojo-bg;
+    border-left: 4px solid $semaphore-rojo-border;
+    .rejection-icon {
+      font-size: 48px;
+      color: $semaphore-rojo-text;
+      margin-bottom: 12px;
+    }
+  }
+}
+
+.semaphore-chip-verde {
+  background-color: $semaphore-verde-bg;
+  color: $semaphore-verde-text;
+  border: 1px solid $semaphore-verde-border;
+}
+
+.semaphore-chip-amarillo {
+  background-color: $semaphore-amarillo-bg;
+  color: $semaphore-amarillo-text;
+  border: 1px solid $semaphore-amarillo-border;
+}
+
+.semaphore-chip-rojo {
+  background-color: $semaphore-rojo-bg;
+  color: $semaphore-rojo-text;
+  border: 1px solid $semaphore-rojo-border;
+}
