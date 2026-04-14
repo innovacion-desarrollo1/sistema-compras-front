@@ -341,7 +341,7 @@
 // ==============================
 .actions-cell {
   text-align: right;
-  width: 280px;
+  width: 320px;
 }
 
 .actions-group {
@@ -351,7 +351,16 @@
   align-items: flex-end;
 }
 
-.select-btn {
+.quantity-field {
+  width: 90px;
+
+  .quantity-input {
+    text-align: center;
+    font-weight: 600;
+  }
+}
+
+.add-cart-btn {
   mat-icon {
     margin-right: 4px;
   }
@@ -544,6 +553,141 @@
     width: 14px;
     height: 14px;
   }
+}
+
+// ==============================
+// BONIFICACIONES COLUMN (Informational Status with Details)
+// ==============================
+.bonif-cell {
+  min-width: 200px;
+  max-width: 280px;
+}
+
+.bonif-status {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+
+  &:hover {
+    background-color: rgba($color-blue-500, 0.08);
+    border-color: $color-blue-300;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba($color-blue-500, 0.15);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Con bonificaciones - Contenido
+.has-bonif-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .bonif-header-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    .bonif-icon {
+      color: $semaphore-verde-text;
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .bonif-count {
+      font-size: 13px;
+      font-weight: 700;
+      color: $semaphore-verde-text;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+  }
+
+  .bonif-list-preview {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-left: 4px;
+  }
+
+  .bonif-preview-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: $color-gray-700;
+    line-height: 1.3;
+
+    .bonif-type-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+      color: $color-blue-600;
+      flex-shrink: 0;
+    }
+
+    .bonif-preview-text {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-weight: 500;
+    }
+  }
+
+  .bonif-more {
+    font-size: 11px;
+    color: $color-gray-500;
+    font-style: italic;
+    margin-left: 20px;
+    font-weight: 600;
+  }
+}
+
+// Sin bonificaciones - Contenido
+.no-bonif-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px;
+
+  .bonif-icon-empty {
+    color: $color-gray-400;
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+  }
+
+  .bonif-empty-text {
+    font-size: 13px;
+    color: $color-gray-600;
+    font-weight: 600;
+  }
+
+  .bonif-hint {
+    font-size: 10px;
+    color: $color-gray-500;
+    font-style: italic;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+  }
+}
+
+.bonif-status:hover .no-bonif-content .bonif-hint {
+  color: $color-blue-700;
+  font-weight: 700;
 }
 
 // ==============================

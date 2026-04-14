@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { Bonificacion } from './bonificacion.service';
 
 export interface ProveedorRanking {
   ranking: number;
@@ -25,7 +26,7 @@ export interface ProveedorRanking {
   
   score_final_80_20: number; // Lower is better
   requiere_aprobacion: boolean; // Clase C flag
-  bonificaciones_aplicadas: string[];
+  bonificaciones_aplicadas: Bonificacion[]; // Bonificaciones activas para este proveedor-producto
 }
 
 @Injectable({ providedIn: 'root' })
@@ -75,7 +76,36 @@ export class SupplierRankingService {
         cumplimiento_plazo_entrega: 88.5,
         score_final_80_20: 1268.4,
         requiere_aprobacion: [3, 7, 9, 10, 13].includes(productoId),
-        bonificaciones_aplicadas: ['8+2 promo', 'Volume discount 10%']
+        bonificaciones_aplicadas: [
+          {
+            id: 1,
+            proveedor_id: 101,
+            proveedor_nombre: 'Droguería Coopidrogas S.A.',
+            molecula_id: productoId,
+            tipo: 'UNIDADES_GRATIS',
+            valor: 0,
+            descripcion: 'Compra 8, lleva 10 (8+2 gratis)',
+            unidades_compradas: 8,
+            unidades_gratis: 2,
+            fecha_inicio: new Date('2026-01-01'),
+            fecha_fin: null,
+            es_vigente: true,
+            es_permanente: true
+          },
+          {
+            id: 2,
+            proveedor_id: 101,
+            proveedor_nombre: 'Droguería Coopidrogas S.A.',
+            molecula_id: productoId,
+            tipo: 'PORCENTAJE',
+            valor: 10,
+            descripcion: 'Descuento por volumen 10% (>100 unidades)',
+            fecha_inicio: new Date('2026-01-01'),
+            fecha_fin: null,
+            es_vigente: true,
+            es_permanente: true
+          }
+        ]
       },
       {
         ranking: 2,
@@ -94,7 +124,21 @@ export class SupplierRankingService {
         cumplimiento_plazo_entrega: 81.0,
         score_final_80_20: 1329.0,
         requiere_aprobacion: false,
-        bonificaciones_aplicadas: ['Early payment 10%']
+        bonificaciones_aplicadas: [
+          {
+            id: 3,
+            proveedor_id: 102,
+            proveedor_nombre: 'Distribuidora La Cruz Verde S.A.S.',
+            molecula_id: productoId,
+            tipo: 'PORCENTAJE',
+            valor: 8,
+            descripcion: '8% descuento por pago anticipado',
+            fecha_inicio: new Date('2026-01-01'),
+            fecha_fin: null,
+            es_vigente: true,
+            es_permanente: true
+          }
+        ]
       },
       // MID TIER - KPIs medios, precios variados
       {
@@ -114,7 +158,21 @@ export class SupplierRankingService {
         cumplimiento_plazo_entrega: 64.0,
         score_final_80_20: 1536.0,
         requiere_aprobacion: false,
-        bonificaciones_aplicadas: ['Volume discount 10%']
+        bonificaciones_aplicadas: [
+          {
+            id: 5,
+            proveedor_id: 103,
+            proveedor_nombre: 'Laboratorios Phoenix S.A.',
+            molecula_id: productoId,
+            tipo: 'PORCENTAJE',
+            valor: 10,
+            descripcion: '10% descuento de lealtad (cliente frecuente)',
+            fecha_inicio: new Date('2026-01-01'),
+            fecha_fin: null,
+            es_vigente: true,
+            es_permanente: true
+          }
+        ]
       },
       {
         ranking: 4,
@@ -153,7 +211,21 @@ export class SupplierRankingService {
         cumplimiento_plazo_entrega: 54.0,
         score_final_80_20: 1012.0,
         requiere_aprobacion: false,
-        bonificaciones_aplicadas: ['Liquidación 20%']
+        bonificaciones_aplicadas: [
+          {
+            id: 6,
+            proveedor_id: 105,
+            proveedor_nombre: 'Distribuciones Medifar S.A.S.',
+            molecula_id: productoId,
+            tipo: 'PORCENTAJE',
+            valor: 20,
+            descripcion: 'Liquidación de inventario 20%',
+            fecha_inicio: new Date('2026-04-01'),
+            fecha_fin: new Date('2026-04-30'),
+            es_vigente: true,
+            es_permanente: false
+          }
+        ]
       },
       {
         ranking: 6,
@@ -172,7 +244,21 @@ export class SupplierRankingService {
         cumplimiento_plazo_entrega: 91.0,
         score_final_80_20: 1722.0,
         requiere_aprobacion: false,
-        bonificaciones_aplicadas: ['Descuento 5%']
+        bonificaciones_aplicadas: [
+          {
+            id: 13,
+            proveedor_id: 106,
+            proveedor_nombre: 'Droguerías Pasteur Ltda.',
+            molecula_id: productoId,
+            tipo: 'PORCENTAJE',
+            valor: 5,
+            descripcion: 'Descuento corporativo 5%',
+            fecha_inicio: new Date('2026-01-01'),
+            fecha_fin: null,
+            es_vigente: true,
+            es_permanente: true
+          }
+        ]
       },
       // PREMIUM - Excelentes KPIs, precios altos
       {
@@ -192,7 +278,21 @@ export class SupplierRankingService {
         cumplimiento_plazo_entrega: 93.5,
         score_final_80_20: 1872.8,
         requiere_aprobacion: [10, 13].includes(productoId),
-        bonificaciones_aplicadas: ['Promo Q2 15%']
+        bonificaciones_aplicadas: [
+          {
+            id: 14,
+            proveedor_id: 107,
+            proveedor_nombre: 'Laboratorios Baxter Colombia S.A.',
+            molecula_id: productoId,
+            tipo: 'PORCENTAJE',
+            valor: 15,
+            descripcion: 'Promoción Q2 2026 - 15%',
+            fecha_inicio: new Date('2026-04-01'),
+            fecha_fin: new Date('2026-06-30'),
+            es_vigente: true,
+            es_permanente: false
+          }
+        ]
       },
       // BUDGET - Precio muy bajo, KPIs muy malos
       {

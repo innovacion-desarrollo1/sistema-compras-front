@@ -5,12 +5,24 @@
     <img src="assets/images/Logo-DUANA.png" alt="DUANA" class="logo">
     <span class="title">Motor de Sugerencias Manuales</span>
     <span class="spacer"></span>
+    <button mat-icon-button 
+      (click)="showCart = !showCart" 
+      [matBadge]="cartService.getItemCount() || null" 
+      matBadgeColor="warn" 
+      matBadgeSize="small"
+      [matBadgeHidden]="cartService.getItemCount() === 0"
+      aria-label="Ver carrito de compras">
+      <mat-icon>shopping_cart</mat-icon>
+    </button>
     <mat-icon>account_circle</mat-icon>
   </mat-toolbar>
 
   <!-- Main Content -->
   <div class="dashboard-content">
-    
+
+    <!-- Cart View (toggled from toolbar) -->
+    <app-cart-view *ngIf="showCart"></app-cart-view>
+
     <!-- Step 1: Molecula Search + Period Selection -->
     <mat-card class="search-card">
       <mat-card-header>
@@ -33,11 +45,15 @@
       [periodoSemanas]="periodoSemanas">
     </app-molecule-inventory-info>
 
-    <!-- Step 3: Supplier Comparison & Bonifications -->
+    <!-- Step 3: Supplier Comparison & Bonifications — Direct Add to Cart -->
     <app-supplier-ranking-table 
       *ngIf="showSupplierRanking && selectedMolecula" 
       [productoId]="selectedMolecula.id"
       [periodoSemanas]="periodoSemanas"
+      [moleculaNombre]="selectedMolecula.nombre"
+      [moleculaFamilia]="selectedMolecula.familia"
+      [esClaseC]="selectedMolecula.es_clase_c"
+      (addedToCart)="onCartUpdated()"
       (supplierSelected)="onSupplierSelected($event)">
     </app-supplier-ranking-table>
 
@@ -56,7 +72,8 @@
           [suggestion]="currentSuggestion"
           (accepted)="onSuggestionAccepted($event)"
           (adjusted)="onSuggestionAdjusted($event)"
-          (rejected)="onSuggestionRejected($event)">
+          (rejected)="onSuggestionRejected($event)"
+          (addedToCart)="onAddedToCart($event)">
         </app-order-suggestion-card>
       </ng-container>
 

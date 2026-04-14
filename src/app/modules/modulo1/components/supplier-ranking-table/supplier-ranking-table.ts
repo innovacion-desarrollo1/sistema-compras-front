@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
@@ -8,22 +9,23 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { trigger, state, style, transition, animate } from '@angular/animations';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { SupplierRankingService, ProveedorRanking } from '../../../../core/services/supplier-ranking.service';
-import { BonificacionService, Bonificacion } from '../../../../core/services/bonificacion.service';
 import { CostoProveedorService } from '../../../../core/services/costo-proveedor.service';
-import { CreateBonificacionDialog } from '../create-bonificacion-dialog/create-bonificacion-dialog';
+import { CartService } from '../../../../core/services/cart.service';
 import { UpdateCostoDialog } from '../update-costo-dialog/update-costo-dialog';
+import { GestionarBonificacionesDialog } from '../gestionar-bonificaciones-dialog/gestionar-bonificaciones-dialog';
 
 @Component({
   selector: 'app-supplier-ranking-table',
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     MatCardModule,
     MatIconModule,
     MatTableModule,
@@ -32,31 +34,30 @@ import { UpdateCostoDialog } from '../update-costo-dialog/update-costo-dialog';
     MatProgressBarModule,
     MatTooltipModule,
     MatProgressSpinnerModule,
-    MatCheckboxModule,
     MatDividerModule,
     MatDialogModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatInputModule,
+    MatFormFieldModule
   ],
   templateUrl: './supplier-ranking-table.html',
-  styleUrls: ['./supplier-ranking-table.scss'],
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed', style({ height: '0px', minHeight: '0', display: 'none' })),
-      state('expanded', style({ height: '*' })),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
-    ])
-  ]
+  styleUrls: ['./supplier-ranking-table.scss']
 })
 export class SupplierRankingTableComponent implements OnInit, OnChanges {
   @Input() productoId!: number;
   @Input() periodoSemanas: number = 4;
+  @Input() moleculaNombre: string = '';
+  @Input() moleculaFamilia: number = 1;
+  @Input() esClaseC: boolean = false;
   @Output() supplierSelected = new EventEmitter<any>();
+  @Output() addedToCart = new EventEmitter<void>();
 
   suppliers: ProveedorRanking[] = [];
-  bonificacionesBySupplier: Map<number, Bonificacion[]> = new Map();
   selectedSupplier: ProveedorRanking | null = null;
-  expandedSupplier: number | null = null; // For inline bonificaciones expansion
   isLoading = true;
+
+  /** Cantidad editable por proveedor (proveedor_id → cantidad) */
+  cantidades: Map<number, number> = new Map();
 
   displayedColumns: string[] = [
     'ranking',
@@ -69,8 +70,8 @@ export class SupplierRankingTableComponent implements OnInit, OnChanges {
 
   constructor(
     private rankingService: SupplierRankingService,
-    private bonificacionService: BonificacionService,
     private costoProveedorService: CostoProveedorService,
+    private cartService: CartService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
   ) {}
@@ -92,9 +93,11 @@ export class SupplierRankingTableComponent implements OnInit, OnChanges {
     this.rankingService.getRanking(this.productoId).subscribe({
       next: (data) => {
         this.suppliers = data;
-        // Load bonifications for each supplier
-        this.suppliers.forEach(supplier => {
-          this.loadBonificaciones(supplier.proveedor_id);
+        // Pre-fill quantities for each supplier
+        data.forEach(s => {
+          if (!this.cantidades.has(s.proveedor_id)) {
+            this.cantidades.set(s.proveedor_id, this.calculateCantidadSugerida(s));
+          }
         });
         this.isLoading = false;
       },
@@ -105,50 +108,66 @@ export class SupplierRankingTableComponent implements OnInit, OnChanges {
     });
   }
 
-  loadBonificaciones(proveedor_id: number): void {
-    this.bonificacionService.getBonificacionesVigentes(proveedor_id, this.productoId).subscribe({
-      next: (bonificaciones) => {
-        this.bonificacionesBySupplier.set(proveedor_id, bonificaciones);
+  /** Obtiene la cantidad editable para un proveedor */
+  getCantidad(supplierId: number): number {
+    return this.cantidades.get(supplierId) ?? 0;
+  }
+
+  /** Actualiza la cantidad cuando el usuario edita el input */
+  onCantidadChange(supplierId: number, value: number): void {
+    this.cantidades.set(supplierId, Math.max(1, Math.round(value)));
+  }
+
+  /** Agrega directamente al carrito desde la tabla */
+  addToCart(supplier: ProveedorRanking): void {
+    const cantidad = this.getCantidad(supplier.proveedor_id);
+    if (cantidad <= 0) {
+      this.snackBar.open('La cantidad debe ser mayor a 0', 'Cerrar', { duration: 3000 });
+      return;
+    }
+
+    this.cartService.addItem({
+      producto_id: this.productoId,
+      nombre_comercial: this.moleculaNombre,
+      molecula: this.moleculaNombre,
+      familia: this.moleculaFamilia,
+      cantidad: cantidad,
+      moq: 1, // TODO: obtener MOQ real del proveedor
+      proveedor_id: supplier.proveedor_id,
+      proveedor_nombre: supplier.proveedor_nombre,
+      precio_lista: supplier.precio_lista,
+      bonificaciones: supplier.bonificaciones_total,
+      costo_real_neto: supplier.costo_real_neto,
+      es_clase_c: this.esClaseC || supplier.requiere_aprobacion
+    }).subscribe({
+      next: () => {
+        this.snackBar.open(
+          `${this.moleculaNombre} × ${cantidad} agregado al carrito (${supplier.proveedor_nombre})`,
+          'Ver Carrito',
+          { duration: 4000 }
+        ).onAction().subscribe(() => this.addedToCart.emit());
+        this.addedToCart.emit();
       },
       error: (err) => {
-        console.error(`Error al cargar bonificaciones para proveedor ${proveedor_id}:`, err);
+        const msg = err?.error?.message || 'Error al agregar al carrito';
+        this.snackBar.open(msg, 'Cerrar', { duration: 3000 });
       }
     });
-  }
-
-  getBonificaciones(proveedor_id: number): Bonificacion[] {
-    return this.bonificacionesBySupplier.get(proveedor_id) || [];
-  }
-
-  toggleBonificacion(bonificacion: Bonificacion, event: any): void {
-    if (event.checked) {
-      this.bonificacionService.applyBonificacion(bonificacion);
-    } else {
-      this.bonificacionService.removeBonificacion(bonificacion.id!);
-    }
-    // Recalcular costo con bonificaciones aplicadas
-    if (this.selectedSupplier && this.selectedSupplier.proveedor_id === bonificacion.proveedor_id) {
-      this.updateCostoConBonificaciones(this.selectedSupplier);
-    }
   }
 
   selectSupplierForOrder(supplier: ProveedorRanking): void {
     this.selectedSupplier = supplier;
     
-    // Calcular cantidad sugerida basada en periodo
-    const cantidad_calculada = this.calculateCantidadSugerida(supplier);
+    const cantidad_calculada = this.getCantidad(supplier.proveedor_id);
+    const costo_total = supplier.costo_real_neto * cantidad_calculada;
     
-    // Calcular costo con bonificaciones aplicadas
-    const costoData = this.updateCostoConBonificaciones(supplier);
-    
-    // Emit to parent
     this.supplierSelected.emit({
       proveedor_id: supplier.proveedor_id,
       proveedor_nombre: supplier.proveedor_nombre,
       precio_unitario: supplier.costo_real_neto,
       cantidad_calculada: cantidad_calculada,
-      costo_total_con_bonificaciones: costoData.costo_total,
-      bonificaciones_aplicadas: this.bonificacionService.getAppliedBonificaciones()
+      costo_total: costo_total,
+      bonificaciones_aplicadas: supplier.bonificaciones_aplicadas || []
     });
   }
 
@@ -156,38 +175,6 @@ export class SupplierRankingTableComponent implements OnInit, OnChanges {
     // Simulación: 50 unidades por semana
     const demanda_semanal = 50;
     return demanda_semanal * this.periodoSemanas;
-  }
-
-  private updateCostoConBonificaciones(supplier: ProveedorRanking): {costo_unitario: number, costo_total: number} {
-    const cantidad = this.calculateCantidadSugerida(supplier);
-    const precio_lista = supplier.costo_real_neto; // Base price
-    
-    const descuento_total = this.bonificacionService.calculateTotalDiscount(precio_lista, cantidad);
-    const costo_total = (precio_lista * cantidad) - descuento_total;
-    const costo_unitario = costo_total / cantidad;
-    
-    return { costo_unitario, costo_total };
-  }
-
-  toggleBonificacionesRow(supplierId: number): void {
-    this.expandedSupplier = this.expandedSupplier === supplierId ? null : supplierId;
-  }
-
-  isRowExpanded(supplierId: number): boolean {
-    return this.expandedSupplier === supplierId;
-  }
-
-  hasBonificaciones(supplierId: number): boolean {
-    const bonifs = this.getBonificaciones(supplierId);
-    return bonifs.length > 0;
-  }
-
-  getBonificacionesCount(supplierId: number): number {
-    return this.getBonificaciones(supplierId).length;
-  }
-
-  getAppliedBonificacionesCount(supplierId: number): number {
-    return this.getBonificaciones(supplierId).filter(b => b.aplicada_a_orden).length;
   }
 
   getSemaphoreColor(supplier: ProveedorRanking, index: number): string {
@@ -215,67 +202,72 @@ export class SupplierRankingTableComponent implements OnInit, OnChanges {
     this.supplierSelected.emit(supplier);
   }
 
-  openCreateBonificacionDialog(supplier: ProveedorRanking): void {
-    const dialogRef = this.dialog.open(CreateBonificacionDialog, {
-      width: '500px',
-      data: {
-        proveedor_id: supplier.proveedor_id,
-        proveedor_nombre: supplier.proveedor_nombre,
-        molecula_id: this.productoId
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        // Create bonification via service
-        this.bonificacionService.createBonificacion(result).subscribe({
-          next: (newBonif) => {
-            console.log('Bonificación creada:', newBonif);
-            // Reload bonifications for this supplier
-            this.loadBonificaciones(supplier.proveedor_id);
-          },
-          error: (err) => {
-            console.error('Error al crear bonificación:', err);
-          }
-        });
-      }
-    });
-  }
-
   isTopSupplier(index: number): boolean {
     return index === 0;
   }
 
-  isExpandableRow = (): boolean => {
-    return true; // All rows can be expanded
-  };
-
   /**
-   * Abre el dialog para actualizar el precio de un proveedor
+   * Abre el dialog para gestionar bonificaciones del proveedor
    */
-  openUpdateCostoDialog(supplier: ProveedorRanking): void {
-    const dialogRef = this.dialog.open(UpdateCostoDialog, {
-      width: '500px',
+  openGestionarBonificacionesDialog(supplier: ProveedorRanking): void {
+    const dialogRef = this.dialog.open(GestionarBonificacionesDialog, {
+      width: '700px',
+      maxHeight: '90vh',
       data: {
         proveedor_id: supplier.proveedor_id,
         proveedor_nombre: supplier.proveedor_nombre,
         producto_id: this.productoId,
-        costo_actual: supplier.costo_real_neto
+        bonificaciones_actuales: supplier.bonificaciones_aplicadas || []
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log('Bonificaciones actualizadas:', result);
+        // TODO: Actualizar las bonificaciones del proveedor vía servicio
+        // this.costoProveedorService.updateBonificaciones(...).subscribe(...);
+        
+        this.snackBar.open(
+          `Bonificaciones actualizadas para ${supplier.proveedor_nombre}`,
+          'Cerrar',
+          { duration: 3000 }
+        );
+        
+        // Recargar suppliers para reflejar cambios
+        this.loadRanking();
+      }
+    });
+  }
+
+  /**
+   * Abre el dialog para actualizar el precio de un proveedor
+   */
+  openUpdateCostoDialog(supplier: ProveedorRanking, scrollTo?: string): void {
+    const dialogRef = this.dialog.open(UpdateCostoDialog, {
+      width: '650px',
+      maxHeight: '90vh',
+      data: {
+        proveedor_id: supplier.proveedor_id,
+        proveedor_nombre: supplier.proveedor_nombre,
+        producto_id: this.productoId,
+        precio_lista_actual: supplier.precio_lista,
+        bonificaciones_actuales: supplier.bonificaciones_aplicadas || [],
+        scrollTo: scrollTo  // 'bonificaciones' si se clickea la columna
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // Actualizar costo a través del servicio
+        // Actualizar precio a través del servicio
         this.costoProveedorService.updateCosto(result).subscribe({
           next: () => {
-            console.log('[Supplier Ranking] Costo actualizado exitosamente:', result);
+            console.log('[Supplier Ranking] Precio Lista actualizado exitosamente:', result);
             
             // Recargar ranking para reflejar el nuevo precio
             this.loadRanking();
             
             this.snackBar.open(
-              `Precio actualizado para ${supplier.proveedor_nombre}: $${result.costo_anterior} → $${result.nuevo_costo}`,
+              `Precio Lista actualizado para ${supplier.proveedor_nombre}: $${result.precio_lista_anterior.toFixed(0)} → $${result.precio_lista.toFixed(0)} | Neto Real: $${result.precio_neto_calculado.toFixed(0)}`,
               'Cerrar',
               { duration: 5000 }
             );

@@ -12,6 +12,8 @@ export interface Bonificacion {
   fecha_inicio: Date;
   fecha_fin: Date | null; // null = permanent
   es_vigente: boolean;
+  es_permanente?: boolean; // true si no tiene fecha de vencimiento
+  vigente?: boolean; // Alias for es_vigente (compatibility)
   aplicada_a_orden?: boolean; // UI state: is this bonification selected for current order?
   // For "compra X, lleva Y" type bonifications
   unidades_compradas?: number;
@@ -232,6 +234,11 @@ export class BonificacionService {
       es_vigente: true
     }
   ];
+
+  // Get all bonifications (useful for management UI)
+  getBonificaciones(): Observable<Bonificacion[]> {
+    return of(this.mockBonificaciones);
+  }
 
   // Get active bonifications for a supplier and molecule
   getBonificacionesVigentes(proveedor_id: number, molecula_id: number): Observable<Bonificacion[]> {

@@ -4,6 +4,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonModule } from '@angular/material/button';
+import { MatBadgeModule } from '@angular/material/badge';
 import { ProductSearch } from '../product-search/product-search';
 import { OrderSuggestionCard } from '../order-suggestion-card/order-suggestion-card';
 import { CostSimulationTable } from '../cost-simulation-table/cost-simulation-table';
@@ -11,8 +13,10 @@ import { SupplierRankingTableComponent } from '../supplier-ranking-table/supplie
 import { ApprovalWorkflow } from '../approval-workflow/approval-workflow';
 import { SuggestionHistory } from '../suggestion-history/suggestion-history';
 import { MoleculeInventoryInfo } from '../molecule-inventory-info/molecule-inventory-info';
+import { CartView } from '../cart-view/cart-view';
 import { Producto, SugerenciaOrden, SuggestionStateService } from '../../services/suggestion-state.service';
 import { Molecula } from '../../../../core/services/molecula.service';
+import { CartService } from '../../../../core/services/cart.service';
 
 @Component({
   selector: 'app-module1-dashboard',
@@ -23,13 +27,16 @@ import { Molecula } from '../../../../core/services/molecula.service';
     MatIconModule,
     MatCardModule,
     MatProgressSpinnerModule,
+    MatButtonModule,
+    MatBadgeModule,
     ProductSearch,
     OrderSuggestionCard,
     CostSimulationTable,
     SupplierRankingTableComponent,
     ApprovalWorkflow,
     SuggestionHistory,
-    MoleculeInventoryInfo
+    MoleculeInventoryInfo,
+    CartView
   ],
   templateUrl: './module1-dashboard.html',
   styleUrl: './module1-dashboard.scss',
@@ -48,9 +55,13 @@ export class Module1Dashboard {
   showSuggestionCard = false;
   showCostSimulation = false;
   showApprovalWorkflow = false;
+  showCart = false;
   isLoading = false;
 
-  constructor(private stateService: SuggestionStateService) {}
+  constructor(
+    private stateService: SuggestionStateService,
+    public cartService: CartService
+  ) {}
 
   // Event Handlers
   onMoleculaSelected(event: {molecula: Molecula, periodo_semanas: number}): void {
@@ -141,6 +152,16 @@ export class Module1Dashboard {
     // TODO: Log rejection to audit trail
     alert(`Sugerencia rechazada: ${data.reason}`);
     this.resetWorkflow();
+  }
+
+  onAddedToCart(suggestion: SugerenciaOrden): void {
+    console.log('Producto agregado al carrito:', suggestion);
+    this.showCart = true;
+  }
+
+  /** Called when supplier-ranking-table adds an item directly to cart */
+  onCartUpdated(): void {
+    this.showCart = true;
   }
 
   resetSuggestion(): void {

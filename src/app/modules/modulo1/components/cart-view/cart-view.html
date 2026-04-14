@@ -1,0 +1,264 @@
+<!-- Empty Cart State -->
+<div class="cart-empty" *ngIf="!cart || cart.items.length === 0">
+  <mat-card class="empty-card">
+    <mat-card-content class="empty-content">
+      <mat-icon class="empty-icon">shopping_cart</mat-icon>
+      <h2>El carrito está vacío</h2>
+      <p>Agrega productos desde las sugerencias de orden para comenzar.</p>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<!-- Cart Content -->
+<div class="cart-container" *ngIf="cart && cart.items.length > 0">
+
+  <!-- Cart Header -->
+  <mat-card class="cart-header-card">
+    <mat-card-header>
+      <mat-card-title class="cart-title">
+        <mat-icon>shopping_cart</mat-icon>
+        <span>Carrito de Compras</span>
+        <mat-chip [ngClass]="getEstadoClass(cart.estado)" class="estado-chip">
+          <mat-icon class="chip-icon">{{ getEstadoIcon(cart.estado) }}</mat-icon>
+          {{ getEstadoLabel(cart.estado) }}
+        </mat-chip>
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Summary Stats -->
+      <div class="cart-stats">
+        <div class="stat-item">
+          <mat-icon>inventory_2</mat-icon>
+          <div class="stat-content">
+            <span class="stat-value">{{ cart.total_productos }}</span>
+            <span class="stat-label">Productos</span>
+          </div>
+        </div>
+        <div class="stat-item">
+          <mat-icon>store</mat-icon>
+          <div class="stat-content">
+            <span class="stat-value">{{ cart.proveedores_unicos }}</span>
+            <span class="stat-label">Proveedores</span>
+          </div>
+        </div>
+        <div class="stat-item stat-total">
+          <mat-icon>payments</mat-icon>
+          <div class="stat-content">
+            <span class="stat-value">{{ formatCurrency(cart.total_costo) }}</span>
+            <span class="stat-label">Costo Total</span>
+          </div>
+        </div>
+        <div class="stat-item stat-warning" *ngIf="cart.tiene_clase_c">
+          <mat-icon>gavel</mat-icon>
+          <div class="stat-content">
+            <span class="stat-value">Clase C</span>
+            <span class="stat-label">Requiere aprobación</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rejection Notice -->
+      <div class="rejection-notice" *ngIf="cart.comentario_rechazo && cart.estado === 'DRAFT'">
+        <mat-icon>warning</mat-icon>
+        <div>
+          <strong>Carrito devuelto por Jefe de Compras:</strong>
+          <p>{{ cart.comentario_rechazo }}</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Cart Items Table -->
+  <mat-card class="cart-table-card">
+    <mat-card-header>
+      <mat-card-title class="table-title">
+        <span>Productos en el carrito</span>
+        <button
+          mat-stroked-button
+          (click)="toggleSupplierGrouping()"
+          matTooltip="Ver cómo se dividirán las órdenes por proveedor">
+          <mat-icon>{{ showSupplierGrouping ? 'view_list' : 'account_tree' }}</mat-icon>
+          {{ showSupplierGrouping ? 'Vista Lista' : 'Vista por Proveedor' }}
+        </button>
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Standard Table View -->
+      <div class="table-container" *ngIf="!showSupplierGrouping">
+        <table mat-table [dataSource]="cart.items" class="cart-table">
+
+          <!-- Producto Column -->
+          <ng-container matColumnDef="producto">
+            <th mat-header-cell *matHeaderCellDef>Producto</th>
+            <td mat-cell *matCellDef="let item">
+              <div class="product-cell">
+                <strong>{{ item.nombre_comercial }}</strong>
+                <span class="molecula-text">{{ item.molecula }}</span>
+                <small class="familia-text">Familia {{ item.familia }}</small>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Proveedor Column -->
+          <ng-container matColumnDef="proveedor">
+            <th mat-header-cell *matHeaderCellDef>Proveedor</th>
+            <td mat-cell *matCellDef="let item">{{ item.proveedor_nombre }}</td>
+          </ng-container>
+
+          <!-- Cantidad Column -->
+          <ng-container matColumnDef="cantidad">
+            <th mat-header-cell *matHeaderCellDef>Cantidad</th>
+            <td mat-cell *matCellDef="let item">
+              <div class="quantity-cell">
+                <input
+                  *ngIf="isEditable()"
+                  type="number"
+                  class="quantity-input"
+                  [value]="item.cantidad"
+                  [min]="item.moq"
+                  (change)="onQuantityChange(item, $event)"
+                >
+                <span *ngIf="!isEditable()">{{ item.cantidad }}</span>
+                <small class="moq-hint">MOQ: {{ item.moq }}</small>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Costo Unitario Column -->
+          <ng-container matColumnDef="costo_unitario">
+            <th mat-header-cell *matHeaderCellDef>Costo Unitario</th>
+            <td mat-cell *matCellDef="let item">
+              <div class="cost-cell">
+                <span class="precio-lista">{{ formatCurrency(item.precio_lista) }}</span>
+                <span class="bonificacion" *ngIf="item.bonificaciones > 0">
+                  - {{ formatCurrency(item.bonificaciones) }}
+                </span>
+                <strong class="costo-neto">{{ formatCurrency(item.costo_real_neto) }}</strong>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Costo Total Column -->
+          <ng-container matColumnDef="costo_total">
+            <th mat-header-cell *matHeaderCellDef>Costo Total</th>
+            <td mat-cell *matCellDef="let item">
+              <strong>{{ formatCurrency(item.costo_total) }}</strong>
+            </td>
+          </ng-container>
+
+          <!-- Clase C Column -->
+          <ng-container matColumnDef="clase_c">
+            <th mat-header-cell *matHeaderCellDef>Gobernanza</th>
+            <td mat-cell *matCellDef="let item">
+              <mat-chip class="clase-c-chip" *ngIf="item.es_clase_c">
+                <mat-icon>gavel</mat-icon>
+                Clase C
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Agregado Por Column -->
+          <ng-container matColumnDef="agregado_por">
+            <th mat-header-cell *matHeaderCellDef>Agregado por</th>
+            <td mat-cell *matCellDef="let item">
+              <small>{{ item.agregado_por_usuario_nombre }}</small>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let item">
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="onRemoveItem(item)"
+                [disabled]="!isEditable()"
+                matTooltip="Eliminar del carrito">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+
+      <!-- Supplier Grouping View -->
+      <div class="supplier-grouping" *ngIf="showSupplierGrouping">
+        <div class="supplier-group" *ngFor="let group of supplierGroups">
+          <div class="supplier-group-header">
+            <mat-icon>store</mat-icon>
+            <strong>{{ group.proveedor_nombre }}</strong>
+            <span class="group-summary">
+              {{ group.items.length }} productos · {{ formatCurrency(group.total) }}
+            </span>
+          </div>
+          <div class="supplier-group-items">
+            <div class="group-item" *ngFor="let item of group.items">
+              <span class="group-item-name">{{ item.nombre_comercial }}</span>
+              <span class="group-item-qty">{{ item.cantidad }} uds</span>
+              <span class="group-item-cost">{{ formatCurrency(item.costo_total) }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="grouping-note">
+          <mat-icon>info</mat-icon>
+          Se crearán <strong>{{ supplierGroups.length }}</strong> órdenes de compra separadas, una por proveedor.
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Cart Actions -->
+  <mat-card class="cart-actions-card">
+    <mat-card-content class="actions-row">
+
+      <!-- Auxiliar Actions -->
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="onSubmitForReview()"
+        [disabled]="!canSubmitCart()"
+        *ngIf="userRole === 'AUXILIAR_COMPRAS' || userRole === 'JEFE_COMPRAS'">
+        <mat-icon>send</mat-icon>
+        Enviar a Validación
+      </button>
+
+      <!-- Jefe Actions -->
+      <ng-container *ngIf="userRole === 'JEFE_COMPRAS'">
+        <button
+          mat-raised-button
+          color="accent"
+          (click)="onApproveCart()"
+          [disabled]="!canApproveCart()">
+          <mat-icon>check_circle</mat-icon>
+          Aprobar Carrito
+        </button>
+
+        <button
+          mat-stroked-button
+          color="warn"
+          (click)="onRejectCart()"
+          [disabled]="!canRejectCart()">
+          <mat-icon>undo</mat-icon>
+          Solicitar Cambios
+        </button>
+
+        <button
+          mat-raised-button
+          color="primary"
+          class="send-orders-btn"
+          (click)="onSendOrders()"
+          [disabled]="!canSendOrders()">
+          <mat-icon>local_shipping</mat-icon>
+          Enviar Órdenes a Proveedores
+        </button>
+      </ng-container>
+
+    </mat-card-content>
+  </mat-card>
+</div>

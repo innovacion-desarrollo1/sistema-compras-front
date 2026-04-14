@@ -5,7 +5,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { SugerenciaOrden } from '../../services/suggestion-state.service';
+import { CartService } from '../../../../core/services/cart.service';
 
 @Component({
   selector: 'app-order-suggestion-card',
@@ -16,7 +18,8 @@ import { SugerenciaOrden } from '../../services/suggestion-state.service';
     MatIconModule,
     MatButtonModule,
     MatChipsModule,
-    MatDividerModule
+    MatDividerModule,
+    MatSnackBarModule
   ],
   templateUrl: './order-suggestion-card.html',
   styleUrl: './order-suggestion-card.scss',
@@ -26,6 +29,47 @@ export class OrderSuggestionCard {
   @Output() accepted = new EventEmitter<SugerenciaOrden>();
   @Output() adjusted = new EventEmitter<{ suggestion: SugerenciaOrden, newQuantity: number }>();
   @Output() rejected = new EventEmitter<{ suggestion: SugerenciaOrden, reason: string }>();
+  @Output() addedToCart = new EventEmitter<SugerenciaOrden>();
+
+  constructor(
+    private cartService: CartService,
+    private snackBar: MatSnackBar
+  ) {}
+
+  onAddToCart(): void {
+    const item = {
+      producto_id: this.suggestion.producto_id,
+      nombre_comercial: this.suggestion.producto_nombre,
+      molecula: this.suggestion.producto_nombre,
+      familia: 1,
+      cantidad: this.suggestion.cantidad_sugerida,
+      moq: 1,
+      proveedor_id: this.suggestion.proveedor_id,
+      proveedor_nombre: this.suggestion.proveedor_nombre,
+      precio_lista: this.suggestion.precio_unitario,
+      bonificaciones: 0,
+      costo_real_neto: this.suggestion.precio_unitario,
+      es_clase_c: this.suggestion.es_clase_c,
+    };
+
+    this.cartService.addItem(item).subscribe({
+      next: (cart) => {
+        this.snackBar.open(
+          `Producto agregado al carrito (${cart.total_productos} productos)`,
+          'Cerrar',
+          { duration: 4000 }
+        );
+        this.addedToCart.emit(this.suggestion);
+      },
+      error: (err) => {
+        if (err.error?.code === 'DUPLICATE_ITEM') {
+          this.snackBar.open('Este producto ya está en el carrito', 'Cerrar', { duration: 3000 });
+        } else {
+          this.snackBar.open('Error al agregar al carrito', 'Cerrar', { duration: 3000 });
+        }
+      }
+    });
+  }
 
   getStockSemaphore(): string {
     if (this.suggestion.es_clase_c) return 'naranja';
