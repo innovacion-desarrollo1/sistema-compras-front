@@ -13,7 +13,16 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2022",
-    "module": "preserve"
+    "module": "preserve",
+    "baseUrl": "src",
+    "paths": {
+      "@shared": ["app/shared/index.ts"],
+      "@shared/*": ["app/shared/*"],
+      "@core/*": ["app/core/*"],
+      "@order-suggestions/*": ["app/modules/order-suggestions/*"],
+      "@inventory-monitoring/*": ["app/modules/inventory-monitoring/*"],
+      "@order-tracking/*": ["app/modules/order-tracking/*"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

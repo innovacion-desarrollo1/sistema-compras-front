@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, delay } from 'rxjs/operators';
-import { Producto } from '../../modules/modulo1/services/suggestion-state.service';
+import { Producto } from '../../modules/order-suggestions/services/suggestion-state.service';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {

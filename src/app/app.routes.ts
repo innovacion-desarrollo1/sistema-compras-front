@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
-import { Module1Dashboard } from './modules/modulo1/components/module1-dashboard/module1-dashboard';
+import { SuggestionsDashboard } from './modules/order-suggestions/components/containers/suggestions-dashboard/suggestions-dashboard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/modulo1', pathMatch: 'full' },
-  { path: 'modulo1', component: Module1Dashboard },
+  { path: '', redirectTo: '/order-suggestions', pathMatch: 'full' },
+  { path: 'order-suggestions', component: SuggestionsDashboard },
 ];
