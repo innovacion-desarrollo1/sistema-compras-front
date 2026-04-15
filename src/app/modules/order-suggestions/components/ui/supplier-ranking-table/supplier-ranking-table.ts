@@ -79,6 +79,11 @@ export class SupplierRankingTableComponent implements OnInit, OnChanges {
     private cdr: ChangeDetectorRef
   ) {}
 
+  /** Check if current product is already in the cart */
+  isProductInCart(): boolean {
+    return this.cartService.hasProduct(this.productoId);
+  }
+
   ngOnInit(): void {
     if (this.productoId) {
       this.loadRanking();

@@ -1,80 +1,90 @@
 <div class="search-container">
-  <!-- Selector de Periodo -->
-  <mat-form-field appearance="outline" class="periodo-field">
-    <mat-label>Periodo a Cubrir</mat-label>
-    <mat-select [formControl]="periodoControl">
-      <mat-option *ngFor="let periodo of periodos" [value]="periodo.value">
-        {{ periodo.label }}
-      </mat-option>
-    </mat-select>
-    <mat-icon matPrefix>calendar_month</mat-icon>
-    <mat-hint>Seleccione el periodo que desea cubrir con esta orden</mat-hint>
-  </mat-form-field>
+  <!-- Search Header -->
+  <div class="search-header">
+    <mat-icon class="search-header-icon">manage_search</mat-icon>
+    <div class="search-header-text">
+      <h3 class="search-title">Buscar Producto</h3>
+      <p class="search-subtitle">Seleccione un periodo y busque por ID, nombre o principio activo</p>
+    </div>
+  </div>
 
-  <!-- Búsqueda de Producto por ID -->
-  <mat-form-field appearance="outline" class="molecula-search-field">
-    <mat-label>Buscar Producto por ID o Nombre</mat-label>
-    <input 
-      type="text"
-      matInput
-      [formControl]="searchControl"
-      [matAutocomplete]="auto"
-      placeholder="ej: 12345, ACETAMINOFEN 500MG, IBUPROFENO"
-      aria-label="Búsqueda de productos">
-    <mat-icon matPrefix>search</mat-icon>
-    <button 
-      *ngIf="searchControl.value" 
-      matSuffix 
-      mat-icon-button 
-      aria-label="Limpiar"
-      (click)="searchControl.setValue('')">
-      <mat-icon>close</mat-icon>
-    </button>
-    
-    <mat-autocomplete 
-      #auto="matAutocomplete" 
-      [displayWith]="displayFn"
-      (optionSelected)="onMoleculaSelect($event.option.value)"
-      class="molecula-autocomplete-panel">
-      
-      <!-- Virtual Scroll para Rendimiento -->
-      <cdk-virtual-scroll-viewport itemSize="60" class="autocomplete-viewport">
-        <mat-option 
-          *cdkVirtualFor="let molecula of filteredMoleculas$ | async" 
-          [value]="molecula"
-          class="molecula-option">
-          
-          <div class="molecula-option-content">
-            <!-- Información Principal -->
-            <div class="molecula-main">
-              <span class="molecula-name">{{ molecula.nombre }}</span>
-              <span class="molecula-code">Código: {{ molecula.codigo }}</span>
-            </div>
-            
-            <!-- Información Secundaria -->
-            <div class="molecula-meta">
-              <!-- Chip de Semáforo -->
-              <mat-chip 
-                [ngClass]="'semaphore-chip-' + getSemaphoreColor(molecula)"
-                class="molecula-semaphore">
-                <mat-icon>{{ getSemaphoreIcon(molecula) }}</mat-icon>
-                <span>{{ getSemaphoreText(molecula) }}</span>
-              </mat-chip>
-            </div>
-          </div>
+  <div class="search-fields">
+    <!-- Selector de Periodo -->
+    <mat-form-field appearance="outline" class="periodo-field">
+      <mat-label>Periodo a Cubrir</mat-label>
+      <mat-select [formControl]="periodoControl">
+        <mat-option *ngFor="let periodo of periodos" [value]="periodo.value">
+          {{ periodo.label }}
         </mat-option>
-      </cdk-virtual-scroll-viewport>
+      </mat-select>
+      <mat-icon matPrefix>calendar_month</mat-icon>
+      <mat-hint>Periodo que desea cubrir</mat-hint>
+    </mat-form-field>
+
+    <!-- Búsqueda de Producto por ID -->
+    <mat-form-field appearance="outline" class="molecula-search-field">
+      <mat-label>Buscar Producto por ID o Nombre</mat-label>
+      <input 
+        type="text"
+        matInput
+        [formControl]="searchControl"
+        [matAutocomplete]="auto"
+        placeholder="ej: 12345, ACETAMINOFEN 500MG, IBUPROFENO"
+        aria-label="Búsqueda de productos">
+      <mat-icon matPrefix>search</mat-icon>
+      <button 
+        *ngIf="searchControl.value" 
+        matSuffix 
+        mat-icon-button 
+        aria-label="Limpiar búsqueda"
+        (click)="searchControl.setValue('')">
+        <mat-icon>close</mat-icon>
+      </button>
       
-      <!-- Mensaje de Sin Resultados -->
-      <mat-option 
-        *ngIf="(filteredMoleculas$ | async)?.length === 0 && searchControl.value" 
-        disabled
-        class="no-results">
-        <mat-icon>search_off</mat-icon>
-        No se encontraron productos para "{{ searchControl.value }}"
-      </mat-option>
-    </mat-autocomplete>
-    
-    <mat-hint>Buscar por ID, nombre del producto o principio activo</mat-hint>
-  </mat-form-field>
+      <mat-autocomplete 
+        #auto="matAutocomplete" 
+        [displayWith]="displayFn"
+        (optionSelected)="onMoleculaSelect($event.option.value)"
+        class="molecula-autocomplete-panel">
+        
+        <!-- Virtual Scroll para Rendimiento -->
+        <cdk-virtual-scroll-viewport itemSize="60" class="autocomplete-viewport">
+          <mat-option 
+            *cdkVirtualFor="let molecula of filteredMoleculas$ | async" 
+            [value]="molecula"
+            class="molecula-option">
+            
+            <div class="molecula-option-content">
+              <!-- Información Principal -->
+              <div class="molecula-main">
+                <span class="molecula-name">{{ molecula.nombre }}</span>
+                <span class="molecula-code">ID: {{ molecula.codigo }}</span>
+              </div>
+              
+              <!-- Chip de Semáforo -->
+              <div class="molecula-meta">
+                <mat-chip 
+                  [ngClass]="'semaphore-chip-' + getSemaphoreColor(molecula)"
+                  class="molecula-semaphore">
+                  <mat-icon>{{ getSemaphoreIcon(molecula) }}</mat-icon>
+                  <span>{{ getSemaphoreText(molecula) }}</span>
+                </mat-chip>
+              </div>
+            </div>
+          </mat-option>
+        </cdk-virtual-scroll-viewport>
+        
+        <!-- Mensaje de Sin Resultados -->
+        <mat-option 
+          *ngIf="(filteredMoleculas$ | async)?.length === 0 && searchControl.value" 
+          disabled
+          class="no-results">
+          <mat-icon>search_off</mat-icon>
+          No se encontraron productos para "{{ searchControl.value }}"
+        </mat-option>
+      </mat-autocomplete>
+      
+      <mat-hint>Buscar por ID, nombre del producto o principio activo</mat-hint>
+    </mat-form-field>
+  </div>
 </div>

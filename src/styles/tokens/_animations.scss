@@ -1,0 +1,212 @@
+/**
+ * DUANA Order Suggestions - Animation System
+ * 
+ * Microinteractions (50-150ms), reduced-motion support
+ * Based on DESIGN-SYSTEM-ORDER-SUGGESTIONS.md Section 8
+ */
+
+// ============================================================
+// Timing Functions (Ease-out for feeling of responsiveness)
+// ============================================================
+
+$ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);      // Standard
+$ease-out: cubic-bezier(0.0, 0, 0.2, 1);         // Deceleration (entering)
+$ease-in: cubic-bezier(0.4, 0, 1, 1);            // Acceleration (exiting)
+$ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);  // Smooth bezier
+
+// ============================================================
+// Duration Tokens (Financial Dashboard - Fast & Responsive)
+// ============================================================
+
+$duration-instant: 50ms;     // Instant feedback (checkbox, toggle)
+$duration-fast: 100ms;       // Microinteractions (button hover, focus)
+$duration-normal: 150ms;     // Standard transitions (cards, dropdowns)
+$duration-slow: 200ms;       // Emphasized transitions (modal, drawer)
+$duration-slower: 300ms;     // Layout shifts (expand/collapse)
+
+// ============================================================
+// Keyframe Animations
+// ============================================================
+
+// Fade In (entrance)
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// Slide In from Bottom (modal, tooltip)
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Slide In from Top (dropdown)
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Scale In (button press feedback)
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// Glow Pulse (CTA button)
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 
+      -4px -4px 12px rgba(255, 255, 255, 0.5),
+      4px 4px 12px rgba(249, 115, 22, 0.4),
+      0 0 0 rgba(249, 115, 22, 0);
+  }
+  50% {
+    box-shadow: 
+      -5px -5px 15px rgba(255, 255, 255, 0.6),
+      5px 5px 15px rgba(249, 115, 22, 0.6),
+      0 0 20px rgba(249, 115, 22, 0.3);
+  }
+}
+
+// Spin (loading spinner)
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Shimmer (skeleton loader)
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+// Bounce (attention grabber)
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-0.25rem);
+  }
+}
+
+// ============================================================
+// Utility Classes
+// ============================================================
+
+// Fade in on mount
+.animate-fade-in {
+  animation: fadeIn $duration-normal $ease-out;
+}
+
+// Slide in from bottom
+.animate-slide-in-up {
+  animation: slideInUp $duration-slow $ease-out;
+}
+
+// Slide in from top
+.animate-slide-in-down {
+  animation: slideInDown $duration-slow $ease-out;
+}
+
+// Scale in
+.animate-scale-in {
+  animation: scaleIn $duration-fast $ease-out;
+}
+
+// Spinning loader
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+// Shimmer loading state
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    #E8E8E8 0%,
+    #F0F0F0 50%,
+    #E8E8E8 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+// ============================================================
+// Reduced Motion Support (Accessibility)
+// ============================================================
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  // Preserve critical animations (loading spinners)
+  .animate-spin {
+    animation: spin 1s linear infinite;
+  }
+}
+
+// ============================================================
+// Transition Utilities
+// ============================================================
+
+.transition-fast {
+  transition: all $duration-fast $ease-in-out;
+}
+
+.transition-normal {
+  transition: all $duration-normal $ease-in-out;
+}
+
+.transition-slow {
+  transition: all $duration-slow $ease-in-out;
+}
+
+.transition-colors {
+  transition: color $duration-normal $ease-in-out,
+              background-color $duration-normal $ease-in-out,
+              border-color $duration-normal $ease-in-out;
+}
+
+.transition-transform {
+  transition: transform $duration-normal $ease-smooth;
+}
+
+.transition-opacity {
+  transition: opacity $duration-fast $ease-in-out;
+}

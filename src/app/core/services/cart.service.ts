@@ -93,6 +93,11 @@ export class CartService {
     return this.cartSubject.value?.items.length ?? 0;
   }
 
+  /** Check if a producto_id already exists in the cart (any supplier) */
+  hasProduct(productoId: number): boolean {
+    return this.cartSubject.value?.items.some(i => i.producto_id === productoId) ?? false;
+  }
+
   /** Add item to cart. Creates cart if none exists. */
   addItem(item: {
     producto_id: number;

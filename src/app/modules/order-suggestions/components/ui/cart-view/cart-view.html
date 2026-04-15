@@ -2,9 +2,9 @@
 <div class="cart-empty" *ngIf="!cart || cart.items.length === 0">
   <mat-card class="empty-card">
     <mat-card-content class="empty-content">
-      <mat-icon class="empty-icon">shopping_cart</mat-icon>
+      <mat-icon class="empty-icon">remove_shopping_cart</mat-icon>
       <h2>El carrito está vacío</h2>
-      <p>Agrega productos desde las sugerencias de orden para comenzar.</p>
+      <p>Agrega productos desde el ranking de proveedores o las sugerencias de orden para comenzar.</p>
     </mat-card-content>
   </mat-card>
 </div>
@@ -224,7 +224,8 @@
         color="primary"
         (click)="onSubmitForReview()"
         [disabled]="!canSubmitCart()"
-        *ngIf="userRole === 'AUXILIAR_COMPRAS' || userRole === 'JEFE_COMPRAS'">
+        *ngIf="userRole === 'AUXILIAR_COMPRAS' || userRole === 'JEFE_COMPRAS'"
+        aria-label="Enviar carrito a validación">
         <mat-icon>send</mat-icon>
         Enviar a Validación
       </button>
@@ -232,29 +233,31 @@
       <!-- Jefe Actions -->
       <ng-container *ngIf="userRole === 'JEFE_COMPRAS'">
         <button
-          mat-raised-button
-          color="accent"
+          mat-stroked-button
+          class="action-approve"
           (click)="onApproveCart()"
-          [disabled]="!canApproveCart()">
+          [disabled]="!canApproveCart()"
+          aria-label="Aprobar carrito">
           <mat-icon>check_circle</mat-icon>
           Aprobar Carrito
         </button>
 
         <button
           mat-stroked-button
-          color="warn"
+          class="action-reject"
           (click)="onRejectCart()"
-          [disabled]="!canRejectCart()">
+          [disabled]="!canRejectCart()"
+          aria-label="Solicitar cambios al carrito">
           <mat-icon>undo</mat-icon>
           Solicitar Cambios
         </button>
 
         <button
           mat-raised-button
-          color="primary"
-          class="send-orders-btn"
+          class="cta-primary send-orders-btn"
           (click)="onSendOrders()"
-          [disabled]="!canSendOrders()">
+          [disabled]="!canSendOrders()"
+          aria-label="Enviar órdenes a proveedores">
           <mat-icon>local_shipping</mat-icon>
           Enviar Órdenes a Proveedores
         </button>

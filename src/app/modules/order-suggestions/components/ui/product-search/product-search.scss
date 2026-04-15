@@ -1,23 +1,117 @@
 ﻿@import '../../../../../../styles/themes/design-tokens';
+@import '../../../../../../styles/tokens/neuro-tokens';
+@import '../../../../../../styles/tokens/financial-colors';
+@import '../../../../../../styles/tokens/typography';
+
+// ============================================================
+// PRODUCT SEARCH - Neumorphic Design
+// ============================================================
 
 .search-container {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: $spacing-md;
+}
+
+.search-header {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding-bottom: $spacing-xs;
+  border-bottom: 1px solid rgba($duana-primary, 0.08);
+
+  .search-header-icon {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+    color: $duana-primary;
+  }
+
+  .search-header-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .search-title {
+    font-family: $font-heading;
+    font-size: $type-h4;
+    font-weight: $font-semibold;
+    color: $duana-text;
+    margin: 0;
+  }
+
+  .search-subtitle {
+    font-family: $font-body;
+    font-size: $type-body-tiny;
+    color: $financial-neutral;
+    margin: 0;
+  }
+}
+
+.search-fields {
+  display: flex;
+  gap: $spacing-md;
+  align-items: flex-start;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 }
 
 .periodo-field {
   width: 100%;
   max-width: 300px;
+
+  ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+    font-family: $font-body;
+  }
 }
 
 .molecula-search-field {
   width: 100%;
   font-size: 16px; // Accesibilidad: prevenir zoom en móviles
+
+  // Neumorphic inset input effect
+  ::ng-deep .mdc-text-field {
+    background: $neuro-bg-white;
+    border-radius: $neuro-radius-md;
+    box-shadow: $neuro-shadow-debossed;
+    transition: box-shadow $neuro-transition-normal;
+
+    &:hover {
+      box-shadow:
+        inset -3px -3px 8px rgba(255, 255, 255, 0.8),
+        inset 3px 3px 8px rgba(174, 174, 192, 0.25);
+    }
+  }
+
+  ::ng-deep .mdc-text-field--focused {
+    box-shadow:
+      $neuro-shadow-debossed,
+      0 0 0 3px rgba($duana-primary, 0.2) !important;
+  }
+
+  ::ng-deep input {
+    font-family: $font-body;
+  }
 }
+
+// ============================================================
+// AUTOCOMPLETE PANEL - Embossed dropdown
+// ============================================================
 
 .molecula-autocomplete-panel {
   max-height: 400px;
+}
+
+::ng-deep .mat-mdc-autocomplete-panel {
+  background: $neuro-bg-light !important;
+  border-radius: $neuro-radius-md !important;
+  box-shadow:
+    -6px -6px 18px $neuro-shadow-soft-2,
+    6px 6px 18px $neuro-shadow-soft-1,
+    0 8px 24px rgba(0, 0, 0, 0.08) !important;
+  padding: $neuro-spacing-xs 0 !important;
 }
 
 .autocomplete-viewport {
@@ -27,9 +121,10 @@
 .molecula-option {
   height: 60px !important;
   padding: 8px 16px;
-  
+  transition: background-color 150ms ease, box-shadow 150ms ease;
+
   &:hover {
-    background-color: $color-blue-50;
+    background-color: rgba($duana-primary, 0.06) !important;
   }
 }
 
@@ -43,17 +138,18 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  
+
   .molecula-name {
-    font-weight: $font-weight-semibold;
-    color: $color-gray-900;
-    font-size: $font-size-md;
+    font-family: $font-heading;
+    font-weight: $font-semibold;
+    color: $duana-text;
+    font-size: $type-body;
   }
-  
+
   .molecula-code {
-    font-size: $font-size-xs;
-    color: $color-gray-500;
-    font-family: 'Courier New', monospace;
+    font-family: $font-data;
+    font-size: $type-body-small;
+    color: $financial-neutral;
   }
 }
 
@@ -68,13 +164,16 @@
   align-items: center;
   gap: 4px;
   padding: 2px 8px;
-  border-radius: $border-radius-sm;
-  font-size: $font-size-xs;
-  font-weight: $font-weight-semibold;
+  border-radius: $neuro-radius-pill;
+  font-size: $type-body-small;
+  font-weight: $font-semibold;
   height: 20px !important;
-  
-  mat-icon {
 
+  box-shadow:
+    -1px -1px 3px rgba(255, 255, 255, 0.5),
+    1px 1px 3px rgba(174, 174, 192, 0.2);
+
+  mat-icon {
     font-size: 14px;
     height: 14px;
     width: 14px;
@@ -85,6 +184,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: $color-gray-500;
+  color: $financial-neutral;
   font-style: italic;
+  font-family: $font-body;
 }

@@ -1,30 +1,39 @@
 ﻿@import '../../../../../../styles/themes/design-tokens';
+@import '../../../../../../styles/tokens/neuro-tokens';
+@import '../../../../../../styles/tokens/financial-colors';
+@import '../../../../../../styles/tokens/typography';
+
+// ============================================================
+// SUPPLIER RANKING TABLE - Neumorphic Financial Data Design
+// ============================================================
 
 // ==============================
 // CARD WRAPPER
 // ==============================
 .ranking-card {
   margin: 16px 0;
-  
+
   mat-card-header {
     mat-card-title {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 20px;
-      font-weight: 600;
-      
+      font-family: $font-heading;
+      font-size: $type-h4;
+      font-weight: $font-semibold;
+
       mat-icon {
-        color: $color-blue-600;
+        color: $duana-primary;
         font-size: 28px;
         width: 28px;
         height: 28px;
       }
     }
-    
+
     mat-card-subtitle {
       margin-top: 8px;
-      color: $color-gray-600;
+      font-family: $font-body;
+      color: $financial-neutral;
     }
   }
 }
@@ -35,8 +44,8 @@
 .table-container {
   margin: 16px 0;
   overflow-x: auto;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: $neuro-radius-md;
+  box-shadow: $neuro-shadow-debossed;
 }
 
 // ==============================
@@ -44,19 +53,20 @@
 // ==============================
 .suppliers-table {
   width: 100%;
-  background: white;
-  
+  background: $neuro-bg-white;
+
   // Header Styling
   th {
-    background-color: $color-blue-100;
-    color: $color-blue-900;
+    background-color: rgba($duana-primary, 0.08);
+    color: $duana-dark;
+    font-family: $font-heading;
     font-weight: 700;
     font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 0.8px;
     padding: 16px 12px;
-    border-bottom: 2px solid $color-blue-300;
-    
+    border-bottom: 2px solid rgba($duana-primary, 0.2);
+
     mat-icon {
       vertical-align: middle;
       margin-right: 4px;
@@ -65,43 +75,44 @@
       height: 18px;
     }
   }
-  
+
   // Cell Styling
   td {
     padding: 16px 12px;
+    font-family: $font-body;
     font-size: 14px;
     vertical-align: middle;
     border-bottom: 1px solid $color-gray-200;
   }
-  
+
   // Main Row Styling
   .supplier-row {
-    transition: background-color 0.2s ease;
-    
+    transition: background-color $neuro-transition-fast, box-shadow $neuro-transition-fast;
+
     &:hover {
-      background-color: $color-gray-50;
+      background-color: rgba($duana-primary, 0.03);
       cursor: pointer;
     }
-    
+
     &.top-supplier-row {
       background-color: rgba($semaphore-verde-bg, 0.1);
       border-left: 4px solid $semaphore-verde-border;
     }
-    
+
     &.expanded {
-      background-color: $color-blue-50;
+      background-color: rgba($duana-primary, 0.05);
     }
   }
-  
+
   // Detail Row (Expanded Bonifications)
   .detail-row {
     height: 0;
     overflow: hidden;
-    
+
     &.detail-row-hidden {
       display: none;
     }
-    
+
     td {
       padding: 0;
       border-bottom: none;
@@ -124,12 +135,16 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: $color-gray-200;
-  color: $color-gray-700;
+  background-color: $neuro-bg-light;
+  color: $duana-text;
+  font-family: $font-data;
   font-weight: 700;
   font-size: 18px;
   margin-bottom: 8px;
-  
+  box-shadow:
+    -2px -2px 5px rgba(255, 255, 255, 0.7),
+    2px 2px 5px rgba(174, 174, 192, 0.2);
+
   &.top-rank {
     background: linear-gradient(135deg, $semaphore-verde-bg 0%, $semaphore-verde-border 100%);
     color: $semaphore-verde-text;
@@ -162,16 +177,18 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  
+
   .proveedor-nombre {
-    font-weight: 600;
+    font-family: $font-heading;
+    font-weight: $font-semibold;
     font-size: 15px;
-    color: $color-blue-900;
+    color: $duana-dark;
   }
-  
+
   .proveedor-score {
+    font-family: $font-data;
     font-size: 12px;
-    color: $color-gray-600;
+    color: $financial-neutral;
   }
 }
 
@@ -199,40 +216,42 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  
+
   .costo-line {
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 13px;
-    
+
     .label {
-      color: $color-gray-600;
+      font-family: $font-body;
+      color: $financial-neutral;
       font-weight: 500;
     }
-    
+
     .value {
-      font-weight: 600;
-      color: $color-gray-900;
+      font-family: $font-data;
+      font-weight: $font-semibold;
+      color: $duana-text;
     }
-    
+
     &.bonif .value {
-      color: $semaphore-verde-text;
+      color: $financial-profit;
     }
-    
+
     &.total {
       margin-top: 4px;
       padding-top: 4px;
-      
+
       .label {
         font-weight: 700;
-        color: $color-blue-900;
+        color: $duana-dark;
       }
-      
+
       .value.highlight {
         font-size: 16px;
         font-weight: 700;
-        color: $color-blue-700;
+        color: $duana-primary;
       }
     }
   }
@@ -274,26 +293,28 @@
   grid-template-columns: 80px 1fr 50px;
   align-items: center;
   gap: 10px;
-  
+
   .kpi-label-compact {
+    font-family: $font-heading;
     font-size: 11px;
-    font-weight: 600;
-    color: $color-gray-600;
+    font-weight: $font-semibold;
+    color: $financial-neutral;
     text-transform: uppercase;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  
+
   .kpi-bar-compact {
     height: 8px;
     border-radius: 4px;
   }
-  
+
   .kpi-value-compact {
+    font-family: $font-data;
     font-size: 12px;
-    font-weight: 600;
-    color: $color-gray-900;
+    font-weight: $font-semibold;
+    color: $duana-text;
     text-align: right;
   }
 }
@@ -364,10 +385,31 @@
   mat-icon {
     margin-right: 4px;
   }
+
+  &.cta-primary {
+    background: $cta-primary;
+    color: white;
+    font-weight: $font-bold;
+    box-shadow:
+      -3px -3px 8px rgba(255, 255, 255, 0.3),
+      3px 3px 8px rgba($cta-primary, 0.4);
+    transition: all $neuro-transition-fast;
+
+    &:hover {
+      background: $cta-primary-hover;
+      box-shadow:
+        -3px -3px 10px rgba(255, 255, 255, 0.4),
+        3px 3px 10px rgba($cta-primary, 0.6),
+        0 0 20px rgba($cta-primary, 0.2);
+      transform: translateY(-1px);
+    }
+  }
 }
 
 .update-precio-btn {
   font-size: 13px;
+  color: $financial-neutral;
+  border-color: rgba($financial-neutral, 0.3);
   
   mat-icon {
     margin-right: 4px;
@@ -375,14 +417,104 @@
     width: 18px;
     height: 18px;
   }
+
+  &:hover {
+    color: $duana-primary;
+    border-color: $duana-primary;
+  }
+}
+
+// Trust badge in subtitle
+.trust-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  background: rgba($financial-profit, 0.08);
+  border-radius: $neuro-radius-pill;
+  font-family: $font-body;
+  font-size: 11px;
+  font-weight: $font-medium;
+  color: $financial-profit;
+  margin-left: $spacing-sm;
+
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    color: $financial-profit;
+  }
+}
+
+// Subtitle layout
+mat-card-subtitle {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: $spacing-xs;
+
+  .subtitle-text {
+    flex: 1;
+  }
+}
+
+// Skeleton loading
+.skeleton-loader {
+  background: linear-gradient(
+    90deg,
+    $neuro-bg-light 25%,
+    rgba($duana-primary, 0.06) 50%,
+    $neuro-bg-light 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.loading-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  color: $financial-neutral;
+  font-family: $font-body;
+  font-style: italic;
+  margin-top: $spacing-sm;
+
+  .spin-icon {
+    animation: spin 1s linear infinite;
+    color: $duana-primary;
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+// Ranking badges
+.second-rank {
+  background: linear-gradient(135deg, #94a3b8, #64748b) !important;
+  color: white !important;
+  box-shadow: -1px -1px 3px rgba(255, 255, 255, 0.4), 1px 1px 3px rgba(100, 116, 139, 0.5) !important;
+}
+
+.third-rank {
+  background: linear-gradient(135deg, #d97706, #b45309) !important;
+  color: white !important;
+  box-shadow: -1px -1px 3px rgba(255, 255, 255, 0.4), 1px 1px 3px rgba(180, 83, 9, 0.5) !important;
 }
 
 // ==============================
 // EXPANDED ROW (BONIFICACIONES DETAIL)
 // ==============================
 .expanded-row {
-  background-color: $color-gray-50;
-  border-left: 4px solid $color-blue-500;
+  background-color: $neuro-bg-light;
+  border-left: 4px solid $duana-primary;
 }
 
 .bonificaciones-detail {
@@ -392,37 +524,38 @@
 
 .bonificaciones-content {
   padding: 20px;
-  background-color: white;
-  border-radius: 4px;
+  background-color: $neuro-bg-white;
+  border-radius: $neuro-radius-sm;
   margin: 12px;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-  
+  box-shadow: $neuro-shadow-debossed;
+
   .bonificaciones-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 16px;
-    
+
     h4 {
       display: flex;
       align-items: center;
       gap: 8px;
       margin: 0;
-      color: $color-blue-900;
-      font-weight: 600;
+      font-family: $font-heading;
+      color: $duana-dark;
+      font-weight: $font-semibold;
       font-size: 16px;
-      
+
       mat-icon {
-        color: $color-blue-600;
+        color: $duana-primary;
       }
     }
-    
+
     button {
       display: flex;
       align-items: center;
       gap: 4px;
       font-size: 13px;
-      
+
       mat-icon {
         font-size: 18px;
         width: 18px;
@@ -430,18 +563,19 @@
       }
     }
   }
-  
+
   h4 {
     display: flex;
     align-items: center;
     gap: 8px;
     margin: 0 0 16px 0;
-    color: $color-blue-900;
-    font-weight: 600;
+    font-family: $font-heading;
+    color: $duana-dark;
+    font-weight: $font-semibold;
     font-size: 16px;
-    
+
     mat-icon {
-      color: $color-blue-600;
+      color: $duana-primary;
     }
   }
 }
@@ -452,9 +586,10 @@
   justify-content: center;
   gap: 8px;
   padding: 16px;
-  color: $color-gray-600;
+  color: $financial-neutral;
+  font-family: $font-body;
   font-style: italic;
-  
+
   mat-icon {
     color: $color-gray-400;
   }
@@ -469,13 +604,13 @@
 .bonif-card {
   padding: 12px;
   border: 1px solid $color-gray-300;
-  border-radius: 6px;
-  background-color: $color-gray-50;
-  transition: all 0.2s ease;
-  
+  border-radius: $neuro-radius-sm;
+  background-color: $neuro-bg-light;
+  transition: all $neuro-transition-fast;
+
   &:hover {
-    border-color: $color-blue-400;
-    box-shadow: 0 2px 6px rgba($color-blue-600, 0.15);
+    border-color: rgba($duana-primary, 0.4);
+    box-shadow: 0 2px 6px rgba($duana-primary, 0.15);
   }
 }
 
@@ -506,9 +641,10 @@
 }
 
 .bonif-desc {
-  font-weight: 600;
+  font-family: $font-body;
+  font-weight: $font-semibold;
   font-size: 14px;
-  color: $color-gray-900;
+  color: $duana-text;
 }
 
 .bonif-type-chip {
@@ -546,7 +682,8 @@
   align-items: center;
   gap: 4px;
   font-size: 11px;
-  color: $color-gray-600;
+  font-family: $font-data;
+  color: $financial-neutral;
   
   mat-icon {
     font-size: 14px;
@@ -568,15 +705,15 @@
   display: flex;
   flex-direction: column;
   padding: 10px;
-  border-radius: 8px;
-  transition: all 0.2s ease;
+  border-radius: $neuro-radius-sm;
+  transition: all $neuro-transition-fast;
   border: 2px solid transparent;
 
   &:hover {
-    background-color: rgba($color-blue-500, 0.08);
-    border-color: $color-blue-300;
+    background-color: rgba($duana-primary, 0.06);
+    border-color: rgba($duana-primary, 0.25);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba($color-blue-500, 0.15);
+    box-shadow: 0 4px 8px rgba($duana-primary, 0.12);
   }
 
   &:active {
@@ -624,14 +761,14 @@
     align-items: center;
     gap: 6px;
     font-size: 12px;
-    color: $color-gray-700;
+    color: $duana-text;
     line-height: 1.3;
 
     .bonif-type-icon {
       font-size: 14px;
       width: 14px;
       height: 14px;
-      color: $color-blue-600;
+      color: $duana-primary;
       flex-shrink: 0;
     }
 
@@ -640,16 +777,17 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      font-family: $font-body;
       font-weight: 500;
     }
   }
 
   .bonif-more {
     font-size: 11px;
-    color: $color-gray-500;
+    color: $financial-neutral;
     font-style: italic;
     margin-left: 20px;
-    font-weight: 600;
+    font-weight: $font-semibold;
   }
 }
 
@@ -671,8 +809,9 @@
 
   .bonif-empty-text {
     font-size: 13px;
-    color: $color-gray-600;
-    font-weight: 600;
+    font-family: $font-body;
+    color: $financial-neutral;
+    font-weight: $font-semibold;
   }
 
   .bonif-hint {
@@ -681,12 +820,12 @@
     font-style: italic;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    transition: all 0.2s ease;
+    transition: all $neuro-transition-fast;
   }
 }
 
 .bonif-status:hover .no-bonif-content .bonif-hint {
-  color: $color-blue-700;
+  color: $duana-primary;
   font-weight: 700;
 }
 
@@ -700,9 +839,10 @@
   justify-content: center;
   gap: 16px;
   padding: 48px;
-  
+
   p {
-    color: $color-gray-600;
+    font-family: $font-body;
+    color: $financial-neutral;
     font-style: italic;
   }
 }
@@ -713,17 +853,18 @@
   align-items: center;
   justify-content: center;
   padding: 48px;
-  
+
   mat-icon {
     font-size: 72px;
     width: 72px;
     height: 72px;
-    color: $color-gray-400;
+    color: rgba($duana-primary, 0.25);
     margin-bottom: 16px;
   }
-  
+
   p {
-    color: $color-gray-600;
+    font-family: $font-body;
+    color: $financial-neutral;
     font-size: 16px;
   }
 }

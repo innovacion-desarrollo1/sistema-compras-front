@@ -2,20 +2,23 @@
   <mat-card-header>
     <mat-card-title>
       <mat-icon>show_chart</mat-icon>
-      Demand Forecast Analysis
+      Análisis de Pronóstico de Demanda
     </mat-card-title>
     <mat-card-subtitle *ngIf="forecastData">
-      Forecast Horizon: {{ forecastData.forecast_horizon_months }} month(s) 
-      | Family {{ forecastData.familia }}
-      | Model: {{ forecastData.model_type }}
+      Horizonte: {{ forecastData.forecast_horizon_months }} mes(es) 
+      | Familia {{ forecastData.familia }}
+      | Modelo: {{ forecastData.model_type }}
     </mat-card-subtitle>
   </mat-card-header>
 
   <mat-card-content>
     <!-- Loading State -->
     <div *ngIf="isLoading" class="loading-container">
-      <mat-spinner diameter="40"></mat-spinner>
-      <p>Loading demand forecast...</p>
+      <div class="skeleton-loader" style="height: 250px; border-radius: 12px;"></div>
+      <p class="loading-text">
+        <mat-icon class="spin-icon">autorenew</mat-icon>
+        Cargando pronóstico de demanda...
+      </p>
     </div>
 
     <!-- Chart Canvas -->
@@ -23,27 +26,33 @@
       <canvas #chartCanvas></canvas>
     </div>
 
-    <!-- Model Accuracy Indicator -->
+    <!-- Model Accuracy Indicator (Trust Signal) -->
     <div *ngIf="!isLoading && forecastData" class="accuracy-indicator">
+      <div class="trust-badge-accuracy">
+        <mat-icon>verified</mat-icon>
+        <span>Confianza del Modelo: {{ (forecastData.model_accuracy * 100).toFixed(1) }}% (R²) — {{ getModelAccuracyLabel(forecastData.model_accuracy) }}</span>
+      </div>
+      
       <mat-chip 
-        [ngClass]="'semaphore-chip-' + getModelAccuracyColor(forecastData.model_accuracy)">
+        [ngClass]="'semaphore-chip-' + getModelAccuracyColor(forecastData.model_accuracy)"
+        class="accuracy-chip">
         <mat-icon>analytics</mat-icon>
-        Model Accuracy: {{ (forecastData.model_accuracy * 100).toFixed(1) }}% (R²)
-        - {{ getModelAccuracyLabel(forecastData.model_accuracy) }}
+        {{ getModelAccuracyLabel(forecastData.model_accuracy) }}
       </mat-chip>
       
       <div *ngIf="forecastData.model_accuracy < 0.70" class="warning-hint">
         <mat-icon>warning</mat-icon>
-        Low accuracy detected. Manual review recommended before large orders.
+        Baja precisión detectada. Se recomienda revisión manual antes de emitir órdenes grandes.
       </div>
     </div>
 
     <!-- Error State -->
     <div *ngIf="!isLoading && !forecastData" class="error-container">
       <mat-icon>error_outline</mat-icon>
-      <p>Failed to load forecast data. Please try again.</p>
+      <p>No se pudieron cargar los datos del pronóstico. Intente de nuevo.</p>
       <button mat-raised-button color="primary" (click)="loadForecastData()">
-        Retry
+        <mat-icon>refresh</mat-icon>
+        Reintentar
       </button>
     </div>
   </mat-card-content>

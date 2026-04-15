@@ -2,46 +2,66 @@
   <mat-card-header>
     <mat-card-title>
       <mat-icon>gavel</mat-icon>
-      Approval Request Status
+      Estado de Solicitud de Aprobación
     </mat-card-title>
+    <mat-card-subtitle>
+      Gobernanza Clase C · Autorización gerencial requerida
+    </mat-card-subtitle>
   </mat-card-header>
 
   <mat-card-content>
     <!-- Loading State -->
     <div *ngIf="isLoading" class="loading-container">
-      <mat-spinner diameter="40"></mat-spinner>
-      <p>Loading approval status...</p>
+      <div class="skeleton-loader" style="height: 120px; border-radius: 12px;"></div>
+      <p class="loading-text">
+        <mat-icon class="spin-icon">autorenew</mat-icon>
+        Cargando estado de aprobación...
+      </p>
     </div>
 
     <!-- Product Info -->
     <div *ngIf="!isLoading" class="request-info">
-      <h4>{{ currentRequest.producto_nombre }}</h4>
-      <p><strong>Quantity:</strong> {{ currentRequest.cantidad_solicitada }} units</p>
-      <p><strong>Supplier:</strong> {{ currentRequest.proveedor_nombre }}</p>
-      <p><strong>Total Cost:</strong> ${{ currentRequest.costo_total | number:'1.0-0' }}</p>
-      <p><strong>Reason for Approval:</strong> {{ currentRequest.motivo_clase_c }}</p>
+      <h4 class="request-product-name">{{ currentRequest.producto_nombre }}</h4>
+      <div class="request-details-grid">
+        <div class="detail-item">
+          <span class="detail-label">Cantidad</span>
+          <span class="detail-value">{{ currentRequest.cantidad_solicitada }} unidades</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Proveedor</span>
+          <span class="detail-value">{{ currentRequest.proveedor_nombre }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Costo Total</span>
+          <span class="detail-value detail-cost">${{ currentRequest.costo_total | number:'1.0-0' }}</span>
+        </div>
+        <div class="detail-item detail-full">
+          <span class="detail-label">Motivo de Aprobación</span>
+          <span class="detail-value">{{ currentRequest.motivo_clase_c }}</span>
+        </div>
+      </div>
     </div>
 
     <mat-divider *ngIf="!isLoading"></mat-divider>
 
     <!-- Status Stepper -->
     <mat-stepper *ngIf="!isLoading" [selectedIndex]="getStepIndex(currentRequest.estado)" class="approval-stepper">
-      <mat-step label="Submitted">
-        <p>Request submitted on {{ currentRequest.fecha_solicitud | date:'medium' }}</p>
-        <p>By: {{ currentRequest.solicitante_nombre }}</p>
+      <mat-step label="Enviada">
+        <p>Solicitud enviada el {{ currentRequest.fecha_solicitud | date:'medium' }}</p>
+        <p>Por: {{ currentRequest.solicitante_nombre }}</p>
       </mat-step>
 
-      <mat-step label="Under Review">
+      <mat-step label="En Revisión">
         <div *ngIf="currentRequest.estado === 'PENDIENTE'" class="pending-state">
-          <mat-spinner diameter="24"></mat-spinner>
-          <p>Awaiting Jefe de Compras decision...</p>
+          <mat-icon class="spin-icon pending-icon">autorenew</mat-icon>
+          <p>Esperando decisión del Jefe de Compras...</p>
         </div>
         <p *ngIf="currentRequest.estado !== 'PENDIENTE'">
-          Reviewed on {{ currentRequest.fecha_decision | date:'medium' }}
+          Revisada el {{ currentRequest.fecha_decision | date:'medium' }}
         </p>
       </mat-step>
 
-      <mat-step label="Decision">
+      <mat-step label="Decisión">
         <mat-chip 
           [ngClass]="'semaphore-chip-' + getEstadoColor(currentRequest.estado)"
           class="estado-chip">
@@ -49,17 +69,22 @@
           {{ currentRequest.estado }}
         </mat-chip>
         
-        <div *ngIf="currentRequest.estado === 'APROBADO'" class="decision-details">
-          <p><strong>Approved by:</strong> {{ currentRequest.aprobador_nombre }}</p>
-          <p *ngIf="currentRequest.comentario_aprobador">
-            <strong>Comment:</strong> {{ currentRequest.comentario_aprobador }}
-          </p>
+        <div *ngIf="currentRequest.estado === 'APROBADO'" class="decision-details approved">
+          <mat-icon class="decision-icon">check_circle</mat-icon>
+          <div>
+            <p><strong>Aprobado por:</strong> {{ currentRequest.aprobador_nombre }}</p>
+            <p *ngIf="currentRequest.comentario_aprobador">
+              <strong>Comentario:</strong> {{ currentRequest.comentario_aprobador }}
+            </p>
+          </div>
         </div>
 
         <div *ngIf="currentRequest.estado === 'RECHAZADO'" class="decision-details rejection">
-          <mat-icon class="rejection-icon">error</mat-icon>
-          <p><strong>Rejected by:</strong> {{ currentRequest.aprobador_nombre }}</p>
-          <p><strong>Reason:</strong> {{ currentRequest.comentario_aprobador }}</p>
+          <mat-icon class="decision-icon rejection-icon">error</mat-icon>
+          <div>
+            <p><strong>Rechazado por:</strong> {{ currentRequest.aprobador_nombre }}</p>
+            <p><strong>Motivo:</strong> {{ currentRequest.comentario_aprobador }}</p>
+          </div>
         </div>
       </mat-step>
     </mat-stepper>

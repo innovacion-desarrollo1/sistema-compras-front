@@ -50,12 +50,11 @@ export class SuggestionsDashboard {
   approvalRequestId: number | null = null;
 
   // View states
-  showDemandForecast = false;
   showSupplierRanking = false;
   showSuggestionCard = false;
   showCostSimulation = false;
   showApprovalWorkflow = false;
-  showCart = false;
+  showHistory = false;
   isLoading = false;
 
   constructor(
@@ -73,7 +72,6 @@ export class SuggestionsDashboard {
     this.resetSuggestion();
     
     // Trigger dependent components
-    this.showDemandForecast = true;
     this.showSupplierRanking = true; // Show supplier ranking immediately
   }
 
@@ -156,12 +154,11 @@ export class SuggestionsDashboard {
 
   onAddedToCart(suggestion: SugerenciaOrden): void {
     console.log('Producto agregado al carrito:', suggestion);
-    this.showCart = true;
   }
 
   /** Called when supplier-ranking-table adds an item directly to cart */
   onCartUpdated(): void {
-    this.showCart = true;
+    // Cart sidebar auto-updates via reactive subscription
   }
 
   resetSuggestion(): void {
@@ -192,7 +189,6 @@ export class SuggestionsDashboard {
   resetWorkflow(): void {
     this.selectedProduct = null;
     this.resetSuggestion();
-    this.showDemandForecast = false;
     this.showSupplierRanking = false;
     this.stateService.resetState();
   }

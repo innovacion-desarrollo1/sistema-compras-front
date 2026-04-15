@@ -1,0 +1,72 @@
+/**
+ * DUANA Order Suggestions - Neumorphic Design Tokens
+ * 
+ * Soft shadows, embossed surfaces, 12-16px border-radius
+ * Based on DESIGN-SYSTEM-ORDER-SUGGESTIONS.md Section 4
+ */
+
+// ============================================================
+// Neumorphic Background Colors
+// ============================================================
+
+$neuro-bg-light: #E8F0F8;      // Soft Blue (primary neumorphic surface)
+$neuro-bg-grey: #E8E8E8;       // Soft Grey (alternative surface)
+$neuro-bg-white: #FFFFFF;      // Pure white (for inset elements)
+
+// ============================================================
+// Neumorphic Shadow System
+// ============================================================
+
+// Light source: Top-left (-45°)
+$neuro-shadow-soft-1: rgba(174, 174, 192, 0.2);  // Bottom-right shadow (darker)
+$neuro-shadow-soft-2: rgba(255, 255, 255, 0.9);  // Top-left highlight (lighter)
+
+// Embossed (raised) - Default state for cards/buttons
+$neuro-shadow-embossed: 
+  -5px -5px 15px $neuro-shadow-soft-2,
+  5px 5px 15px $neuro-shadow-soft-1;
+
+// Embossed (hover) - Slightly more pronounced
+$neuro-shadow-embossed-hover: 
+  -6px -6px 18px $neuro-shadow-soft-2,
+  6px 6px 18px $neuro-shadow-soft-1;
+$neuro-shadow-hover: $neuro-shadow-embossed-hover; // Alias
+
+// Debossed (inset) - For input fields, pressed buttons
+$neuro-shadow-debossed: 
+  inset -3px -3px 8px rgba(255, 255, 255, 0.7),
+  inset 3px 3px 8px rgba(174, 174, 192, 0.3);
+
+// Flat (neutral) - Minimal elevation
+$neuro-shadow-flat: 
+  -2px -2px 6px rgba(255, 255, 255, 0.7),
+  2px 2px 6px rgba(174, 174, 192, 0.2);
+
+// ============================================================
+// Border Radius (Soft Curves)
+// ============================================================
+
+$neuro-radius-sm: 8px;
+$neuro-radius-md: 12px;
+$neuro-radius-lg: 16px;
+$neuro-radius-xl: 20px;
+$neuro-radius-pill: 9999px;
+
+// ============================================================
+// Spacing (Consistent Padding)
+// ============================================================
+
+$neuro-spacing-xs: 0.5rem;   // 8px
+$neuro-spacing-sm: 0.75rem;  // 12px
+$neuro-spacing-md: 1rem;     // 16px
+$neuro-spacing-lg: 1.5rem;   // 24px
+$neuro-spacing-xl: 2rem;     // 32px
+$neuro-spacing-2xl: 3rem;    // 48px
+
+// ============================================================
+// Transition Timing (Smooth Animations)
+// ============================================================
+
+$neuro-transition-fast: 100ms cubic-bezier(0.4, 0, 0.2, 1);
+$neuro-transition-normal: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+$neuro-transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);

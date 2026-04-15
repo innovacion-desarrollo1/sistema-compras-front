@@ -1,6 +1,10 @@
 // ============================================================================
-// CART VIEW STYLES
+// CART VIEW STYLES - Neumorphic Design
 // ============================================================================
+@import '../../../../../../styles/themes/design-tokens';
+@import '../../../../../../styles/tokens/neuro-tokens';
+@import '../../../../../../styles/tokens/financial-colors';
+@import '../../../../../../styles/tokens/typography';
 
 :host {
   display: block;
@@ -22,18 +26,20 @@
       font-size: 64px;
       height: 64px;
       width: 64px;
-      color: #bdbdbd;
+      color: rgba($duana-primary, 0.25);
       margin-bottom: 1rem;
     }
 
     h2 {
       margin: 0 0 0.5rem;
-      color: #616161;
+      font-family: $font-heading;
+      color: $duana-text;
     }
 
     p {
       margin: 0;
-      color: #9e9e9e;
+      font-family: $font-body;
+      color: $financial-neutral;
     }
   }
 }
@@ -51,10 +57,11 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    font-family: $font-heading;
     font-size: 1.2rem;
 
     mat-icon {
-      color: #1565c0;
+      color: $duana-primary;
     }
 
     .estado-chip {
@@ -81,11 +88,14 @@
       align-items: center;
       gap: 0.5rem;
       padding: 0.75rem 1rem;
-      border-radius: 8px;
-      background: #f5f5f5;
+      border-radius: $neuro-radius-sm;
+      background: $neuro-bg-light;
+      box-shadow:
+        -2px -2px 5px rgba(255, 255, 255, 0.6),
+        2px 2px 5px rgba(174, 174, 192, 0.15);
 
       mat-icon {
-        color: #1565c0;
+        color: $duana-primary;
       }
 
       .stat-content {
@@ -93,33 +103,35 @@
         flex-direction: column;
 
         .stat-value {
-          font-weight: 600;
+          font-family: $font-data;
+          font-weight: $font-semibold;
           font-size: 1rem;
         }
 
         .stat-label {
+          font-family: $font-body;
           font-size: 0.75rem;
-          color: #757575;
+          color: $financial-neutral;
         }
       }
 
       &.stat-total {
-        background: #e3f2fd;
+        background: rgba($duana-primary, 0.06);
 
         .stat-value {
-          color: #1565c0;
+          color: $duana-primary;
         }
       }
 
       &.stat-warning {
-        background: #fff3e0;
+        background: $semaphore-naranja-bg;
 
         mat-icon {
-          color: #e65100;
+          color: $semaphore-naranja-text;
         }
 
         .stat-value {
-          color: #e65100;
+          color: $semaphore-naranja-text;
         }
       }
     }
@@ -131,45 +143,46 @@
     gap: 0.75rem;
     margin-top: 1rem;
     padding: 1rem;
-    background: #fff3e0;
-    border-left: 4px solid #ff9800;
-    border-radius: 4px;
+    background: $semaphore-naranja-bg;
+    border-left: 4px solid $semaphore-naranja;
+    border-radius: $neuro-radius-sm;
 
     mat-icon {
-      color: #e65100;
+      color: $semaphore-naranja-text;
       flex-shrink: 0;
     }
 
     strong {
-      color: #e65100;
+      color: $semaphore-naranja-text;
     }
 
     p {
       margin: 0.25rem 0 0;
-      color: #424242;
+      font-family: $font-body;
+      color: $duana-text;
     }
   }
 }
 
 // Estado Chips
 .estado-draft {
-  background-color: #fff9c4 !important;
-  color: #f57f17 !important;
+  background-color: $semaphore-amarillo-bg !important;
+  color: $semaphore-amarillo-text !important;
 }
 
 .estado-pending {
-  background-color: #ffe0b2 !important;
-  color: #e65100 !important;
+  background-color: $semaphore-naranja-bg !important;
+  color: $semaphore-naranja-text !important;
 }
 
 .estado-approved {
-  background-color: #c8e6c9 !important;
-  color: #2e7d32 !important;
+  background-color: $semaphore-verde-bg !important;
+  color: $semaphore-verde-text !important;
 }
 
 .estado-sent {
-  background-color: #bbdefb !important;
-  color: #1565c0 !important;
+  background-color: rgba($duana-primary, 0.1) !important;
+  color: $duana-primary !important;
 }
 
 // Table Card
@@ -179,11 +192,13 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    font-family: $font-heading;
     font-size: 1rem;
   }
 
   .table-container {
     overflow-x: auto;
+    border-radius: $neuro-radius-sm;
   }
 
   .cart-table {
@@ -196,16 +211,18 @@
       padding: 0.5rem 0;
 
       strong {
+        font-family: $font-heading;
         font-size: 0.9rem;
       }
 
       .molecula-text {
+        font-family: $font-body;
         font-size: 0.8rem;
-        color: #616161;
+        color: $financial-neutral;
       }
 
       .familia-text {
-        color: #9e9e9e;
+        color: $color-gray-400;
         font-size: 0.75rem;
       }
     }
@@ -218,19 +235,26 @@
       .quantity-input {
         width: 80px;
         padding: 4px 8px;
-        border: 1px solid #bdbdbd;
-        border-radius: 4px;
+        border: 1px solid $color-gray-300;
+        border-radius: $neuro-radius-sm;
+        font-family: $font-data;
         font-size: 0.9rem;
         text-align: center;
+        background: $neuro-bg-white;
+        box-shadow: $neuro-shadow-debossed;
+        transition: border-color $neuro-transition-fast, box-shadow $neuro-transition-fast;
 
         &:focus {
           outline: none;
-          border-color: #1565c0;
+          border-color: $duana-primary;
+          box-shadow:
+            $neuro-shadow-debossed,
+            0 0 0 3px rgba($duana-primary, 0.15);
         }
       }
 
       .moq-hint {
-        color: #9e9e9e;
+        color: $color-gray-400;
         font-size: 0.7rem;
       }
     }
@@ -241,24 +265,28 @@
       gap: 2px;
 
       .precio-lista {
+        font-family: $font-data;
         font-size: 0.8rem;
-        color: #9e9e9e;
+        color: $color-gray-400;
         text-decoration: line-through;
       }
 
       .bonificacion {
+        font-family: $font-data;
         font-size: 0.75rem;
-        color: #2e7d32;
+        color: $financial-profit;
       }
 
       .costo-neto {
-        color: #212121;
+        font-family: $font-data;
+        font-weight: $font-semibold;
+        color: $duana-text;
       }
     }
 
     .clase-c-chip {
-      background-color: #ffe0b2 !important;
-      color: #e65100 !important;
+      background-color: $semaphore-naranja-bg !important;
+      color: $semaphore-naranja-text !important;
       font-size: 0.75rem;
 
       mat-icon {
@@ -275,8 +303,8 @@
 .supplier-grouping {
   .supplier-group {
     margin-bottom: 1rem;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
+    border: 1px solid $color-gray-200;
+    border-radius: $neuro-radius-sm;
     overflow: hidden;
 
     .supplier-group-header {
@@ -284,16 +312,17 @@
       align-items: center;
       gap: 0.5rem;
       padding: 0.75rem 1rem;
-      background: #f5f5f5;
+      background: $neuro-bg-light;
 
       mat-icon {
-        color: #1565c0;
+        color: $duana-primary;
       }
 
       .group-summary {
         margin-left: auto;
+        font-family: $font-data;
         font-size: 0.85rem;
-        color: #616161;
+        color: $financial-neutral;
       }
     }
 
@@ -302,21 +331,24 @@
         display: flex;
         align-items: center;
         padding: 0.5rem 1rem 0.5rem 2.5rem;
-        border-top: 1px solid #f5f5f5;
+        border-top: 1px solid $neuro-bg-light;
 
         .group-item-name {
           flex: 1;
+          font-family: $font-body;
         }
 
         .group-item-qty {
           width: 80px;
           text-align: center;
-          color: #616161;
+          font-family: $font-data;
+          color: $financial-neutral;
         }
 
         .group-item-cost {
           width: 120px;
           text-align: right;
+          font-family: $font-data;
           font-weight: 500;
         }
       }
@@ -328,10 +360,12 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem;
-    background: #e3f2fd;
-    border-radius: 4px;
+    background: rgba($duana-primary, 0.06);
+    border-radius: $neuro-radius-sm;
+    font-family: $font-body;
     font-size: 0.85rem;
-    color: #1565c0;
+    color: $duana-primary;
+    box-shadow: $neuro-shadow-debossed;
 
     mat-icon {
       font-size: 18px;
@@ -350,8 +384,14 @@
     justify-content: flex-end;
 
     .send-orders-btn {
-      background-color: #2e7d32 !important;
+      background-color: $financial-profit !important;
       color: white !important;
+      transition: transform $neuro-transition-fast, box-shadow $neuro-transition-fast;
+
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba($financial-profit, 0.3);
+      }
     }
   }
 }

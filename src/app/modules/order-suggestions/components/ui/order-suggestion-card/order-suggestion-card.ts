@@ -38,6 +38,11 @@ export class OrderSuggestionCard {
     private snackBar: MatSnackBar
   ) {}
 
+  /** Check if this suggestion's product is already in the cart */
+  isProductInCart(): boolean {
+    return this.cartService.hasProduct(this.suggestion?.producto_id);
+  }
+
   onAddToCart(): void {
     const item = {
       producto_id: this.suggestion.producto_id,
