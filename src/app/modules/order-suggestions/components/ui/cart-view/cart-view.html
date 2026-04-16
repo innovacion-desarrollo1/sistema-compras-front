@@ -74,13 +74,21 @@
     <mat-card-header>
       <mat-card-title class="table-title">
         <span>Productos en el carrito</span>
-        <button
-          mat-stroked-button
-          (click)="toggleSupplierGrouping()"
-          matTooltip="Ver cómo se dividirán las órdenes por proveedor">
-          <mat-icon>{{ showSupplierGrouping ? 'view_list' : 'account_tree' }}</mat-icon>
-          {{ showSupplierGrouping ? 'Vista Lista' : 'Vista por Proveedor' }}
-        </button>
+        <mat-button-toggle-group
+          [value]="showSupplierGrouping ? 'supplier' : 'list'"
+          (change)="onViewModeChange($event.value)"
+          class="view-toggle"
+          hideSingleSelectionIndicator
+          aria-label="Modo de vista del carrito">
+          <mat-button-toggle value="list" aria-label="Vista lista">
+            <mat-icon>view_list</mat-icon>
+            Lista
+          </mat-button-toggle>
+          <mat-button-toggle value="supplier" aria-label="Vista por proveedor">
+            <mat-icon>account_tree</mat-icon>
+            Proveedor
+          </mat-button-toggle>
+        </mat-button-toggle-group>
       </mat-card-title>
     </mat-card-header>
 
@@ -192,8 +200,10 @@
       <div class="supplier-grouping" *ngIf="showSupplierGrouping">
         <div class="supplier-group" *ngFor="let group of supplierGroups">
           <div class="supplier-group-header">
-            <mat-icon>store</mat-icon>
-            <strong>{{ group.proveedor_nombre }}</strong>
+            <div class="supplier-name">
+              <mat-icon>store</mat-icon>
+              <strong>{{ group.proveedor_nombre }}</strong>
+            </div>
             <span class="group-summary">
               {{ group.items.length }} productos · {{ formatCurrency(group.total) }}
             </span>
@@ -201,8 +211,10 @@
           <div class="supplier-group-items">
             <div class="group-item" *ngFor="let item of group.items">
               <span class="group-item-name">{{ item.nombre_comercial }}</span>
-              <span class="group-item-qty">{{ item.cantidad }} uds</span>
-              <span class="group-item-cost">{{ formatCurrency(item.costo_total) }}</span>
+              <div class="group-item-meta">
+                <span class="group-item-qty">{{ item.cantidad }} uds</span>
+                <span class="group-item-cost">{{ formatCurrency(item.costo_total) }}</span>
+              </div>
             </div>
           </div>
         </div>

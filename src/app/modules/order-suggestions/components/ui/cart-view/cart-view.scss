@@ -191,9 +191,50 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
     width: 100%;
     font-family: $font-heading;
     font-size: 1rem;
+  }
+
+  // View Toggle (Segmented Control)
+  .view-toggle {
+    border: 1px solid $color-gray-200;
+    border-radius: 20px;
+    overflow: hidden;
+    height: 32px;
+
+    .mat-button-toggle {
+      font-family: $font-body;
+      font-size: 0.75rem;
+      line-height: 32px;
+      border: none !important;
+
+      .mat-button-toggle-label-content {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 0 12px;
+        line-height: 32px;
+      }
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    .mat-button-toggle-checked {
+      background: $duana-primary;
+      color: white;
+    }
+
+    .mat-button-toggle:not(.mat-button-toggle-checked) {
+      background: $neuro-bg-white;
+      color: $duana-text;
+    }
   }
 
   .table-container {
@@ -309,47 +350,80 @@
 
     .supplier-group-header {
       display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      flex-direction: column;
+      gap: 4px;
       padding: 0.75rem 1rem;
       background: $neuro-bg-light;
+      border-bottom: 1px solid $color-gray-200;
 
-      mat-icon {
-        color: $duana-primary;
+      .supplier-name {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        mat-icon {
+          color: $duana-primary;
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+          flex-shrink: 0;
+        }
+
+        strong {
+          font-family: $font-heading;
+          font-size: 0.85rem;
+          line-height: 1.3;
+          word-break: break-word;
+        }
       }
 
       .group-summary {
-        margin-left: auto;
         font-family: $font-data;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         color: $financial-neutral;
+        padding-left: 28px; // align with text after icon
       }
     }
 
     .supplier-group-items {
       .group-item {
         display: flex;
-        align-items: center;
-        padding: 0.5rem 1rem 0.5rem 2.5rem;
-        border-top: 1px solid $neuro-bg-light;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 4px 8px;
+        padding: 0.6rem 1rem;
+        border-top: 1px solid rgba($color-gray-200, 0.6);
+
+        &:first-child {
+          border-top: none;
+        }
 
         .group-item-name {
-          flex: 1;
+          flex: 1 1 100%;
           font-family: $font-body;
+          font-size: 0.85rem;
+          font-weight: 500;
+          color: $duana-text;
+        }
+
+        .group-item-meta {
+          display: flex;
+          justify-content: space-between;
+          width: 100%;
+          padding-top: 2px;
         }
 
         .group-item-qty {
-          width: 80px;
-          text-align: center;
           font-family: $font-data;
+          font-size: 0.8rem;
           color: $financial-neutral;
         }
 
         .group-item-cost {
-          width: 120px;
-          text-align: right;
           font-family: $font-data;
-          font-weight: 500;
+          font-size: 0.85rem;
+          font-weight: 600;
+          color: $duana-text;
         }
       }
     }
@@ -363,7 +437,8 @@
     background: rgba($duana-primary, 0.06);
     border-radius: $neuro-radius-sm;
     font-family: $font-body;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
+    line-height: 1.4;
     color: $duana-primary;
     box-shadow: $neuro-shadow-debossed;
 
@@ -371,6 +446,7 @@
       font-size: 18px;
       width: 18px;
       height: 18px;
+      flex-shrink: 0;
     }
   }
 }

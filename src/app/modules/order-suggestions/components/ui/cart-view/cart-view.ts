@@ -14,6 +14,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { Cart, CartItem, CartEstado, CartService, SendOrdersResult } from '../../../../../core/services/cart.service';
 
 @Component({
@@ -34,6 +35,7 @@ import { Cart, CartItem, CartEstado, CartService, SendOrdersResult } from '../..
     MatSnackBarModule,
     MatBadgeModule,
     MatDialogModule,
+    MatButtonToggleModule,
   ],
   templateUrl: './cart-view.html',
   styleUrl: './cart-view.scss',
@@ -55,6 +57,14 @@ export class CartView implements OnInit, OnDestroy {
   // Order splitting preview
   showSupplierGrouping = false;
   supplierGroups: { proveedor_id: number; proveedor_nombre: string; items: CartItem[]; total: number }[] = [];
+
+  onViewModeChange(value: string): void {
+    this.showSupplierGrouping = value === 'supplier';
+    if (this.showSupplierGrouping) {
+      this.buildSupplierGroups();
+    }
+    this.cdr.markForCheck();
+  }
 
   // TODO: Replace with AuthService
   userRole: 'AUXILIAR_COMPRAS' | 'JEFE_COMPRAS' = 'JEFE_COMPRAS';
