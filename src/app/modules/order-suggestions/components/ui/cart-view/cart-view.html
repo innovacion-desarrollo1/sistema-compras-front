@@ -210,11 +210,56 @@
           </div>
           <div class="supplier-group-items">
             <div class="group-item" *ngFor="let item of group.items">
-              <span class="group-item-name">{{ item.nombre_comercial }}</span>
-              <div class="group-item-meta">
-                <span class="group-item-qty">{{ item.cantidad }} uds</span>
-                <span class="group-item-cost">{{ formatCurrency(item.costo_total) }}</span>
+              <!-- Product info -->
+              <div class="group-item-info">
+                <strong class="group-item-name">{{ item.nombre_comercial }}</strong>
+                <span class="group-item-molecula">{{ item.molecula }}</span>
+                <small class="group-item-familia">Familia {{ item.familia }}</small>
               </div>
+
+              <!-- Cost breakdown -->
+              <div class="group-item-cost-detail">
+                <span class="group-item-precio-lista" *ngIf="item.bonificaciones > 0">
+                  {{ formatCurrency(item.precio_lista) }}
+                </span>
+                <span class="group-item-bonificacion" *ngIf="item.bonificaciones > 0">
+                  - {{ formatCurrency(item.bonificaciones) }} bonif.
+                </span>
+                <strong class="group-item-neto">{{ formatCurrency(item.costo_real_neto) }} / ud</strong>
+              </div>
+
+              <!-- Quantity + total row -->
+              <div class="group-item-actions">
+                <div class="group-item-quantity">
+                  <input
+                    *ngIf="isEditable()"
+                    type="number"
+                    class="quantity-input"
+                    [value]="item.cantidad"
+                    [min]="item.moq"
+                    (change)="onQuantityChange(item, $event)"
+                    aria-label="Cantidad">
+                  <span *ngIf="!isEditable()" class="group-item-qty-text">{{ item.cantidad }} uds</span>
+                  <small class="moq-hint">MOQ: {{ item.moq }}</small>
+                </div>
+                <strong class="group-item-total">{{ formatCurrency(item.costo_total) }}</strong>
+                <button
+                  mat-icon-button
+                  color="warn"
+                  (click)="onRemoveItem(item)"
+                  [disabled]="!isEditable()"
+                  aria-label="Eliminar del carrito"
+                  matTooltip="Eliminar del carrito"
+                  class="group-item-delete">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+
+              <!-- Clase C badge -->
+              <mat-chip class="group-item-clase-c" *ngIf="item.es_clase_c">
+                <mat-icon>gavel</mat-icon>
+                Clase C
+              </mat-chip>
             </div>
           </div>
         </div>
