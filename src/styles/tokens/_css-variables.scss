@@ -1,0 +1,165 @@
+/**
+ * DUANA Order Suggestions - CSS Custom Properties
+ * 
+ * Runtime-accessible CSS variables for use in Angular components
+ * Usage: var(--duana-primary), var(--neuro-shadow-embossed), etc.
+ */
+
+:root {
+  /* ========================================
+     DUANA Brand Colors
+     ======================================== */
+  --duana-primary: #3B82F6;
+  --duana-primary-dark: #1E3A8A;
+  --duana-primary-light: #DBEAFE;
+  --duana-white: #FFFFFF;
+  --duana-text: #0F172A;
+  --duana-text-muted: #475569;
+  
+  /* ========================================
+     Financial Dashboard Colors
+     ======================================== */
+  --financial-profit: #22C55E;
+  --financial-loss: #EF4444;
+  --financial-neutral: #6B7280;
+  --financial-trust: #003366;
+  
+  /* ========================================
+     Semaphore System
+     ======================================== */
+  --semaphore-verde: #10B981;
+  --semaphore-amarillo: #F59E0B;
+  --semaphore-naranja: #F97316;
+  --semaphore-rojo: #EF4444;
+  --semaphore-negro: #1F2937;
+  
+  /* ========================================
+     CTA Colors
+     ======================================== */
+  --cta-primary: #F97316;
+  --cta-primary-hover: #EA580C;
+  --cta-secondary: #3B82F6;
+  
+  /* ========================================
+     Neumorphic Backgrounds
+     ======================================== */
+  --neuro-bg-light: #E8F0F8;
+  --neuro-bg-grey: #E8E8E8;
+  --neuro-bg-white: #FFFFFF;
+  
+  /* ========================================
+     Neumorphic Shadows
+     ======================================== */
+  --neuro-shadow-soft-1: rgba(174, 174, 192, 0.2);
+  --neuro-shadow-soft-2: rgba(255, 255, 255, 0.9);
+  
+  --neuro-shadow-embossed: 
+    -5px -5px 15px var(--neuro-shadow-soft-2),
+    5px 5px 15px var(--neuro-shadow-soft-1);
+  
+  --neuro-shadow-embossed-hover: 
+    -6px -6px 18px var(--neuro-shadow-soft-2),
+    6px 6px 18px var(--neuro-shadow-soft-1);
+  
+  --neuro-shadow-debossed: 
+    inset -3px -3px 8px rgba(255, 255, 255, 0.7),
+    inset 3px 3px 8px rgba(174, 174, 192, 0.3);
+  
+  --neuro-shadow-flat: 
+    -2px -2px 6px rgba(255, 255, 255, 0.7),
+    2px 2px 6px rgba(174, 174, 192, 0.2);
+  
+  /* ========================================
+     Border Radius
+     ======================================== */
+  --neuro-radius-sm: 8px;
+  --neuro-radius-md: 12px;
+  --neuro-radius-lg: 16px;
+  --neuro-radius-xl: 20px;
+  --neuro-radius-pill: 9999px;
+  
+  /* ========================================
+     Spacing
+     ======================================== */
+  --neuro-spacing-xs: 0.5rem;
+  --neuro-spacing-sm: 0.75rem;
+  --neuro-spacing-md: 1rem;
+  --neuro-spacing-lg: 1.5rem;
+  --neuro-spacing-xl: 2rem;
+  --neuro-spacing-2xl: 3rem;
+  
+  /* ========================================
+     Typography
+     ======================================== */
+  --font-heading: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-body: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-data: 'Inter', 'SF Mono', 'Consolas', monospace;
+  
+  --type-display: clamp(2.5rem, 4vw, 3.5rem);
+  --type-h1: clamp(2rem, 3vw, 2.5rem);
+  --type-h2: clamp(1.5rem, 2.5vw, 2rem);
+  --type-h3: clamp(1.25rem, 2vw, 1.5rem);
+  --type-h4: 1.125rem;
+  --type-body-large: 1.125rem;
+  --type-body: 1rem;
+  --type-body-small: 0.875rem;
+  --type-body-tiny: 0.75rem;
+  
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  
+  --font-light: 300;
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  
+  /* ========================================
+     Animation Durations
+     ======================================== */
+  --duration-instant: 50ms;
+  --duration-fast: 100ms;
+  --duration-normal: 150ms;
+  --duration-slow: 200ms;
+  --duration-slower: 300ms;
+  
+  /* ========================================
+     Chart Colors (Chart.js)
+     ======================================== */
+  --chart-historical: #3B82F6;
+  --chart-predicted: #1E3A8A;
+  --chart-confidence: rgba(59, 130, 246, 0.15);
+  --chart-anomaly: #EF4444;
+  
+  /* ========================================
+     Approval Workflow States
+     ======================================== */
+  --estado-pendiente: #F97316;
+  --estado-aprobado: #10B981;
+  --estado-rechazado: #EF4444;
+  
+  /* ========================================
+     Background Neutrals (60-30-10)
+     ======================================== */
+  --bg-neutral-white: #FFFFFF;
+  --bg-neutral-grey: #F8FAFC;
+  --bg-accent-primary: rgba(59, 130, 246, 0.05);
+  --bg-accent-primary-strong: rgba(59, 130, 246, 0.1);
+  --bg-alert-success: rgba(16, 185, 129, 0.1);
+  --bg-alert-warning: rgba(249, 115, 22, 0.1);
+  --bg-alert-danger: rgba(239, 68, 68, 0.1);
+}
+
+/* ========================================
+   Reduced Motion Support
+   ======================================== */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-instant: 0.01ms;
+    --duration-fast: 0.01ms;
+    --duration-normal: 0.01ms;
+    --duration-slow: 0.01ms;
+    --duration-slower: 0.01ms;
+  }
+}

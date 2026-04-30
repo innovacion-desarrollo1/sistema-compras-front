@@ -1,34 +1,43 @@
 ﻿@import '../../../../../../styles/themes/design-tokens';
+@import '../../../../../../styles/tokens/neuro-tokens';
+@import '../../../../../../styles/tokens/financial-colors';
+@import '../../../../../../styles/tokens/typography';
+
+// ============================================================
+// ORDER SUGGESTION CARD - Neumorphic Hero Card
+// ============================================================
 
 .suggestion-card {
   .product-header {
-    background: linear-gradient(135deg, $color-blue-50 0%, $color-white 100%);
+    background: linear-gradient(135deg, rgba($duana-primary, 0.06) 0%, $neuro-bg-white 100%);
     padding: $spacing-md;
-    border-radius: $border-radius-md $border-radius-md 0 0;
-    
+    border-radius: $neuro-radius-lg $neuro-radius-lg 0 0;
+
     .product-info {
       flex: 1;
-      
+
       mat-card-title {
-        font-size: $font-size-xl;
-        font-weight: $font-weight-bold;
-        color: $color-blue-700;
+        font-family: $font-heading;
+        font-size: $type-h3;
+        font-weight: $font-bold;
+        color: $duana-dark;
         margin-bottom: $spacing-xs;
       }
-      
+
       mat-card-subtitle {
-        color: $color-gray-600;
+        font-family: $font-body;
+        color: $financial-neutral;
         font-size: $font-size-sm;
-        
+
         .separator {
           margin: 0 $spacing-xs;
         }
       }
     }
-    
+
     .stock-badge {
       height: 32px !important;
-      font-weight: $font-weight-semibold;
+      font-weight: $font-semibold;
     }
   }
 
@@ -36,132 +45,217 @@
     padding: $spacing-lg;
   }
 
-  .suggestion-section {
-    padding: $spacing-md 0;
-    
-    h3 {
-      display: flex;
-      align-items: center;
-      gap: $spacing-sm;
-      font-size: $font-size-lg;
-      font-weight: $font-weight-semibold;
-      color: $color-gray-700;
-      margin-bottom: $spacing-md;
-      
-      mat-icon {
-        color: $color-blue-500;
-      }
+  // Compact metrics grid
+  .suggestion-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $spacing-md;
+
+    @media (max-width: 480px) {
+      grid-template-columns: 1fr;
     }
   }
 
-  .quantity-display {
-    .quantity-value {
-      font-size: $font-size-2xl;
-      font-weight: $font-weight-bold;
-      color: $color-blue-700;
+  .metric-item {
+    display: flex;
+    align-items: flex-start;
+    gap: $spacing-sm;
+    padding: $spacing-sm;
+    background: $neuro-bg-light;
+    border-radius: $neuro-radius-sm;
+    box-shadow: $neuro-shadow-debossed;
+
+    > mat-icon {
+      color: $duana-primary;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    &.metric-total {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, rgba($duana-primary, 0.04) 0%, $neuro-bg-light 100%);
+      border: 1px solid rgba($duana-primary, 0.1);
     }
   }
 
-  .supplier-display {
-    .supplier-name {
-      font-size: $font-size-lg;
-      font-weight: $font-weight-semibold;
-      color: $color-gray-800;
-    }
-  }
+  .metric-data {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 
-  .cost-breakdown {
-    .cost-row {
-      display: flex;
-      justify-content: space-between;
-      padding: $spacing-sm 0;
-      font-size: $font-size-md;
-      
-      &.net-cost {
-        color: $color-gray-800;
-        font-size: $font-size-lg;
-      }
-      
-      &.total {
-        font-size: $font-size-xl;
-        color: $color-blue-700;
-        
-        .total-value {
-          font-weight: $font-weight-bold;
-        }
-      }
+    .metric-label {
+      font-family: $font-body;
+      font-size: $type-body-tiny;
+      font-weight: $font-medium;
+      color: $financial-neutral;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
     }
-    
-    .total-divider {
-      margin: $spacing-sm 0;
+
+    .metric-value {
+      font-family: $font-data;
+      font-size: $type-body;
+      font-weight: $font-semibold;
+      color: $duana-text;
+
+      &.quantity-highlight {
+        font-size: $type-h4;
+        color: $duana-primary;
+        font-weight: $font-bold;
+      }
+
+      &.total-value {
+        font-size: $type-h4;
+        color: $financial-trust;
+        font-weight: $font-bold;
+      }
     }
   }
 
   .governance-alert {
-    margin-top: $spacing-lg;
-    
-    .alert-card {
-      background-color: $semaphore-naranja-bg;
-      border-left: 4px solid $semaphore-naranja;
-      
-      mat-card-header {
-        mat-icon {
-          color: $semaphore-naranja;
-          margin-right: $spacing-sm;
-        }
-        
-        mat-card-title {
-          color: $semaphore-naranja-text;
-          font-size: $font-size-lg;
-        }
+    margin-top: $spacing-md;
+  }
+
+  .governance-alert-content {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    padding: $spacing-md;
+    background-color: $semaphore-naranja-bg;
+    border-left: 4px solid $semaphore-naranja;
+    border-radius: $neuro-radius-sm;
+
+    .governance-icon {
+      color: $semaphore-naranja;
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .governance-text {
+      flex: 1;
+
+      strong {
+        font-family: $font-heading;
+        font-size: $type-body;
+        color: $semaphore-naranja-text;
+        display: block;
       }
-      
-      .approval-status {
-        display: flex;
-        align-items: center;
-        gap: $spacing-sm;
-        margin-top: $spacing-sm;
-        
-        .status-pendiente {
-          background-color: $semaphore-amarillo-bg !important;
-          color: $semaphore-amarillo-text !important;
-        }
-        
-        .status-aprobado {
-          background-color: $semaphore-verde-bg !important;
-          color: $semaphore-verde-text !important;
-        }
-        
-        .status-rechazado {
-          background-color: $semaphore-rojo-bg !important;
-          color: $semaphore-rojo-text !important;
-        }
+
+      p {
+        font-family: $font-body;
+        font-size: $type-body-tiny;
+        color: $financial-neutral;
+        margin: 2px 0 0 0;
       }
+    }
+
+    .estado-chip {
+      font-family: $font-heading;
+      font-weight: $font-semibold;
+      font-size: 11px;
+      height: 28px;
     }
   }
 
   .action-buttons {
     padding: $spacing-md $spacing-lg;
     display: flex;
-    gap: $spacing-sm;
-    justify-content: flex-end;
-    background-color: $color-gray-50;
-    
-    button {
+    align-items: center;
+    gap: $spacing-md;
+    background-color: $neuro-bg-light;
+    border-radius: 0 0 $neuro-radius-lg $neuro-radius-lg;
+
+    // PRIMARY CTA (orange, standout)
+    .cta-primary {
+      background: $cta-primary;
+      color: white;
+      font-family: $font-heading;
+      font-weight: $font-bold;
+      font-size: $type-body;
+      padding: 0 $spacing-lg;
+      height: 44px;
+      border-radius: $neuro-radius-md;
+      box-shadow:
+        -3px -3px 8px rgba(255, 255, 255, 0.3),
+        3px 3px 8px rgba($cta-primary, 0.4);
+      transition: all $neuro-transition-fast;
       display: flex;
       align-items: center;
       gap: $spacing-xs;
-      font-weight: $font-weight-medium;
-      
+      border: none;
+
+      &:hover {
+        background: $cta-primary-hover;
+        box-shadow:
+          -3px -3px 10px rgba(255, 255, 255, 0.4),
+          3px 3px 10px rgba($cta-primary, 0.6),
+          0 0 20px rgba($cta-primary, 0.2);
+        transform: translateY(-1px);
+      }
+
       mat-icon {
-        font-size: 18px;
-        height: 18px;
-        width: 18px;
+        font-size: 20px;
+        height: 20px;
+        width: 20px;
+      }
+    }
+
+    // Secondary actions (muted)
+    .secondary-actions {
+      display: flex;
+      gap: $spacing-xs;
+      margin-left: auto;
+
+      button {
+        font-family: $font-body;
+        font-size: 13px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        transition: all $neuro-transition-fast;
+
+        mat-icon {
+          font-size: 16px;
+          height: 16px;
+          width: 16px;
+        }
+      }
+
+      .action-accept {
+        color: $financial-profit;
+        border-color: rgba($financial-profit, 0.3);
+
+        &:hover {
+          background: rgba($financial-profit, 0.06);
+          border-color: $financial-profit;
+        }
+      }
+
+      .action-adjust {
+        color: $duana-primary;
+        border-color: rgba($duana-primary, 0.3);
+
+        &:hover {
+          background: rgba($duana-primary, 0.06);
+          border-color: $duana-primary;
+        }
+      }
+
+      .action-reject {
+        color: $financial-loss;
+        border-color: rgba($financial-loss, 0.3);
+
+        &:hover {
+          background: rgba($financial-loss, 0.06);
+          border-color: $financial-loss;
+        }
       }
     }
   }
-}
-
-mat-divider {
-  margin: $spacing-md 0;
 }

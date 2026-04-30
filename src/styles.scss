@@ -23,6 +23,19 @@
 @import './styles/themes/design-tokens';
 
 // ============================================================================
+// DUANA ORDER SUGGESTIONS - NEUMORPHIC DESIGN SYSTEM
+// ============================================================================
+
+// Tokens (MUST import before components)
+@import './styles/tokens/neuro-tokens';
+@import './styles/tokens/financial-colors';
+@import './styles/tokens/typography';
+@import './styles/tokens/animations';
+
+// Base Components
+@import './styles/components/neuro-components';
+
+// ============================================================================
 // UTILITY CLASSES (Semaphore, Spacing, Layout)
 // ============================================================================
 
@@ -32,6 +45,9 @@
 // GLOBAL RESETS & BASE STYLES
 // ============================================================================
 
+// Import CSS Variables for runtime access
+@import './styles/tokens/css-variables';
+
 * {
   margin: 0;
   padding: 0;
@@ -40,13 +56,20 @@
 
 html, body {
   height: 100%;
-  font-family: $font-family-primary;
-  font-size: $font-size-md;
-  line-height: $line-height-normal;
-  color: $color-gray-900;
-  background-color: $color-gray-50;
+  font-family: var(--font-body);
+  font-size: var(--type-body);
+  line-height: var(--line-height-normal);
+  color: var(--duana-text);
+  background-color: var(--bg-neutral-grey);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+// Headings use Poppins
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  line-height: var(--line-height-tight);
+  font-weight: var(--font-semibold);
 }
 
 body {

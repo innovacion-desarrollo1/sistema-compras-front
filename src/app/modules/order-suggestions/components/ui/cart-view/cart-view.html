@@ -2,9 +2,9 @@
 <div class="cart-empty" *ngIf="!cart || cart.items.length === 0">
   <mat-card class="empty-card">
     <mat-card-content class="empty-content">
-      <mat-icon class="empty-icon">shopping_cart</mat-icon>
+      <mat-icon class="empty-icon">remove_shopping_cart</mat-icon>
       <h2>El carrito está vacío</h2>
-      <p>Agrega productos desde las sugerencias de orden para comenzar.</p>
+      <p>Agrega productos desde el ranking de proveedores o las sugerencias de orden para comenzar.</p>
     </mat-card-content>
   </mat-card>
 </div>
@@ -74,13 +74,21 @@
     <mat-card-header>
       <mat-card-title class="table-title">
         <span>Productos en el carrito</span>
-        <button
-          mat-stroked-button
-          (click)="toggleSupplierGrouping()"
-          matTooltip="Ver cómo se dividirán las órdenes por proveedor">
-          <mat-icon>{{ showSupplierGrouping ? 'view_list' : 'account_tree' }}</mat-icon>
-          {{ showSupplierGrouping ? 'Vista Lista' : 'Vista por Proveedor' }}
-        </button>
+        <mat-button-toggle-group
+          [value]="showSupplierGrouping ? 'supplier' : 'list'"
+          (change)="onViewModeChange($event.value)"
+          class="view-toggle"
+          hideSingleSelectionIndicator
+          aria-label="Modo de vista del carrito">
+          <mat-button-toggle value="list" aria-label="Vista lista">
+            <mat-icon>view_list</mat-icon>
+            Lista
+          </mat-button-toggle>
+          <mat-button-toggle value="supplier" aria-label="Vista por proveedor">
+            <mat-icon>account_tree</mat-icon>
+            Proveedor
+          </mat-button-toggle>
+        </mat-button-toggle-group>
       </mat-card-title>
     </mat-card-header>
 
@@ -192,17 +200,66 @@
       <div class="supplier-grouping" *ngIf="showSupplierGrouping">
         <div class="supplier-group" *ngFor="let group of supplierGroups">
           <div class="supplier-group-header">
-            <mat-icon>store</mat-icon>
-            <strong>{{ group.proveedor_nombre }}</strong>
+            <div class="supplier-name">
+              <mat-icon>store</mat-icon>
+              <strong>{{ group.proveedor_nombre }}</strong>
+            </div>
             <span class="group-summary">
               {{ group.items.length }} productos · {{ formatCurrency(group.total) }}
             </span>
           </div>
           <div class="supplier-group-items">
             <div class="group-item" *ngFor="let item of group.items">
-              <span class="group-item-name">{{ item.nombre_comercial }}</span>
-              <span class="group-item-qty">{{ item.cantidad }} uds</span>
-              <span class="group-item-cost">{{ formatCurrency(item.costo_total) }}</span>
+              <!-- Product info -->
+              <div class="group-item-info">
+                <strong class="group-item-name">{{ item.nombre_comercial }}</strong>
+                <span class="group-item-molecula">{{ item.molecula }}</span>
+                <small class="group-item-familia">Familia {{ item.familia }}</small>
+              </div>
+
+              <!-- Cost breakdown -->
+              <div class="group-item-cost-detail">
+                <span class="group-item-precio-lista" *ngIf="item.bonificaciones > 0">
+                  {{ formatCurrency(item.precio_lista) }}
+                </span>
+                <span class="group-item-bonificacion" *ngIf="item.bonificaciones > 0">
+                  - {{ formatCurrency(item.bonificaciones) }} bonif.
+                </span>
+                <strong class="group-item-neto">{{ formatCurrency(item.costo_real_neto) }} / ud</strong>
+              </div>
+
+              <!-- Quantity + total row -->
+              <div class="group-item-actions">
+                <div class="group-item-quantity">
+                  <input
+                    *ngIf="isEditable()"
+                    type="number"
+                    class="quantity-input"
+                    [value]="item.cantidad"
+                    [min]="item.moq"
+                    (change)="onQuantityChange(item, $event)"
+                    aria-label="Cantidad">
+                  <span *ngIf="!isEditable()" class="group-item-qty-text">{{ item.cantidad }} uds</span>
+                  <small class="moq-hint">MOQ: {{ item.moq }}</small>
+                </div>
+                <strong class="group-item-total">{{ formatCurrency(item.costo_total) }}</strong>
+                <button
+                  mat-icon-button
+                  color="warn"
+                  (click)="onRemoveItem(item)"
+                  [disabled]="!isEditable()"
+                  aria-label="Eliminar del carrito"
+                  matTooltip="Eliminar del carrito"
+                  class="group-item-delete">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+
+              <!-- Clase C badge -->
+              <mat-chip class="group-item-clase-c" *ngIf="item.es_clase_c">
+                <mat-icon>gavel</mat-icon>
+                Clase C
+              </mat-chip>
             </div>
           </div>
         </div>
@@ -224,7 +281,8 @@
         color="primary"
         (click)="onSubmitForReview()"
         [disabled]="!canSubmitCart()"
-        *ngIf="userRole === 'AUXILIAR_COMPRAS' || userRole === 'JEFE_COMPRAS'">
+        *ngIf="userRole === 'AUXILIAR_COMPRAS' || userRole === 'JEFE_COMPRAS'"
+        aria-label="Enviar carrito a validación">
         <mat-icon>send</mat-icon>
         Enviar a Validación
       </button>
@@ -232,29 +290,31 @@
       <!-- Jefe Actions -->
       <ng-container *ngIf="userRole === 'JEFE_COMPRAS'">
         <button
-          mat-raised-button
-          color="accent"
+          mat-stroked-button
+          class="action-approve"
           (click)="onApproveCart()"
-          [disabled]="!canApproveCart()">
+          [disabled]="!canApproveCart()"
+          aria-label="Aprobar carrito">
           <mat-icon>check_circle</mat-icon>
           Aprobar Carrito
         </button>
 
         <button
           mat-stroked-button
-          color="warn"
+          class="action-reject"
           (click)="onRejectCart()"
-          [disabled]="!canRejectCart()">
+          [disabled]="!canRejectCart()"
+          aria-label="Solicitar cambios al carrito">
           <mat-icon>undo</mat-icon>
           Solicitar Cambios
         </button>
 
         <button
           mat-raised-button
-          color="primary"
-          class="send-orders-btn"
+          class="cta-primary send-orders-btn"
           (click)="onSendOrders()"
-          [disabled]="!canSendOrders()">
+          [disabled]="!canSendOrders()"
+          aria-label="Enviar órdenes a proveedores">
           <mat-icon>local_shipping</mat-icon>
           Enviar Órdenes a Proveedores
         </button>

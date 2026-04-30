@@ -1,19 +1,27 @@
 <mat-card class="ranking-card">
   <mat-card-header>
     <mat-card-title>
-      <mat-icon>store</mat-icon>
-      2. Comparar Proveedores y Aplicar Bonificaciones
+      <mat-icon>leaderboard</mat-icon>
+      Ranking de Proveedores · Score 80/20
     </mat-card-title>
     <mat-card-subtitle>
-      Todos los proveedores ranqueados por score 80/20 en una sola vista. Actualice precios haciendo clic en "Actualizar Precio".
+      <span class="subtitle-text">Proveedores ranqueados por score: 80% Costo Real Neto + 20% Desempeño KPI</span>
+      <span class="trust-badge">
+        <mat-icon>verified</mat-icon>
+        Metodología auditada
+      </span>
     </mat-card-subtitle>
   </mat-card-header>
 
   <mat-card-content>
-    <!-- Loading State -->
+    <!-- Loading State (Skeleton) -->
     <div *ngIf="isLoading" class="loading-container">
-      <mat-spinner diameter="40"></mat-spinner>
-      <p>Cargando ranking de proveedores...</p>
+      <div class="skeleton-loader" style="height: 48px; border-radius: 8px; margin-bottom: 8px;"></div>
+      <div class="skeleton-loader" style="height: 64px; border-radius: 8px; margin-bottom: 6px;" *ngFor="let i of [1,2,3]"></div>
+      <p class="loading-text">
+        <mat-icon class="spin-icon">autorenew</mat-icon>
+        Calculando ranking de proveedores...
+      </p>
     </div>
 
     <!-- Suppliers Comparison Table -->
@@ -27,14 +35,14 @@
             Rank
           </th>
           <td mat-cell *matCellDef="let supplier; let i = index" class="ranking-cell">
-            <div class="ranking-badge" [ngClass]="{'top-rank': isTopSupplier(i)}">
+            <div class="ranking-badge" [ngClass]="{'top-rank': isTopSupplier(i), 'second-rank': i === 1, 'third-rank': i === 2}">
               {{ i + 1 }}
             </div>
             <mat-chip 
               *ngIf="isTopSupplier(i)" 
               class="semaphore-chip-verde recommended-chip">
               <mat-icon>star</mat-icon>
-              Recomendado
+              Mejor opción
             </mat-chip>
           </td>
         </ng-container>
@@ -182,7 +190,7 @@
         <!-- Actions Column -->
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef class="actions-header">Acciones</th>
-          <td mat-cell *matCellDef="let supplier" class="actions-cell">
+          <td mat-cell *matCellDef="let supplier; let i = index" class="actions-cell">
             <div class="actions-group">
               <!-- Inline quantity input -->
               <mat-form-field class="quantity-field" appearance="outline" subscriptSizing="dynamic">
@@ -192,29 +200,33 @@
                   min="1"
                   [ngModel]="getCantidad(supplier.proveedor_id)"
                   (ngModelChange)="onCantidadChange(supplier.proveedor_id, $event)"
-                  class="quantity-input">
+                  class="quantity-input"
+                  [attr.aria-label]="'Cantidad para ' + supplier.proveedor_nombre">
               </mat-form-field>
 
-              <!-- Add to cart (primary action) -->
+              <!-- Add to cart (PRIMARY CTA - only top supplier glows) -->
               <button 
                 mat-raised-button 
-                color="primary"
+                [class.cta-primary]="isTopSupplier(i) && !isProductInCart()"
+                [color]="isTopSupplier(i) ? undefined : 'primary'"
                 (click)="addToCart(supplier)"
                 class="add-cart-btn"
-                matTooltip="Agregar al carrito de compras">
-                <mat-icon>add_shopping_cart</mat-icon>
-                Al Carrito
+                [disabled]="isProductInCart()"
+                [matTooltip]="isProductInCart() ? 'Este producto ya está en el carrito' : 'Agregar al carrito de compras'"
+                [attr.aria-label]="'Agregar ' + supplier.proveedor_nombre + ' al carrito'">
+                <mat-icon>{{ isProductInCart() ? 'check_circle' : 'add_shopping_cart' }}</mat-icon>
+                {{ isProductInCart() ? 'Ya en carrito' : 'Al Carrito' }}
               </button>
 
               <!-- Update price (secondary action) -->
               <button 
                 mat-stroked-button 
-                color="accent"
                 (click)="openUpdateCostoDialog(supplier)"
                 class="update-precio-btn"
-                matTooltip="Actualizar precio de este proveedor">
+                matTooltip="Actualizar precio de este proveedor"
+                [attr.aria-label]="'Actualizar precio de ' + supplier.proveedor_nombre">
                 <mat-icon>edit</mat-icon>
-                Actualizar Precio
+                Precio
               </button>
             </div>
           </td>
@@ -233,7 +245,8 @@
     <!-- Empty State -->
     <div *ngIf="!isLoading && suppliers.length === 0" class="empty-state">
       <mat-icon>store_off</mat-icon>
-      <p>No se encontraron proveedores para esta molécula</p>
+      <h3>Sin proveedores disponibles</h3>
+      <p>No se encontraron proveedores para esta molécula.</p>
     </div>
   </mat-card-content>
 </mat-card>

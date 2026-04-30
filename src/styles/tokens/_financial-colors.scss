@@ -1,0 +1,88 @@
+/**
+ * DUANA Order Suggestions - Financial Dashboard Colors
+ * 
+ * Profit/Loss colors, trust indicators, KPI visualization
+ * Based on DESIGN-SYSTEM-ORDER-SUGGESTIONS.md Section 3
+ */
+
+// ============================================================
+// DUANA Brand Colors (Azure/Blue Theme)
+// ============================================================
+
+$duana-primary: #3B82F6;          // Azure Blue (buttons, links, primary actions)
+$duana-primary-dark: #1E3A8A;     // Dark Blue (emphasis, chart predictions)
+$duana-primary-light: #DBEAFE;    // Light Blue (backgrounds, highlights)
+$duana-dark: $duana-primary-dark;  // Alias for convenience
+
+$duana-white: #FFFFFF;
+$duana-text: #0F172A;             // Slate 900 (primary text)
+$duana-text-muted: #475569;       // Slate 600 (secondary text)
+
+// ============================================================
+// Financial Dashboard Performance Colors
+// ============================================================
+
+$financial-profit: #22C55E;       // Green (positive indicators, savings)
+$financial-loss: #EF4444;         // Red (negative indicators, alerts)
+$financial-neutral: #6B7280;      // Gray (neutral data)
+$financial-trust: #003366;        // Deep Blue (trustworthy data, totals)
+
+// ============================================================
+// Semaphore System (DUANA Legacy - Preserved)
+// ============================================================
+
+$semaphore-verde: #10B981;        // Green (OK, stock sufficient)
+$semaphore-amarillo: #F59E0B;     // Yellow (Warning, approaching ROP)
+$semaphore-naranja: #F97316;      // Orange (Alert, below ROP)
+$semaphore-rojo: #EF4444;         // Red (Critical, stockout risk)
+$semaphore-negro: #1F2937;        // Black (Critical + High Cost)
+
+// ============================================================
+// CTA (Call-to-Action) High Contrast
+// ============================================================
+
+$cta-primary: #F97316;            // Orange (conversion-optimized CTA)
+$cta-primary-hover: #EA580C;      // Darker Orange (hover)
+$cta-secondary: $duana-primary;   // Azure Blue (secondary actions)
+
+// ============================================================
+// Background Neutrals (60-30-10 Rule)
+// ============================================================
+
+// 60% - Dominant neutral backgrounds
+$bg-neutral-white: #FFFFFF;
+$bg-neutral-grey: #F8FAFC;        // Slate 50 (page background)
+
+// 30% - Azure/Blue accents
+$bg-accent-primary: rgba(59, 130, 246, 0.05);
+$bg-accent-primary-strong: rgba(59, 130, 246, 0.1);
+
+// 10% - Semaphore alerts (sparingly)
+$bg-alert-success: rgba(16, 185, 129, 0.1);
+$bg-alert-warning: rgba(249, 115, 22, 0.1);
+$bg-alert-danger: rgba(239, 68, 68, 0.1);
+
+// ============================================================
+// Data Visualization (Chart.js Financial Colors)
+// ============================================================
+
+$chart-historical: $duana-primary;          // Historical data (solid line)
+$chart-predicted: $duana-primary-dark;      // ML predictions (dashed line)
+$chart-confidence: rgba(59, 130, 246, 0.15); // Confidence interval (shaded area)
+$chart-anomaly: $financial-loss;            // Anomaly markers (red points)
+
+// ============================================================
+// Bonification Tier Crossing (Cost Simulation)
+// ============================================================
+
+$tier-active-bg: rgba(34, 197, 94, 0.05);
+$tier-active-border: $financial-profit;
+$tier-inactive-bg: transparent;
+
+// ============================================================
+// Approval Workflow State Colors
+// ============================================================
+
+$estado-pendiente: $semaphore-naranja;
+$estado-aprobado: $semaphore-verde;
+$estado-rechazado: $semaphore-rojo;

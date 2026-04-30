@@ -2,16 +2,20 @@
   <mat-card-header>
     <mat-card-title>
       <mat-icon>inventory_2</mat-icon>
-      Información de Inventario - {{ molecula.nombre }}
+      Información de Inventario · {{ molecula.nombre }}
     </mat-card-title>
     <mat-card-subtitle>
-      {{ getFamilyName() }}
+      <span class="subtitle-text">{{ getFamilyName() }}</span>
       <mat-chip 
         *ngIf="molecula.es_clase_c" 
         class="semaphore-chip-naranja clase-c-chip">
         <mat-icon>gavel</mat-icon>
-        Clase C - Requiere Aprobación
+        Clase C — Requiere Aprobación
       </mat-chip>
+      <span class="trust-badge">
+        <mat-icon>update</mat-icon>
+        Datos en tiempo real
+      </span>
     </mat-card-subtitle>
   </mat-card-header>
 

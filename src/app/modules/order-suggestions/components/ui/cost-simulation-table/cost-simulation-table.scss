@@ -1,4 +1,11 @@
 ﻿@import '../../../../../../styles/themes/design-tokens';
+@import '../../../../../../styles/tokens/neuro-tokens';
+@import '../../../../../../styles/tokens/financial-colors';
+@import '../../../../../../styles/tokens/typography';
+
+// ============================================================
+// COST SIMULATION TABLE - Neumorphic Financial Analysis
+// ============================================================
 
 .simulation-card {
   margin: 16px 0;
@@ -9,8 +16,9 @@ mat-card-header {
     display: flex;
     align-items: center;
     gap: 8px;
+    font-family: $font-heading;
     mat-icon {
-      color: $color-blue-600;
+      color: $duana-primary;
       font-size: 24px;
     }
   }
@@ -19,13 +27,15 @@ mat-card-header {
 .table-container {
   margin: 16px 0;
   overflow-x: auto;
+  border-radius: $neuro-radius-sm;
 }
 
 .simulation-table {
   width: 100%;
   th {
-    background-color: $color-blue-100;
-    color: $color-blue-900;
+    background-color: rgba($duana-primary, 0.08);
+    color: $duana-dark;
+    font-family: $font-heading;
     font-weight: 700;
     font-size: 13px;
     text-transform: uppercase;
@@ -33,31 +43,33 @@ mat-card-header {
   }
   td {
     padding: 12px;
+    font-family: $font-data;
     font-size: 14px;
   }
   .total-cost {
     font-size: 16px;
-    color: $color-blue-800;
+    font-weight: $font-bold;
+    color: $duana-primary;
   }
 }
 
 .clickable-row {
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color $neuro-transition-fast;
   &:hover {
-    background-color: $color-blue-50;
+    background-color: rgba($duana-primary, 0.04);
   }
   &.base-scenario {
-    background-color: rgba($color-blue-200, 0.3);
-    border-left: 4px solid $color-blue-600;
-    font-weight: 600;
+    background-color: rgba($duana-primary, 0.08);
+    border-left: 4px solid $duana-primary;
+    font-weight: $font-semibold;
     &:hover {
-      background-color: rgba($color-blue-200, 0.5);
+      background-color: rgba($duana-primary, 0.12);
     }
   }
   &.tier-active {
-    background-color: rgba($semaphore-verde-bg, 0.05);
-    border-right: 3px solid $semaphore-verde-border;
+    background-color: rgba($financial-profit, 0.05);
+    border-right: 3px solid $financial-profit;
   }
 }
 
@@ -66,9 +78,10 @@ mat-card-header {
   align-items: center;
   gap: 4px;
   padding: 4px 10px;
-  border-radius: 12px;
+  border-radius: $neuro-radius-pill;
+  font-family: $font-data;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: $font-semibold;
   mat-icon {
     font-size: 16px;
     height: 16px;
@@ -80,7 +93,7 @@ mat-card-header {
   }
   &.bonif-inactive {
     background-color: $color-gray-200;
-    color: $color-gray-600;
+    color: $financial-neutral;
   }
 }
 
@@ -90,12 +103,14 @@ mat-card-header {
   gap: 8px;
   margin-top: 12px;
   padding: 12px;
-  background-color: $color-blue-50;
-  border-radius: 6px;
+  background-color: rgba($duana-primary, 0.05);
+  border-radius: $neuro-radius-sm;
+  font-family: $font-body;
   font-size: 13px;
-  color: $color-blue-800;
+  color: $duana-dark;
+  box-shadow: $neuro-shadow-debossed;
   mat-icon {
-    color: $color-blue-600;
+    color: $duana-primary;
     font-size: 18px;
   }
 }
@@ -107,7 +122,8 @@ mat-card-header {
   gap: 12px;
   padding: 32px;
   p {
-    color: $color-gray-600;
+    font-family: $font-body;
+    color: $financial-neutral;
     font-style: italic;
   }
 }

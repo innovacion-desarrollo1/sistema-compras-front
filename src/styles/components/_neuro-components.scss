@@ -1,0 +1,514 @@
+/**
+ * DUANA Order Suggestions - Neumorphic Base Components
+ * 
+ * .neuro-card, .neuro-button, .neuro-input, .neuro-progress
+ * Based on DESIGN-SYSTEM-ORDER-SUGGESTIONS.md Section 4
+ */
+
+@import '../tokens/neuro-tokens';
+@import '../tokens/financial-colors';
+@import '../tokens/typography';
+@import '../tokens/animations';
+
+// ============================================================
+// 1. Neumorphic Card (Base Container)
+// ============================================================
+
+.neuro-card {
+  background: $neuro-bg-light;
+  border-radius: $neuro-radius-lg;
+  box-shadow: $neuro-shadow-embossed;
+  padding: $neuro-spacing-lg;
+  
+  transition: box-shadow $duration-normal $ease-in-out,
+              transform $duration-normal $ease-in-out;
+  
+  // Hover state: Slightly more elevated
+  &:hover {
+    box-shadow: $neuro-shadow-embossed-hover;
+    transform: translateY(-2px);
+  }
+  
+  // Variants
+  &.flat {
+    box-shadow: $neuro-shadow-flat;
+    
+    &:hover {
+      box-shadow: $neuro-shadow-embossed;
+    }
+  }
+  
+  &.white {
+    background: $neuro-bg-white;
+  }
+  
+  &.grey {
+    background: $neuro-bg-grey;
+  }
+}
+
+// ============================================================
+// 2. Neumorphic Button
+// ============================================================
+
+.neuro-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: $neuro-radius-md;
+  
+  font-family: $font-heading;
+  font-size: $type-body;
+  font-weight: $font-semibold;
+  letter-spacing: $tracking-wide;
+  
+  background: $neuro-bg-light;
+  color: $duana-text;
+  
+  box-shadow: $neuro-shadow-embossed;
+  cursor: pointer;
+  
+  transition: 
+    box-shadow $duration-fast $ease-in-out,
+    transform $duration-fast $ease-in-out,
+    background $duration-fast $ease-in-out;
+  
+  // Hover: More pronounced shadow
+  &:hover:not(:disabled) {
+    box-shadow: $neuro-shadow-embossed-hover;
+    transform: translateY(-1px);
+  }
+  
+  // Active: Debossed (pressed)
+  &:active:not(:disabled) {
+    box-shadow: $neuro-shadow-debossed;
+    transform: scale(0.98);
+  }
+  
+  // Focus: Azure ring
+  &:focus-visible {
+    outline: 3px solid rgba($duana-primary, 0.5);
+    outline-offset: 2px;
+  }
+  
+  // Disabled: Muted
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: $neuro-shadow-flat;
+  }
+  
+  // ========================================
+  // Variants
+  // ========================================
+  
+  // Primary (CTA Orange with glow)
+  &.primary {
+    background: $cta-primary;
+    color: white;
+    
+    box-shadow: 
+      -4px -4px 12px rgba(255, 255, 255, 0.5),
+      4px 4px 12px rgba(249, 115, 22, 0.4);
+    
+    &:hover:not(:disabled) {
+      background: $cta-primary-hover;
+      
+      box-shadow: 
+        -5px -5px 15px rgba(255, 255, 255, 0.6),
+        5px 5px 15px rgba(249, 115, 22, 0.6);
+    }
+    
+    // Glow animation (for main CTA)
+    &.glow {
+      animation: glowPulse 2s ease-in-out infinite;
+    }
+  }
+  
+  // Secondary (Azure Blue)
+  &.secondary {
+    background: $duana-primary;
+    color: white;
+    
+    box-shadow: 
+      -4px -4px 12px rgba(255, 255, 255, 0.5),
+      4px 4px 12px rgba(59, 130, 246, 0.4);
+    
+    &:hover:not(:disabled) {
+      background: $duana-primary-dark;
+      
+      box-shadow: 
+        -5px -5px 15px rgba(255, 255, 255, 0.6),
+        5px 5px 15px rgba(59, 130, 246, 0.6);
+    }
+  }
+  
+  // Success (Green)
+  &.success {
+    background: $financial-profit;
+    color: white;
+    
+    box-shadow: 
+      -4px -4px 12px rgba(255, 255, 255, 0.3),
+      4px 4px 12px rgba(34, 197, 94, 0.4);
+    
+    &:hover:not(:disabled) {
+      background: darken($financial-profit, 5%);
+    }
+  }
+  
+  // Danger (Red)
+  &.danger {
+    background: $financial-loss;
+    color: white;
+    
+    box-shadow: 
+      -4px -4px 12px rgba(255, 255, 255, 0.3),
+      4px 4px 12px rgba(239, 68, 68, 0.4);
+    
+    &:hover:not(:disabled) {
+      background: darken($financial-loss, 5%);
+    }
+  }
+  
+  // Outline (for secondary actions)
+  &.outline {
+    background: transparent;
+    border: 2px solid $duana-primary;
+    color: $duana-primary;
+    box-shadow: none;
+    
+    &:hover:not(:disabled) {
+      background: rgba($duana-primary, 0.05);
+      box-shadow: $neuro-shadow-flat;
+    }
+    
+    &:active:not(:disabled) {
+      background: rgba($duana-primary, 0.1);
+    }
+  }
+  
+  // Icon only (square)
+  &.icon-only {
+    padding: 0.75rem;
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+  
+  // Small size
+  &.sm {
+    padding: 0.5rem 1rem;
+    font-size: $type-body-small;
+  }
+  
+  // Large size
+  &.lg {
+    padding: 1rem 2rem;
+    font-size: $type-body-large;
+  }
+}
+
+// ============================================================
+// 3. Neumorphic Input
+// ============================================================
+
+.neuro-input {
+  display: block;
+  width: 100%;
+  
+  padding: 0.875rem 1.25rem;
+  border: none;
+  border-radius: $neuro-radius-md;
+  
+  font-family: $font-body;
+  font-size: $type-body;
+  color: $duana-text;
+  
+  background: $neuro-bg-white;
+  
+  // Inset (debossed) shadow
+  box-shadow: $neuro-shadow-debossed;
+  
+  transition: box-shadow $duration-normal $ease-in-out;
+  
+  // Placeholder
+  &::placeholder {
+    color: $financial-neutral;
+    opacity: 0.7;
+  }
+  
+  // Focus: Azure ring + deeper inset
+  &:focus {
+    outline: none;
+    box-shadow: 
+      inset -3px -3px 8px rgba(255, 255, 255, 0.7),
+      inset 3px 3px 8px rgba(174, 174, 192, 0.3),
+      0 0 0 3px rgba($duana-primary, 0.3);
+  }
+  
+  // Error state
+  &.error {
+    box-shadow: 
+      inset -3px -3px 8px rgba(255, 255, 255, 0.7),
+      inset 3px 3px 8px rgba(239, 68, 68, 0.3);
+    
+    &:focus {
+      box-shadow: 
+        inset -3px -3px 8px rgba(255, 255, 255, 0.7),
+        inset 3px 3px 8px rgba(239, 68, 68, 0.3),
+        0 0 0 3px rgba($financial-loss, 0.3);
+    }
+  }
+  
+  // Success state
+  &.success {
+    box-shadow: 
+      inset -3px -3px 8px rgba(255, 255, 255, 0.7),
+      inset 3px 3px 8px rgba(34, 197, 94, 0.2);
+  }
+  
+  // Disabled
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: $neuro-bg-grey;
+  }
+}
+
+// Textarea variant
+.neuro-textarea {
+  @extend .neuro-input;
+  min-height: 120px;
+  resize: vertical;
+  line-height: $line-height-relaxed;
+}
+
+// ============================================================
+// 4. Neumorphic Progress Bar
+// ============================================================
+
+.neuro-progress {
+  position: relative;
+  width: 100%;
+  height: 1rem;
+  
+  background: $neuro-bg-white;
+  border-radius: $neuro-radius-pill;
+  
+  // Inset container
+  box-shadow: $neuro-shadow-debossed;
+  overflow: hidden;
+  
+  // Fill (embossed)
+  .progress-fill {
+    position: relative;
+    height: 100%;
+    
+    background: linear-gradient(
+      90deg,
+      $duana-primary 0%,
+      lighten($duana-primary, 10%) 100%
+    );
+    
+    border-radius: $neuro-radius-pill;
+    
+    box-shadow: 
+      -2px -2px 4px rgba(255, 255, 255, 0.5),
+      2px 2px 4px rgba(59, 130, 246, 0.3);
+    
+    transition: width $duration-slow $ease-smooth;
+    
+    // Shimmer animation (optional)
+    &.animate {
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(255, 255, 255, 0.3) 50%,
+          transparent 100%
+        );
+        
+        animation: shimmer 2s ease-in-out infinite;
+      }
+    }
+  }
+  
+  // Variants
+  &.sm {
+    height: 0.5rem;
+  }
+  
+  &.lg {
+    height: 1.5rem;
+  }
+  
+  // Color variants
+  &.success .progress-fill {
+    background: linear-gradient(
+      90deg,
+      $financial-profit 0%,
+      lighten($financial-profit, 10%) 100%
+    );
+    
+    box-shadow: 
+      -2px -2px 4px rgba(255, 255, 255, 0.5),
+      2px 2px 4px rgba(34, 197, 94, 0.3);
+  }
+  
+  &.warning .progress-fill {
+    background: linear-gradient(
+      90deg,
+      $semaphore-naranja 0%,
+      lighten($semaphore-naranja, 10%) 100%
+    );
+    
+    box-shadow: 
+      -2px -2px 4px rgba(255, 255, 255, 0.5),
+      2px 2px 4px rgba(249, 115, 22, 0.3);
+  }
+  
+  &.danger .progress-fill {
+    background: linear-gradient(
+      90deg,
+      $financial-loss 0%,
+      lighten($financial-loss, 10%) 100%
+    );
+    
+    box-shadow: 
+      -2px -2px 4px rgba(255, 255, 255, 0.5),
+      2px 2px 4px rgba(239, 68, 68, 0.3);
+  }
+}
+
+// ============================================================
+// 5. Utility Components
+// ============================================================
+
+// Semaphore chips (for status indicators)
+.semaphore-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  
+  padding: 0.25rem 0.75rem;
+  border-radius: $neuro-radius-pill;
+  
+  font-family: $font-heading;
+  font-size: $type-body-small;
+  font-weight: $font-semibold;
+  
+  &.verde {
+    background: rgba($semaphore-verde, 0.15);
+    color: darken($semaphore-verde, 10%);
+    border: 1px solid rgba($semaphore-verde, 0.3);
+  }
+  
+  &.amarillo {
+    background: rgba($semaphore-amarillo, 0.15);
+    color: darken($semaphore-amarillo, 15%);
+    border: 1px solid rgba($semaphore-amarillo, 0.3);
+  }
+  
+  &.naranja {
+    background: rgba($semaphore-naranja, 0.15);
+    color: darken($semaphore-naranja, 10%);
+    border: 1px solid rgba($semaphore-naranja, 0.3);
+  }
+  
+  &.rojo {
+    background: rgba($semaphore-rojo, 0.15);
+    color: darken($semaphore-rojo, 10%);
+    border: 1px solid rgba($semaphore-rojo, 0.3);
+  }
+  
+  &.negro {
+    background: rgba($semaphore-negro, 0.15);
+    color: $semaphore-negro;
+    border: 1px solid rgba($semaphore-negro, 0.3);
+  }
+}
+
+// Trust badge (ML confidence, OTIF ratings)
+.trust-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  
+  padding: 0.375rem 0.875rem;
+  border-radius: $neuro-radius-md;
+  
+  background: rgba($duana-primary, 0.1);
+  border: 1px solid rgba($duana-primary, 0.2);
+  
+  font-family: $font-body;
+  font-size: $type-body-small;
+  font-weight: $font-medium;
+  color: $duana-primary-dark;
+  
+  .trust-icon {
+    color: $duana-primary;
+    font-size: 1rem;
+  }
+}
+
+// Governance alert banner
+.governance-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  
+  padding: 1rem 1.25rem;
+  border-radius: $neuro-radius-md;
+  border-left: 4px solid $semaphore-naranja;
+  
+  background: rgba($semaphore-naranja, 0.05);
+  
+  .alert-icon {
+    color: $semaphore-naranja;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+  
+  .alert-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    
+    .alert-title {
+      font-family: $font-heading;
+      font-weight: $font-semibold;
+      color: $semaphore-naranja;
+    }
+    
+    .alert-text {
+      font-family: $font-body;
+      font-size: $type-body-small;
+      color: $duana-text;
+      line-height: $line-height-normal;
+    }
+  }
+}
+
+// Skeleton loader
+.skeleton-loader {
+  background: linear-gradient(
+    90deg,
+    $neuro-bg-grey 0%,
+    lighten($neuro-bg-grey, 3%) 50%,
+    $neuro-bg-grey 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: $neuro-radius-md;
+}

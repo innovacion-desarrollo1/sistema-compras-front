@@ -1,73 +1,131 @@
 <div class="dashboard-container">
-  
+
   <!-- Header -->
   <mat-toolbar color="primary" class="dashboard-header">
     <img src="assets/images/Logo-DUANA.png" alt="DUANA" class="logo">
     <span class="title">Motor de Sugerencias Manuales</span>
     <span class="spacer"></span>
     <button mat-icon-button 
-      (click)="showCart = !showCart" 
       [matBadge]="cartService.getItemCount() || null" 
       matBadgeColor="warn" 
       matBadgeSize="small"
       [matBadgeHidden]="cartService.getItemCount() === 0"
-      aria-label="Ver carrito de compras">
+      aria-label="Ver carrito de compras"
+      class="cart-btn"
+      matTooltip="El carrito siempre es visible a la derecha">
       <mat-icon>shopping_cart</mat-icon>
     </button>
-    <mat-icon aria-hidden="true">account_circle</mat-icon>
+    <button mat-icon-button aria-label="Cuenta de usuario" class="account-btn">
+      <mat-icon>account_circle</mat-icon>
+    </button>
   </mat-toolbar>
 
-  <!-- Main Content -->
-  <div class="dashboard-content">
+  <!-- KPI Summary Header (Financial Dashboard Pattern) -->
+  <section class="kpi-header" aria-label="Resumen de indicadores clave">
+    <div class="kpi-chip">
+      <mat-icon class="kpi-icon">inventory_2</mat-icon>
+      <div class="kpi-body">
+        <span class="kpi-label">Ítems en Carrito</span>
+        <span class="kpi-value">{{ cartService.getItemCount() || 0 }}</span>
+      </div>
+    </div>
+    <div class="kpi-chip" [class.kpi-warning]="showApprovalWorkflow">
+      <mat-icon class="kpi-icon">gavel</mat-icon>
+      <div class="kpi-body">
+        <span class="kpi-label">Pendientes Aprobación</span>
+        <span class="kpi-value">{{ approvalRequestId ? 1 : 0 }}</span>
+      </div>
+    </div>
+    <div class="kpi-chip">
+      <mat-icon class="kpi-icon">speed</mat-icon>
+      <div class="kpi-body">
+        <span class="kpi-label">Estado del Flujo</span>
+        <span class="kpi-value kpi-status">{{ selectedMolecula ? (currentSuggestion ? 'Sugerencia Lista' : 'Evaluando') : 'Esperando producto' }}</span>
+      </div>
+    </div>
+  </section>
 
-    <!-- Cart View (toggled from toolbar) -->
-    <app-cart-view *ngIf="showCart"></app-cart-view>
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- SPLIT-PANE: Workflow (left, scrollable) + Cart (right, sticky) -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <div class="split-pane">
 
-    <!-- Step 1: Molecula Search + Period Selection -->
-    <mat-card class="search-card">
-      <mat-card-header>
-        <mat-card-title>
-          <mat-icon>search</mat-icon>
-          Paso 1: Seleccionar ID y Periodo
-        </mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <app-product-search
-          (moleculaSelected)="onMoleculaSelected($event)">
-        </app-product-search>
-      </mat-card-content>
-    </mat-card>
+    <!-- ════════════ LEFT PANEL: Workflow ════════════ -->
+    <main class="workflow-panel" role="main">
 
-    <!-- Step 2: Molecule Inventory Information -->
-    <app-molecule-inventory-info
-      *ngIf="selectedMolecula"
-      [molecula]="selectedMolecula"
-      [periodoSemanas]="periodoSemanas">
-    </app-molecule-inventory-info>
+      <!-- Step 1: Product Search -->
+      <section class="workflow-step animate-fadeIn" aria-label="Paso 1: Búsqueda de producto">
+        <div class="step-indicator">
+          <span class="step-number" [class.step-active]="!selectedMolecula" [class.step-done]="selectedMolecula">
+            <mat-icon *ngIf="selectedMolecula">check</mat-icon>
+            <span *ngIf="!selectedMolecula">1</span>
+          </span>
+          <span class="step-label">Seleccionar Producto y Periodo</span>
+        </div>
+        <mat-card class="search-card neuro-card">
+          <mat-card-content>
+            <app-product-search
+              (moleculaSelected)="onMoleculaSelected($event)">
+            </app-product-search>
+          </mat-card-content>
+        </mat-card>
+      </section>
 
-    <!-- Step 3: Supplier Comparison & Bonifications — Direct Add to Cart -->
-    <app-supplier-ranking-table 
-      *ngIf="showSupplierRanking && selectedMolecula" 
-      [productoId]="selectedMolecula.id"
-      [periodoSemanas]="periodoSemanas"
-      [moleculaNombre]="selectedMolecula.nombre"
-      [moleculaFamilia]="selectedMolecula.familia"
-      [esClaseC]="selectedMolecula.es_clase_c"
-      (addedToCart)="onCartUpdated()"
-      (supplierSelected)="onSupplierSelected($event)">
-    </app-supplier-ranking-table>
+      <!-- Step 2: Inventory Context -->
+      <section *ngIf="selectedMolecula" class="workflow-step animate-slideInUp" aria-label="Paso 2: Contexto de inventario">
+        <div class="step-indicator">
+          <span class="step-number step-active">2</span>
+          <span class="step-label">Inventario Actual</span>
+          <span class="trust-badge">
+            <mat-icon>verified</mat-icon>
+            Datos actualizados
+          </span>
+        </div>
+        <app-molecule-inventory-info
+          [molecula]="selectedMolecula"
+          [periodoSemanas]="periodoSemanas">
+        </app-molecule-inventory-info>
+      </section>
 
-    <!-- Step 4: Demand Forecast Chart -->
-<!--     <app-demand-forecast-chart 
-      *ngIf="showDemandForecast && selectedMolecula" 
-      [productoId]="selectedMolecula.id">
-    </app-demand-forecast-chart> -->
+      <!-- Step 3: Supplier Ranking (80/20 Score) -->
+      <section *ngIf="showSupplierRanking && selectedMolecula" class="workflow-step animate-slideInUp" aria-label="Paso 3: Comparación de proveedores">
+        <div class="step-indicator">
+          <span class="step-number" [class.step-active]="!currentSuggestion" [class.step-done]="currentSuggestion">
+            <mat-icon *ngIf="currentSuggestion">check</mat-icon>
+            <span *ngIf="!currentSuggestion">3</span>
+          </span>
+          <span class="step-label">Ranking de Proveedores · Score 80/20</span>
+          <span class="trust-badge">
+            <mat-icon>analytics</mat-icon>
+            80% Costo + 20% Desempeño
+          </span>
+        </div>
+        <app-supplier-ranking-table 
+          [productoId]="selectedMolecula.id"
+          [periodoSemanas]="periodoSemanas"
+          [moleculaNombre]="selectedMolecula.nombre"
+          [moleculaFamilia]="selectedMolecula.familia"
+          [esClaseC]="selectedMolecula.es_clase_c"
+          (addedToCart)="onCartUpdated()"
+          (supplierSelected)="onSupplierSelected($event)">
+        </app-supplier-ranking-table>
+      </section>
 
-    <!-- Two Column Layout for Suggestion & Simulation -->
-    <div class="suggestion-simulation-grid" *ngIf="showSuggestionCard && currentSuggestion">
-      
-      <!-- Order Suggestion Card -->
-      <ng-container *ngIf="!isLoading && currentSuggestion">
+      <!-- Loading State for Suggestion (Skeleton) -->
+      <div *ngIf="isLoading" class="loading-skeleton animate-fadeIn">
+        <div class="skeleton-loader" style="height: 200px; border-radius: 16px;"></div>
+        <p class="loading-text">
+          <mat-icon class="spin-icon">autorenew</mat-icon>
+          Generando sugerencia...
+        </p>
+      </div>
+
+      <!-- Step 4: Order Suggestion -->
+      <section *ngIf="showSuggestionCard && currentSuggestion" class="workflow-step animate-slideInUp" aria-label="Paso 4: Sugerencia de orden">
+        <div class="step-indicator">
+          <span class="step-number step-active">4</span>
+          <span class="step-label">Sugerencia de Orden</span>
+        </div>
         <app-order-suggestion-card
           [suggestion]="currentSuggestion"
           (accepted)="onSuggestionAccepted($event)"
@@ -75,35 +133,61 @@
           (rejected)="onSuggestionRejected($event)"
           (addedToCart)="onAddedToCart($event)">
         </app-order-suggestion-card>
-      </ng-container>
+      </section>
 
-      <!-- Cost Simulation Table -->
-      <app-cost-simulation-table 
-        *ngIf="showCostSimulation && currentSuggestion" 
-        [productoId]="currentSuggestion.producto_id"
-        [baseQuantity]="currentSuggestion.cantidad_sugerida"
-        [proveedorId]="currentSuggestion.proveedor_id || 1"
-        (scenarioSelected)="onScenarioSelected($event)">
-      </app-cost-simulation-table>
-    </div>
+      <!-- Step 5: Cost Simulation (What-If Analysis) -->
+      <section *ngIf="showCostSimulation && currentSuggestion" class="workflow-step animate-slideInUp" aria-label="Paso 5: Simulación de costos">
+        <div class="step-indicator">
+          <span class="step-number step-active">5</span>
+          <span class="step-label">Simulación de Costos · ¿Qué pasa si ajusto?</span>
+        </div>
+        <app-cost-simulation-table 
+          [productoId]="currentSuggestion.producto_id"
+          [baseQuantity]="currentSuggestion.cantidad_sugerida"
+          [proveedorId]="currentSuggestion.proveedor_id || 1"
+          (scenarioSelected)="onScenarioSelected($event)">
+        </app-cost-simulation-table>
+      </section>
 
-    <!-- Loading State for Suggestion -->
-    <mat-card *ngIf="isLoading" class="loading-card">
-      <mat-card-content class="loading-content">
-        <mat-spinner diameter="50"></mat-spinner>
-        <p>Generando sugerencia...</p>
-      </mat-card-content>
-    </mat-card>
+      <!-- Step 6: Approval Gate (Clase C only) -->
+      <section *ngIf="showApprovalWorkflow && approvalRequestId" class="workflow-step animate-slideInUp governance-section" aria-label="Paso 6: Aprobación Clase C">
+        <div class="step-indicator">
+          <span class="step-number step-governance">
+            <mat-icon>gavel</mat-icon>
+          </span>
+          <span class="step-label">Gobernanza · Aprobación Clase C</span>
+          <span class="governance-alert-badge">
+            <mat-icon>warning</mat-icon>
+            Requiere autorización gerencial
+          </span>
+        </div>
+        <app-approval-workflow
+          [requestId]="approvalRequestId"
+          (approved)="onApprovalGranted($event)"
+          (rejected)="onApprovalDenied($event)">
+        </app-approval-workflow>
+      </section>
 
-    <!-- Approval Workflow -->
-    <app-approval-workflow
-      *ngIf="showApprovalWorkflow && approvalRequestId"
-      [requestId]="approvalRequestId"
-      (approved)="onApprovalGranted($event)"
-      (rejected)="onApprovalDenied($event)">
-    </app-approval-workflow>
+      <!-- History (collapsible) -->
+      <section class="workflow-step history-section animate-fadeIn" aria-label="Historial de auditoría">
+        <div class="step-indicator step-indicator-toggle" (click)="showHistory = !showHistory" (keydown.enter)="showHistory = !showHistory" tabindex="0" role="button" [attr.aria-expanded]="showHistory">
+          <span class="step-number step-info">
+            <mat-icon>history</mat-icon>
+          </span>
+          <span class="step-label">Historial de Decisiones</span>
+          <mat-icon class="toggle-icon" [class.toggle-open]="showHistory">expand_more</mat-icon>
+        </div>
+        <app-suggestion-history *ngIf="showHistory" class="animate-slideInUp"></app-suggestion-history>
+      </section>
 
-    <!-- Suggestion History -->
-    <app-suggestion-history></app-suggestion-history>
+    </main>
+
+    <!-- ════════════ RIGHT PANEL: Cart Sidebar (always visible) ════════════ -->
+    <aside class="cart-sidebar" role="complementary" aria-label="Carrito de compras">
+      <div class="cart-sidebar-inner">
+        <app-cart-view></app-cart-view>
+      </div>
+    </aside>
+
   </div>
 </div>

@@ -1,4 +1,11 @@
 ﻿@import '../../../../../../styles/themes/design-tokens';
+@import '../../../../../../styles/tokens/neuro-tokens';
+@import '../../../../../../styles/tokens/financial-colors';
+@import '../../../../../../styles/tokens/typography';
+
+// ============================================================
+// MOLECULE INVENTORY INFO - Neumorphic Metrics Dashboard
+// ============================================================
 
 .inventory-card {
   margin: 16px 0;
@@ -8,11 +15,12 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 18px;
-      font-weight: 600;
+      font-family: $font-heading;
+      font-size: $type-h4;
+      font-weight: $font-semibold;
 
       mat-icon {
-        color: $color-blue-600;
+        color: $duana-primary;
         font-size: 24px;
         width: 24px;
         height: 24px;
@@ -24,7 +32,33 @@
       align-items: center;
       gap: 8px;
       margin-top: 8px;
-      color: $color-gray-600;
+      font-family: $font-body;
+      color: $financial-neutral;
+      flex-wrap: wrap;
+
+      .subtitle-text {
+        flex-shrink: 0;
+      }
+
+      .trust-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 2px 8px;
+        background: rgba($financial-profit, 0.08);
+        border-radius: $neuro-radius-pill;
+        font-size: 11px;
+        font-weight: $font-medium;
+        color: $financial-profit;
+        margin-left: auto;
+
+        mat-icon {
+          font-size: 14px;
+          width: 14px;
+          height: 14px;
+          color: $financial-profit;
+        }
+      }
     }
   }
 }
@@ -48,9 +82,10 @@
   display: flex;
   align-items: center;
   padding: 16px;
-  border-radius: 8px;
+  border-radius: $neuro-radius-md;
   margin-bottom: 24px;
   gap: 12px;
+  box-shadow: $neuro-shadow-debossed;
 
   mat-icon {
     font-size: 32px;
@@ -88,11 +123,13 @@
     gap: 4px;
 
     .status-label {
+      font-family: $font-heading;
       font-size: 16px;
       font-weight: 700;
     }
 
     .status-detail {
+      font-family: $font-body;
       font-size: 13px;
       opacity: 0.85;
     }
@@ -110,23 +147,27 @@
 }
 
 .metric-card {
-  background-color: $color-gray-50;
-  border: 1px solid $color-gray-300;
-  border-radius: 8px;
+  background-color: $neuro-bg-light;
+  border: 1px solid rgba($color-gray-300, 0.6);
+  border-radius: $neuro-radius-md;
   padding: 16px;
-  transition: all 0.2s ease;
+  transition: all $neuro-transition-normal;
+  box-shadow:
+    -3px -3px 8px rgba(255, 255, 255, 0.6),
+    3px 3px 8px rgba(174, 174, 192, 0.15);
 
   &:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-color: $color-blue-400;
+    box-shadow: $neuro-shadow-hover;
+    border-color: rgba($duana-primary, 0.3);
+    transform: translateY(-2px);
   }
 
   &.stock-actual {
-    background: linear-gradient(135deg, rgba($color-blue-100, 0.5) 0%, rgba($color-blue-50, 0.3) 100%);
-    border: 2px solid $color-blue-500;
+    background: linear-gradient(135deg, rgba($duana-primary, 0.1) 0%, rgba($duana-primary, 0.03) 100%);
+    border: 2px solid rgba($duana-primary, 0.4);
 
     .metric-value {
-      color: $color-blue-700;
+      color: $duana-primary;
       font-size: 32px;
     }
   }
@@ -138,31 +179,34 @@
     margin-bottom: 8px;
 
     mat-icon {
-      color: $color-blue-600;
+      color: $duana-primary;
       font-size: 20px;
       width: 20px;
       height: 20px;
     }
 
     .metric-label {
+      font-family: $font-heading;
       font-size: 12px;
-      font-weight: 600;
-      color: $color-gray-700;
+      font-weight: $font-semibold;
+      color: $financial-neutral;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
   }
 
   .metric-value {
+    font-family: $font-data;
     font-size: 24px;
     font-weight: 700;
-    color: $color-gray-900;
+    color: $duana-text;
     margin: 4px 0;
   }
 
   .metric-sublabel {
+    font-family: $font-body;
     font-size: 11px;
-    color: $color-gray-600;
+    color: $financial-neutral;
   }
 }
 
@@ -172,20 +216,22 @@
 .calculation-section {
   margin-top: 24px;
   padding: 20px;
-  background-color: rgba($color-blue-50, 0.5);
-  border-radius: 8px;
+  background-color: rgba($duana-primary, 0.04);
+  border-radius: $neuro-radius-md;
+  box-shadow: $neuro-shadow-debossed;
 
   h4 {
     display: flex;
     align-items: center;
     gap: 8px;
     margin: 0 0 16px 0;
-    color: $color-blue-900;
-    font-weight: 600;
+    font-family: $font-heading;
+    color: $duana-dark;
+    font-weight: $font-semibold;
     font-size: 16px;
 
     mat-icon {
-      color: $color-blue-600;
+      color: $duana-primary;
     }
   }
 }
@@ -194,31 +240,31 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  font-family: 'Courier New', monospace;
+  font-family: $font-data;
 
   .formula-line {
     display: flex;
     align-items: center;
     gap: 8px;
     padding: 8px 12px;
-    background-color: white;
+    background-color: $neuro-bg-white;
     border-left: 3px solid $color-gray-300;
-    border-radius: 4px;
+    border-radius: $neuro-radius-sm;
 
     .formula-label {
-      font-weight: 600;
-      color: $color-gray-700;
+      font-weight: $font-semibold;
+      color: $financial-neutral;
       min-width: 160px;
     }
 
     .formula-value {
-      color: $color-gray-900;
+      color: $duana-text;
       flex: 1;
 
       &.highlight {
         font-size: 18px;
         font-weight: 700;
-        color: $color-blue-700;
+        color: $duana-primary;
         display: flex;
         align-items: center;
         gap: 8px;
@@ -226,10 +272,11 @@
     }
 
     &.result {
-      background: linear-gradient(90deg, rgba($color-blue-100, 0.3) 0%, rgba($color-blue-50, 0.1) 100%);
-      border-left: 3px solid $color-blue-600;
+      background: linear-gradient(90deg, rgba($duana-primary, 0.08) 0%, rgba($duana-primary, 0.02) 100%);
+      border-left: 3px solid $duana-primary;
       padding: 12px 16px;
       margin-top: 8px;
+      box-shadow: $neuro-shadow-flat;
     }
   }
 }

@@ -1,4 +1,11 @@
 ﻿@import '../../../../../../styles/themes/design-tokens';
+@import '../../../../../../styles/tokens/neuro-tokens';
+@import '../../../../../../styles/tokens/financial-colors';
+@import '../../../../../../styles/tokens/typography';
+
+// ============================================================
+// DEMAND FORECAST CHART - Neumorphic Visualization Container
+// ============================================================
 
 .forecast-card {
   margin: 16px 0;
@@ -10,8 +17,9 @@ mat-card-header {
     display: flex;
     align-items: center;
     gap: 8px;
+    font-family: $font-heading;
     mat-icon {
-      color: $color-blue-600;
+      color: $duana-primary;
     }
   }
 }
@@ -20,6 +28,10 @@ mat-card-header {
   height: 400px;
   margin: 16px 0;
   position: relative;
+  padding: 12px;
+  background: $neuro-bg-white;
+  border-radius: $neuro-radius-md;
+  box-shadow: $neuro-shadow-debossed;
 }
 
 .loading-container {
@@ -30,7 +42,8 @@ mat-card-header {
   height: 300px;
   gap: 16px;
   p {
-    color: $color-gray-600;
+    font-family: $font-body;
+    color: $financial-neutral;
     font-style: italic;
   }
 }
@@ -41,14 +54,37 @@ mat-card-header {
   gap: 12px;
   margin-top: 16px;
   padding: 12px;
-  background-color: $color-gray-50;
-  border-radius: 8px;
-  mat-chip {
+  background-color: $neuro-bg-light;
+  border-radius: $neuro-radius-sm;
+  box-shadow: $neuro-shadow-debossed;
+
+  .trust-badge-accuracy {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: rgba($financial-profit, 0.08);
+    border-radius: $neuro-radius-pill;
+    font-family: $font-body;
+    font-size: 12px;
+    font-weight: $font-medium;
+    color: $financial-profit;
+    max-width: fit-content;
+
+    mat-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  .accuracy-chip {
     display: inline-flex;
     align-items: center;
     gap: 6px;
     padding: 8px 16px;
-    font-weight: 600;
+    font-family: $font-data;
+    font-weight: $font-semibold;
     max-width: fit-content;
     mat-icon {
       font-size: 18px;
@@ -58,6 +94,44 @@ mat-card-header {
   }
 }
 
+// Skeleton loading
+.skeleton-loader {
+  background: linear-gradient(
+    90deg,
+    $neuro-bg-light 25%,
+    rgba($duana-primary, 0.06) 50%,
+    $neuro-bg-light 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.loading-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  color: $financial-neutral;
+  font-family: $font-body;
+  font-style: italic;
+  margin-top: $spacing-sm;
+
+  .spin-icon {
+    animation: spin 1s linear infinite;
+    color: $duana-primary;
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 .warning-hint {
   display: flex;
   align-items: center;
@@ -65,8 +139,9 @@ mat-card-header {
   color: $semaphore-naranja-text;
   background-color: $semaphore-naranja-bg;
   padding: 8px 12px;
-  border-radius: 4px;
+  border-radius: $neuro-radius-sm;
   border-left: 4px solid $semaphore-naranja-border;
+  font-family: $font-body;
   font-size: 13px;
   font-weight: 500;
   mat-icon {
@@ -83,6 +158,7 @@ mat-card-header {
   gap: 16px;
   padding: 32px;
   color: $semaphore-rojo-text;
+  font-family: $font-body;
   mat-icon {
     font-size: 48px;
     height: 48px;

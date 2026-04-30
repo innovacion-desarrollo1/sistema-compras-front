@@ -1,4 +1,11 @@
 ﻿@import '../../../../../../styles/themes/design-tokens';
+@import '../../../../../../styles/tokens/neuro-tokens';
+@import '../../../../../../styles/tokens/financial-colors';
+@import '../../../../../../styles/tokens/typography';
+
+// ============================================================
+// APPROVAL WORKFLOW - Neumorphic Governance UI
+// ============================================================
 
 .approval-status-card {
   margin: 16px 0;
@@ -9,8 +16,9 @@ mat-card-header {
     display: flex;
     align-items: center;
     gap: 8px;
+    font-family: $font-heading;
     mat-icon {
-      color: $color-blue-600;
+      color: $duana-primary;
       font-size: 24px;
     }
   }
@@ -23,28 +31,130 @@ mat-card-header {
   gap: 12px;
   padding: 32px;
   p {
-    color: $color-gray-600;
+    font-family: $font-body;
+    color: $financial-neutral;
     font-style: italic;
   }
 }
 
 .request-info {
   margin: 16px 0;
-  h4 {
-    font-size: 18px;
-    font-weight: 600;
-    color: $color-blue-900;
+
+  .request-product-name {
+    font-family: $font-heading;
+    font-size: $type-h4;
+    font-weight: $font-semibold;
+    color: $duana-dark;
     margin-bottom: 12px;
   }
-  p {
-    margin: 8px 0;
-    font-size: 14px;
-    color: $color-gray-700;
+
+  .request-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: $spacing-sm;
+
+    @media (max-width: 600px) {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: $spacing-sm;
+      background: $neuro-bg-light;
+      border-radius: $neuro-radius-sm;
+      box-shadow: $neuro-shadow-debossed;
+
+      &.detail-full {
+        grid-column: 1 / -1;
+      }
+
+      .detail-label {
+        font-family: $font-body;
+        font-size: $type-body-tiny;
+        font-weight: $font-medium;
+        color: $financial-neutral;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+      }
+
+      .detail-value {
+        font-family: $font-data;
+        font-size: $type-body;
+        font-weight: $font-semibold;
+        color: $duana-text;
+
+        &.detail-cost {
+          color: $financial-trust;
+          font-size: $type-h4;
+          font-weight: $font-bold;
+        }
+      }
+    }
   }
 }
 
 .approval-stepper {
   margin: 16px 0;
+}
+
+.estado-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-family: $font-heading;
+  font-weight: $font-semibold;
+  margin: 12px 0;
+  border-radius: $neuro-radius-pill;
+  box-shadow:
+    -1px -1px 3px rgba(255, 255, 255, 0.5),
+    1px 1px 3px rgba(174, 174, 192, 0.2);
+  mat-icon {
+    font-size: 20px;
+  }
+}
+
+.decision-details {
+  margin-top: 16px;
+  padding: 16px;
+  background-color: $neuro-bg-light;
+  border-radius: $neuro-radius-sm;
+  box-shadow: $neuro-shadow-debossed;
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-sm;
+
+  .decision-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    color: $financial-profit;
+  }
+
+  p {
+    font-family: $font-body;
+    margin: 4px 0;
+  }
+
+  &.approved {
+    border-left: 4px solid $financial-profit;
+  }
+
+  &.rejection {
+    background-color: $semaphore-rojo-bg;
+    border-left: 4px solid $semaphore-rojo-border;
+
+    .decision-icon,
+    .rejection-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+      color: $semaphore-rojo-text;
+    }
+  }
 }
 
 .pending-state {
@@ -54,42 +164,62 @@ mat-card-header {
   padding: 16px;
   background-color: $semaphore-amarillo-bg;
   border-left: 4px solid $semaphore-amarillo-border;
-  border-radius: 4px;
+  border-radius: $neuro-radius-sm;
+  box-shadow: $neuro-shadow-debossed;
+
+  .pending-icon {
+    color: $semaphore-amarillo;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+
   p {
+    font-family: $font-body;
     color: $semaphore-amarillo-text;
     font-weight: 500;
   }
 }
 
-.estado-chip {
-  display: inline-flex;
+.spin-icon {
+  animation: spin 1s linear infinite;
+}
+
+// Skeleton loading
+.skeleton-loader {
+  background: linear-gradient(
+    90deg,
+    $neuro-bg-light 25%,
+    rgba($duana-primary, 0.06) 50%,
+    $neuro-bg-light 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.loading-text {
+  display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  font-weight: 600;
-  margin: 12px 0;
-  mat-icon {
-    font-size: 20px;
+  justify-content: center;
+  gap: $spacing-sm;
+  color: $financial-neutral;
+  font-family: $font-body;
+  font-style: italic;
+  margin-top: $spacing-sm;
+
+  .spin-icon {
+    color: $duana-primary;
   }
 }
 
-.decision-details {
-  margin-top: 16px;
-  padding: 16px;
-  background-color: $color-gray-50;
-  border-radius: 8px;
-  p {
-    margin: 8px 0;
-  }
-  &.rejection {
-    background-color: $semaphore-rojo-bg;
-    border-left: 4px solid $semaphore-rojo-border;
-    .rejection-icon {
-      font-size: 48px;
-      color: $semaphore-rojo-text;
-      margin-bottom: 12px;
-    }
-  }
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 // Semaphore chip styles are provided globally via /styles/utilities/_semaphore.scss

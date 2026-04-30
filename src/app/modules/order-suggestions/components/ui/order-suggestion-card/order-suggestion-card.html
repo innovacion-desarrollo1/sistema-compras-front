@@ -2,10 +2,12 @@
   <!-- Product Header -->
   <mat-card-header class="product-header">
     <div class="product-info">
-      <mat-card-title>{{ suggestion.producto_nombre }}</mat-card-title>
-      <mat-card-subtitle>
-        <span class="separator">ID:</span>
+      <mat-card-title class="product-name">{{ suggestion.producto_nombre }}</mat-card-title>
+      <mat-card-subtitle class="product-id-line">
+        <span class="id-label">ID:</span>
         <span class="product-id">{{ suggestion.producto_id }}</span>
+        <span class="separator">·</span>
+        <span class="created-date">{{ suggestion.created_at | date:'short' }}</span>
       </mat-card-subtitle>
     </div>
     
@@ -22,108 +24,94 @@
   </mat-card-header>
 
   <mat-card-content>
-    <!-- Quantity Section -->
-    <div class="suggestion-section">
-      <h3>
-        <mat-icon>add_shopping_cart</mat-icon>
-        Cantidad Sugerida
-      </h3>
-      <div class="quantity-display">
-        <span class="quantity-value">{{ suggestion.cantidad_sugerida }} {{ suggestion.unidad_medida }}</span>
+    <!-- Summary Metrics (compact grid) -->
+    <div class="suggestion-metrics">
+      <div class="metric-item">
+        <mat-icon>inventory_2</mat-icon>
+        <div class="metric-data">
+          <span class="metric-label">Cantidad Sugerida</span>
+          <span class="metric-value quantity-highlight">{{ suggestion.cantidad_sugerida }} {{ suggestion.unidad_medida }}</span>
+        </div>
       </div>
-    </div>
-
-    <mat-divider></mat-divider>
-
-    <!-- Supplier Section -->
-    <div class="suggestion-section">
-      <h3>
+      <div class="metric-item">
         <mat-icon>local_shipping</mat-icon>
-        Proveedor Recomendado
-      </h3>
-      <div class="supplier-display">
-        <div class="supplier-name">
-          {{ suggestion.proveedor_nombre }}
+        <div class="metric-data">
+          <span class="metric-label">Proveedor</span>
+          <span class="metric-value">{{ suggestion.proveedor_nombre }}</span>
         </div>
       </div>
-    </div>
-
-    <mat-divider></mat-divider>
-
-    <!-- Cost Section -->
-    <div class="suggestion-section">
-      <h3>
-        <mat-icon>attach_money</mat-icon>
-        Detalle de Costos
-      </h3>
-      <div class="cost-breakdown">
-        <div class="cost-row net-cost">
-          <span><strong>Precio Unitario:</strong></span>
-          <span><strong>${{ suggestion.precio_unitario | number:'1.2-2' }}</strong></span>
+      <div class="metric-item">
+        <mat-icon>payments</mat-icon>
+        <div class="metric-data">
+          <span class="metric-label">Precio Unitario</span>
+          <span class="metric-value">${{ suggestion.precio_unitario | number:'1.2-2' }}</span>
         </div>
-        <mat-divider class="total-divider"></mat-divider>
-        <div class="cost-row total">
-          <span><strong>Costo Total Orden:</strong></span>
-          <span class="total-value">${{ suggestion.costo_total | number:'1.2-2' }}</span>
+      </div>
+      <div class="metric-item metric-total">
+        <mat-icon>account_balance</mat-icon>
+        <div class="metric-data">
+          <span class="metric-label">Costo Total Orden</span>
+          <span class="metric-value total-value">${{ suggestion.costo_total | number:'1.2-2' }}</span>
         </div>
       </div>
     </div>
 
     <!-- Governance Alert (Clase C Only) -->
     <div *ngIf="suggestion.es_clase_c" class="governance-alert">
-      <mat-card class="alert-card">
-        <mat-card-header>
-          <mat-icon>gavel</mat-icon>
-          <mat-card-title>Aprobación Requerida (Clase C)</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
+      <div class="governance-alert-content">
+        <mat-icon class="governance-icon">gavel</mat-icon>
+        <div class="governance-text">
+          <strong>Aprobación Requerida — Clase C</strong>
           <p>Este producto requiere aprobación gerencial antes de emitir la orden.</p>
-          <div class="approval-status">
-            <strong>Estado:</strong>
-            <mat-chip-set>
-              <mat-chip [ngClass]="getApprovalStatusClass()">
-                {{ suggestion.estado_aprobacion || 'PENDIENTE' }}
-              </mat-chip>
-            </mat-chip-set>
-          </div>
-        </mat-card-content>
-      </mat-card>
+        </div>
+        <mat-chip [ngClass]="getApprovalStatusClass()" class="estado-chip">
+          {{ suggestion.estado_aprobacion || 'PENDIENTE' }}
+        </mat-chip>
+      </div>
     </div>
   </mat-card-content>
 
-  <!-- Action Buttons -->
+  <!-- Action Buttons (Single Primary CTA Focus) -->
   <mat-card-actions class="action-buttons">
+    <!-- PRIMARY CTA: Add to Cart (standout orange) -->
     <button
       mat-raised-button
-      color="primary"
-      (click)="onAddToCart()">
-      <mat-icon>add_shopping_cart</mat-icon>
-      Agregar al Carrito
+      [class.cta-primary]="!isProductInCart()"
+      (click)="onAddToCart()"
+      [disabled]="isProductInCart()"
+      [attr.aria-label]="isProductInCart() ? 'Producto ya en el carrito' : 'Agregar al carrito de compras'">
+      <mat-icon>{{ isProductInCart() ? 'check_circle' : 'add_shopping_cart' }}</mat-icon>
+      {{ isProductInCart() ? 'Ya en Carrito' : 'Agregar al Carrito' }}
     </button>
 
-    <button 
-      mat-raised-button 
-      color="primary"
-      (click)="onAccept()"
-      [disabled]="suggestion.es_clase_c && suggestion.estado_aprobacion !== 'APROBADO'">
-      <mat-icon>check_circle</mat-icon>
-      Aceptar
-    </button>
-    
-    <button 
-      mat-raised-button 
-      color="accent"
-      (click)="onAdjust()">
-      <mat-icon>tune</mat-icon>
-      Ajustar
-    </button>
-    
-    <button 
-      mat-raised-button 
-      color="warn"
-      (click)="onReject()">
-      <mat-icon>cancel</mat-icon>
-      Rechazar
-    </button>
+    <div class="secondary-actions">
+      <button 
+        mat-stroked-button 
+        class="action-accept"
+        (click)="onAccept()"
+        [disabled]="suggestion.es_clase_c && suggestion.estado_aprobacion !== 'APROBADO'"
+        aria-label="Aceptar sugerencia">
+        <mat-icon>check_circle</mat-icon>
+        Aceptar
+      </button>
+      
+      <button 
+        mat-stroked-button 
+        class="action-adjust"
+        (click)="onAdjust()"
+        aria-label="Ajustar cantidad">
+        <mat-icon>tune</mat-icon>
+        Ajustar
+      </button>
+      
+      <button 
+        mat-stroked-button 
+        class="action-reject"
+        (click)="onReject()"
+        aria-label="Rechazar sugerencia">
+        <mat-icon>cancel</mat-icon>
+        Rechazar
+      </button>
+    </div>
   </mat-card-actions>
 </mat-card>
