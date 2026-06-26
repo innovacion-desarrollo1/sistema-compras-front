@@ -1,17 +1,39 @@
 .shell-container {
   height: 100vh;
+  --duana-drawer-width: 240px;
 
-  // En desktop (mode=side) quitamos el shadow por defecto de mat-sidenav
+  &.sidenav-collapsed {
+    --duana-drawer-width: 98px;
+  }
+
   ::ng-deep .mat-drawer:not(.mat-drawer-over) {
     box-shadow: none !important;
     border-right: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  // Force drawer width on desktop (side mode)
+  &.sidenav-collapsed,
+  &:not(.sidenav-collapsed) {
+    ::ng-deep .mat-drawer.mat-drawer-side {
+      width: var(--duana-drawer-width) !important;
+      transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+  }
+
+  // Sync content margin with drawer width on desktop
+  &.sidenav-collapsed,
+  &:not(.sidenav-collapsed) {
+    ::ng-deep .mat-drawer-content {
+      margin-left: var(--duana-drawer-width) !important;
+      transition: margin-left 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
   }
 }
 
 .shell-sidenav {
   padding: 0;
-  // El color de fondo real lo provee SidenavComponent — transparente aquí
   background: transparent;
+  overflow: hidden;
 }
 
 .shell-content {
@@ -20,4 +42,26 @@
   height: 100%;
   overflow-y: auto;
   background-color: var(--neuro-bg-light);
+}
+
+.menu-toggle-fab {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 1000;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: none;
+  background: var(--duana-primary-dark);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-elevated);
+
+  &:hover {
+    background: var(--duana-primary);
+  }
 }

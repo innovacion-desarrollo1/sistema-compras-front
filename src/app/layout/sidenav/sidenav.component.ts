@@ -26,7 +26,8 @@ const NAV_ITEMS: NavItem[] = [
     label: 'Aprobaciones',
     icon: 'gavel',
     route: '/approvals',
-    roles: ['JEFE_COMPRAS', 'GERENTE', 'ADMIN'],
+    roles: ['JEFE_COMPRAS', 'GERENTE', 'ADMIN', 'AUXILIAR_COMPRAS'],
+    comingSoon: true, // HIS-008: habilitar cuando se implemente la funcionalidad de aprobaciones
   },
   {
     id: 'centinela',
@@ -38,7 +39,7 @@ const NAV_ITEMS: NavItem[] = [
   },
   {
     id: 'traceability',
-    label: 'Trazabilidad',
+    label: 'Seguimiento de Órdenes de Compra',
     icon: 'timeline',
     roles: ['AUXILIAR_COMPRAS', 'JEFE_COMPRAS', 'GERENTE', 'ADMIN'],
     comingSoon: true,

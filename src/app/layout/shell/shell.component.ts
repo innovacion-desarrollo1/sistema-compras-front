@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatIconModule } from '@angular/material/icon';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
@@ -15,7 +16,7 @@ import { SidenavComponent } from '../sidenav/sidenav.component';
 @Component({
   selector: 'app-shell',
   standalone: true,
-  imports: [MatSidenavModule, RouterOutlet, SidenavComponent],
+  imports: [MatSidenavModule, MatIconModule, RouterOutlet, SidenavComponent],
   templateUrl: './shell.component.html',
   styleUrl: './shell.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,7 +32,9 @@ export class ShellComponent {
     { initialValue: false }
   );
 
-  sidenavMode = computed(() => (this.isHandset() ? ('over' as const) : ('side' as const)));
+  sidenavMode = computed<'over' | 'side'>(() =>
+    this.isHandset() ? 'over' : 'side'
+  );
   sidenavOpened = computed(() =>
     this.isHandset() ? this.navState.mobileOpen() : true
   );

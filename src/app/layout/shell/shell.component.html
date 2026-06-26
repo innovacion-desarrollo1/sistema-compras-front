@@ -1,4 +1,5 @@
-<mat-sidenav-container class="shell-container" autosize>
+<mat-sidenav-container class="shell-container"
+  [class.sidenav-collapsed]="!isHandset() && navState.collapsed()">
 
   <mat-sidenav
     #sidenav
@@ -11,6 +12,13 @@
   </mat-sidenav>
 
   <mat-sidenav-content class="shell-content">
+    @if (isHandset()) {
+      <button class="menu-toggle-fab"
+              (click)="navState.toggleMobileOpen()"
+              aria-label="Abrir menú">
+        <mat-icon>menu</mat-icon>
+      </button>
+    }
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 

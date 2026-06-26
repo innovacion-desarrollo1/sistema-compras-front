@@ -1,15 +1,12 @@
 <nav class="sidenav" [class.collapsed]="collapsed()" role="navigation" aria-label="Menú principal">
 
-  <!-- Header: logo + wordmark + toggle -->
+  <!-- Header: logo + toggle -->
   <div class="sidenav-header">
-    <img src="assets/images/Logo-DUANA.png" alt="DUANA" class="sidenav-logo">
-    @if (!collapsed()) {
-      <span class="sidenav-brand">DUANA</span>
-    }
+    <img [src]="collapsed() ? 'assets/images/D-logo-letra-blanco.png' : 'assets/images/Logo-DUANA-letra-blanca.png'" alt="DUANA" class="sidenav-logo">
     <button mat-icon-button class="toggle-btn"
             (click)="navState.toggle()"
             [attr.aria-label]="collapsed() ? 'Expandir menú' : 'Colapsar menú'">
-      <mat-icon>{{ collapsed() ? 'chevron_right' : 'chevron_left' }}</mat-icon>
+      <mat-icon>{{ collapsed() ? 'menu' : 'menu_open' }}</mat-icon>
     </button>
   </div>
 
