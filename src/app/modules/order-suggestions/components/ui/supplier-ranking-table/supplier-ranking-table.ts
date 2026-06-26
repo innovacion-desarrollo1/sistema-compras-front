@@ -57,6 +57,7 @@ export class SupplierRankingTableComponent implements OnInit, OnChanges {
   suppliers: ProveedorRanking[] = [];
   selectedSupplier: ProveedorRanking | null = null;
   isLoading = true;
+  errorMessage: string | null = null;
 
   /** Cantidad editable por proveedor (proveedor_id → cantidad) */
   cantidades: Map<number, number> = new Map();
@@ -98,10 +99,13 @@ export class SupplierRankingTableComponent implements OnInit, OnChanges {
 
   loadRanking(): void {
     this.isLoading = true;
+    this.errorMessage = null;
     this.rankingService.getRanking(this.productoId).subscribe({
       next: (data) => {
         this.suppliers = data;
-        // Pre-fill quantities for each supplier
+        if (data.length === 0) {
+          this.errorMessage = 'No hay proveedores disponibles para este producto.';
+        }
         data.forEach(s => {
           if (!this.cantidades.has(s.proveedor_id)) {
             this.cantidades.set(s.proveedor_id, this.calculateCantidadSugerida(s));
@@ -112,6 +116,8 @@ export class SupplierRankingTableComponent implements OnInit, OnChanges {
       },
       error: (err) => {
         console.error('Error al cargar ranking de proveedores:', err);
+        this.errorMessage = 'Error al cargar el ranking de proveedores.';
+        this.suppliers = [];
         this.isLoading = false;
         this.cdr.markForCheck();
       }

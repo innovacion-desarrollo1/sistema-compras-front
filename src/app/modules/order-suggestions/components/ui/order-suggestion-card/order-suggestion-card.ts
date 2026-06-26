@@ -87,8 +87,8 @@ export class OrderSuggestionCard {
   }
 
   onAccept(): void {
-    if (this.suggestion.es_clase_c && this.suggestion.estado_aprobacion !== 'APROBADO') {
-      alert('No se puede aceptar sugerencia Clase C sin aprobación');
+    if (this.suggestion.requiere_aprobacion_gerente && !this.suggestion.estado_aprobacion?.startsWith('APROBADO')) {
+      alert('No se puede aceptar una sugerencia que requiere aprobación sin haberla recibido');
       return;
     }
     this.accepted.emit(this.suggestion);

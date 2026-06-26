@@ -52,8 +52,10 @@ export interface SugerenciaOrden {
   proveedor_nombre: string;
   precio_unitario: number;
   costo_total: number;
+  /** @deprecated usar requiere_aprobacion_gerente (HIS-004) */
   es_clase_c: boolean;
-  estado_aprobacion: 'PENDIENTE' | 'APROBADO' | 'RECHAZADO' | null;
+  requiere_aprobacion_gerente: boolean;
+  estado_aprobacion: 'PENDIENTE_GERENTE' | 'PENDIENTE_JEFE' | 'APROBADO_GERENTE' | 'APROBADO_JEFE' | 'RECHAZADO_GERENTE' | 'RECHAZADO_JEFE' | null;
   created_at?: Date;
   created_by?: number;
 }
@@ -64,7 +66,8 @@ export interface AprobacionRequest {
   producto_id: number;
   cantidad: number;
   costo_estimado: number;
-  estado: 'PENDIENTE' | 'APROBADO' | 'RECHAZADO';
+  nivel_aprobacion: 'GERENTE' | 'JEFE';
+  estado: 'PENDIENTE_GERENTE' | 'PENDIENTE_JEFE' | 'APROBADO_GERENTE' | 'APROBADO_JEFE' | 'RECHAZADO_GERENTE' | 'RECHAZADO_JEFE';
   solicitante_id: number;
   aprobador_id?: number;
   fecha_solicitud: Date;
@@ -152,23 +155,24 @@ export class SuggestionStateService {
   // Has active suggestion?
   hasSuggestion = computed(() => this._currentSuggestion() !== null);
   
-  // Needs approval? (Clase C products)
+  // Needs approval? (items requiring GERENTE or JEFE approval)
   needsApproval = computed(() => {
     const suggestion = this._currentSuggestion();
-    return suggestion?.es_clase_c === true && suggestion?.estado_aprobacion === 'PENDIENTE';
+    return suggestion?.requiere_aprobacion_gerente === true
+      && suggestion?.estado_aprobacion?.startsWith('PENDIENTE') === true;
   });
-  
+
   // Is approved? (Can emit order)
   isApproved = computed(() => {
     const suggestion = this._currentSuggestion();
-    if (!suggestion?.es_clase_c) return true; // Non-Class C always approved
-    return suggestion?.estado_aprobacion === 'APROBADO';
+    if (!suggestion?.requiere_aprobacion_gerente) return true;
+    return suggestion?.estado_aprobacion?.startsWith('APROBADO') === true;
   });
-  
+
   // Is rejected?
   isRejected = computed(() => {
     const suggestion = this._currentSuggestion();
-    return suggestion?.estado_aprobacion === 'RECHAZADO';
+    return suggestion?.estado_aprobacion?.startsWith('RECHAZADO') === true;
   });
   
   // Best supplier (lowest 80/20 score)

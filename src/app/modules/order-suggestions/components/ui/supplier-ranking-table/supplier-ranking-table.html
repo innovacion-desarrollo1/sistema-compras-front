@@ -24,6 +24,12 @@
       </p>
     </div>
 
+    <!-- Error / No-providers State (CA-5) -->
+    <div *ngIf="!isLoading && errorMessage" class="error-state">
+      <mat-icon color="warn">warning</mat-icon>
+      <span>{{ errorMessage }}</span>
+    </div>
+
     <!-- Suppliers Comparison Table -->
     <div *ngIf="!isLoading && suppliers.length > 0" class="table-container">
       <table mat-table [dataSource]="suppliers" multiTemplateDataRows class="suppliers-table">
@@ -137,6 +143,12 @@
                 </mat-progress-bar>
                 <span class="kpi-value-compact">{{ supplier.cumplimiento_plazo_entrega | number:'1.0-0' }}%</span>
               </div>
+              <!-- CA-3: badge cuando KPIs son estimados (proveedor sin historial) -->
+              <mat-chip *ngIf="supplier.kpi_estimado" class="chip-kpi-estimado"
+                matTooltip="KPIs calculados con valores por defecto — proveedor sin historial de compras">
+                <mat-icon>info_outline</mat-icon>
+                KPIs Estimados
+              </mat-chip>
             </div>
           </td>
         </ng-container>
@@ -204,15 +216,23 @@
                   [attr.aria-label]="'Cantidad para ' + supplier.proveedor_nombre">
               </mat-form-field>
 
+              <!-- CA-6: chip de alerta cuando sin precio -->
+              <mat-chip *ngIf="!supplier.precio_disponible" class="chip-sin-precio"
+                color="warn"
+                [matTooltip]="supplier.mensaje_alerta || 'Sin precio registrado'">
+                <mat-icon>price_change</mat-icon>
+                Sin precio
+              </mat-chip>
+
               <!-- Add to cart (PRIMARY CTA - only top supplier glows) -->
-              <button 
-                mat-raised-button 
-                [class.cta-primary]="isTopSupplier(i) && !isProductInCart()"
+              <button
+                mat-raised-button
+                [class.cta-primary]="isTopSupplier(i) && !isProductInCart() && supplier.precio_disponible"
                 [color]="isTopSupplier(i) ? undefined : 'primary'"
                 (click)="addToCart(supplier)"
                 class="add-cart-btn"
-                [disabled]="isProductInCart()"
-                [matTooltip]="isProductInCart() ? 'Este producto ya está en el carrito' : 'Agregar al carrito de compras'"
+                [disabled]="isProductInCart() || !supplier.precio_disponible"
+                [matTooltip]="!supplier.precio_disponible ? (supplier.mensaje_alerta || 'Sin precio registrado') : isProductInCart() ? 'Este producto ya está en el carrito' : 'Agregar al carrito de compras'"
                 [attr.aria-label]="'Agregar ' + supplier.proveedor_nombre + ' al carrito'">
                 <mat-icon>{{ isProductInCart() ? 'check_circle' : 'add_shopping_cart' }}</mat-icon>
                 {{ isProductInCart() ? 'Ya en carrito' : 'Al Carrito' }}

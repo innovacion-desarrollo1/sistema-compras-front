@@ -2,6 +2,12 @@
 
   <!-- Header -->
   <mat-toolbar color="primary" class="dashboard-header">
+    @if (isHandset()) {
+      <button mat-icon-button style="color:white;" aria-label="Abrir menú de navegación"
+              (click)="navState.toggleMobileOpen()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    }
     <img src="assets/images/Logo-DUANA.png" alt="DUANA" class="logo">
     <span class="title">Motor de Sugerencias Manuales</span>
     <span class="spacer"></span>
@@ -105,7 +111,7 @@
           [periodoSemanas]="periodoSemanas"
           [moleculaNombre]="selectedMolecula.nombre"
           [moleculaFamilia]="selectedMolecula.familia"
-          [esClaseC]="selectedMolecula.es_clase_c"
+          [esClaseC]="selectedMolecula.familia === 1"
           (addedToCart)="onCartUpdated()"
           (supplierSelected)="onSupplierSelected($event)">
         </app-supplier-ranking-table>

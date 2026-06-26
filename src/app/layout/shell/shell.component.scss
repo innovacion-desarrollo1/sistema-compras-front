@@ -1,0 +1,23 @@
+.shell-container {
+  height: 100vh;
+
+  // En desktop (mode=side) quitamos el shadow por defecto de mat-sidenav
+  ::ng-deep .mat-drawer:not(.mat-drawer-over) {
+    box-shadow: none !important;
+    border-right: 1px solid rgba(0, 0, 0, 0.06);
+  }
+}
+
+.shell-sidenav {
+  padding: 0;
+  // El color de fondo real lo provee SidenavComponent — transparente aquí
+  background: transparent;
+}
+
+.shell-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+  background-color: var(--neuro-bg-light);
+}

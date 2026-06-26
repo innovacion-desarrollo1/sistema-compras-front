@@ -1,0 +1,205 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.sidenav {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 240px;
+  background-color: var(--duana-primary-dark);
+  overflow: hidden;
+  transition: width var(--duration-slower) cubic-bezier(0.16, 1, 0.3, 1);
+
+  &.collapsed {
+    width: 64px;
+  }
+}
+
+// ── Header ──────────────────────────────────────────────────────────────────
+
+.sidenav-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 12px;
+  min-height: 72px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+
+  .sidenav-logo {
+    height: 36px;
+    width: auto;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
+  .sidenav-brand {
+    font-family: var(--font-heading);
+    font-weight: var(--font-semibold);
+    font-size: var(--type-h4);
+    color: var(--duana-white);
+    white-space: nowrap;
+    overflow: hidden;
+    flex: 1;
+  }
+
+  .toggle-btn {
+    color: rgba(255, 255, 255, 0.70);
+    flex-shrink: 0;
+    margin-left: auto;
+
+    &:hover { color: var(--duana-white); }
+
+    mat-icon { color: inherit; }
+  }
+}
+
+// ── Nav items ────────────────────────────────────────────────────────────────
+
+.sidenav-nav {
+  flex: 1;
+  padding: var(--neuro-spacing-xs) 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.nav-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: var(--neuro-spacing-xs) 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px var(--neuro-spacing-md);
+  min-height: 48px; // Fitts's Law
+  cursor: pointer;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.70);
+  transition:
+    background var(--duration-normal) ease,
+    color var(--duration-normal) ease;
+  position: relative;
+  white-space: nowrap;
+
+  &:hover:not(.disabled) {
+    background: rgba(255, 255, 255, 0.07);
+    color: var(--duana-white);
+  }
+
+  &.active {
+    background: rgba(59, 130, 246, 0.18);
+    color: var(--duana-white);
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 6px;
+      bottom: 6px;
+      width: 3px;
+      background: var(--duana-primary);
+      border-radius: 0 2px 2px 0;
+    }
+
+    .nav-label { font-weight: var(--font-semibold); }
+    .nav-icon  { color: var(--duana-primary-light); }
+  }
+
+  &.disabled {
+    pointer-events: none;
+    opacity: 0.45;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--duana-primary);
+    outline-offset: -2px;
+    border-radius: var(--neuro-radius-sm);
+  }
+}
+
+.nav-icon {
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  color: inherit;
+}
+
+.nav-label {
+  font-family: var(--font-body);
+  font-size: var(--type-body);
+  font-weight: var(--font-medium);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: inherit;
+}
+
+.nav-soon-badge {
+  font-size: 9px;
+  font-weight: var(--font-bold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: rgba(249, 115, 22, 0.15);
+  color: var(--cta-primary);
+  padding: 2px 6px;
+  border-radius: var(--neuro-radius-sm);
+  flex-shrink: 0;
+}
+
+// ── Footer usuario ───────────────────────────────────────────────────────────
+
+.sidenav-footer {
+  flex-shrink: 0;
+  padding-bottom: var(--neuro-spacing-xs);
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px var(--neuro-spacing-md);
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--duana-primary);
+  color: var(--duana-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-weight: var(--font-bold);
+  font-size: var(--type-body-small);
+  flex-shrink: 0;
+}
+
+.user-details {
+  overflow: hidden;
+  flex: 1;
+
+  .user-name {
+    display: block;
+    font-family: var(--font-body);
+    font-size: var(--type-body-small);
+    font-weight: var(--font-semibold);
+    color: var(--duana-white);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .user-role-label {
+    display: block;
+    font-family: var(--font-body);
+    font-size: var(--type-body-tiny);
+    color: var(--duana-primary-light);
+  }
+}

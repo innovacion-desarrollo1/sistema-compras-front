@@ -1,4 +1,4 @@
-﻿import { Component } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -6,6 +6,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatBadgeModule } from '@angular/material/badge';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs/operators';
+import { SidenavStateService } from '../../../../../core/services/sidenav-state.service';
 import { ProductSearch } from '../../ui/product-search/product-search';
 import { OrderSuggestionCard } from '../../ui/order-suggestion-card/order-suggestion-card';
 import { CostSimulationTable } from '../../ui/cost-simulation-table/cost-simulation-table';
@@ -40,8 +44,18 @@ import { CartService } from '../../../../../core/services/cart.service';
   ],
   templateUrl: './suggestions-dashboard.html',
   styleUrl: './suggestions-dashboard.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SuggestionsDashboard {
+  // Navegación lateral (shell)
+  protected navState = inject(SidenavStateService);
+  private bpo = inject(BreakpointObserver);
+  protected isHandset = toSignal(
+    this.bpo.observe([Breakpoints.Handset, Breakpoints.TabletPortrait]).pipe(map(r => r.matches)),
+    { initialValue: false }
+  );
+
+  private _nextSuggestionId = 0;
   // State flags
   selectedMolecula: Molecula | null = null;
   periodoSemanas: number = 4;
@@ -84,39 +98,44 @@ export class SuggestionsDashboard {
   }
 
   private _generateSuggestion(supplierData: any): void {
-    // Generación instantánea de orden basada en proveedor y bonificaciones
     this.isLoading = true;
-    
-    const mockSuggestion: SugerenciaOrden = {
-      id: Math.floor(Math.random() * 10000),
-      producto_id: 1, // TODO: link to actual product from molecula
+
+    const precioUnitario: number = supplierData.precio_unitario || 1000;
+    const familia: number = this.selectedMolecula?.familia ?? 4;
+    const requiereGerente = familia === 1 || precioUnitario > 50_000;
+
+    // TODO: reemplazar con llamada real a POST /api/v1/suggestions/calculate (HIS-001/HIS-002)
+    const suggestion: SugerenciaOrden = {
+      id: ++this._nextSuggestionId,
+      producto_id: this.selectedMolecula?.id ?? 0,
       producto_nombre: this.selectedMolecula?.nombre || '',
       cantidad_sugerida: supplierData.cantidad_calculada || 300,
       unidad_medida: 'unidades',
       proveedor_id: supplierData.proveedor_id,
       proveedor_nombre: supplierData.proveedor_nombre,
-      precio_unitario: supplierData.precio_unitario || 1000,
+      precio_unitario: precioUnitario,
       costo_total: supplierData.costo_total_con_bonificaciones || 0,
-      es_clase_c: this.selectedMolecula?.es_clase_c || false,
-      estado_aprobacion: this.selectedMolecula?.es_clase_c ? 'PENDIENTE' : null,
-      created_at: new Date()
+      es_clase_c: requiereGerente,
+      requiere_aprobacion_gerente: requiereGerente,
+      estado_aprobacion: requiereGerente ? 'PENDIENTE_GERENTE' : 'PENDIENTE_JEFE',
+      created_at: new Date(),
     };
-    
-    this.currentSuggestion = mockSuggestion;
-    this.stateService.updateSuggestion(mockSuggestion);
+
+    this.currentSuggestion = suggestion;
+    this.stateService.updateSuggestion(suggestion);
     this.showSuggestionCard = true;
     this.showCostSimulation = true;
     this.isLoading = false;
-    
-    if (mockSuggestion.es_clase_c) {
+
+    if (suggestion.requiere_aprobacion_gerente) {
       this.showApprovalWorkflow = true;
-      this.approvalRequestId = mockSuggestion.id ?? null;
+      this.approvalRequestId = suggestion.id ?? null;
     }
   }
 
   onSuggestionAccepted(suggestion: SugerenciaOrden): void {
-    if (suggestion.es_clase_c && suggestion.estado_aprobacion !== 'APROBADO') {
-      alert('No se puede aceptar sugerencia Clase C sin aprobación');
+    if (suggestion.requiere_aprobacion_gerente && !suggestion.estado_aprobacion?.startsWith('APROBADO')) {
+      alert('No se puede aceptar sugerencia que requiere aprobación sin haberla recibido');
       return;
     }
     console.log('Sugerencia aceptada:', suggestion);
@@ -172,7 +191,7 @@ export class SuggestionsDashboard {
   onApprovalGranted(event: any): void {
     console.log('Approval granted:', event);
     if (this.currentSuggestion) {
-      this.currentSuggestion.estado_aprobacion = 'APROBADO';
+      this.currentSuggestion.estado_aprobacion = 'APROBADO_GERENTE';
       alert('Aprobación concedida. Ahora puedes emitir la orden.');
     }
   }
@@ -180,7 +199,7 @@ export class SuggestionsDashboard {
   onApprovalDenied(event: any): void {
     console.log('Approval denied:', event);
     if (this.currentSuggestion) {
-      this.currentSuggestion.estado_aprobacion = 'RECHAZADO';
+      this.currentSuggestion.estado_aprobacion = 'RECHAZADO_GERENTE';
       alert(`Aprobación rechazada: ${event.comentarios || 'Sin comentarios'}`);
       this.resetWorkflow();
     }

@@ -89,7 +89,7 @@
         mat-stroked-button 
         class="action-accept"
         (click)="onAccept()"
-        [disabled]="suggestion.es_clase_c && suggestion.estado_aprobacion !== 'APROBADO'"
+        [disabled]="suggestion.requiere_aprobacion_gerente && !suggestion.estado_aprobacion?.startsWith('APROBADO')"
         aria-label="Aceptar sugerencia">
         <mat-icon>check_circle</mat-icon>
         Aceptar

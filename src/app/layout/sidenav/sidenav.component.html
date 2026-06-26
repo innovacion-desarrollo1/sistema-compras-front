@@ -1,0 +1,55 @@
+<nav class="sidenav" [class.collapsed]="collapsed()" role="navigation" aria-label="Menú principal">
+
+  <!-- Header: logo + wordmark + toggle -->
+  <div class="sidenav-header">
+    <img src="assets/images/Logo-DUANA.png" alt="DUANA" class="sidenav-logo">
+    @if (!collapsed()) {
+      <span class="sidenav-brand">DUANA</span>
+    }
+    <button mat-icon-button class="toggle-btn"
+            (click)="navState.toggle()"
+            [attr.aria-label]="collapsed() ? 'Expandir menú' : 'Colapsar menú'">
+      <mat-icon>{{ collapsed() ? 'chevron_right' : 'chevron_left' }}</mat-icon>
+    </button>
+  </div>
+
+  <!-- Nav items -->
+  <div class="sidenav-nav">
+    @for (item of visibleItems(); track item.id) {
+      @if (item.dividerBefore) {
+        <div class="nav-divider" role="separator"></div>
+      }
+      <a class="nav-item"
+         [class.active]="isActive(item)"
+         [class.disabled]="item.comingSoon"
+         [routerLink]="item.comingSoon ? null : item.route"
+         [attr.aria-current]="isActive(item) ? 'page' : null"
+         [attr.aria-disabled]="item.comingSoon ? 'true' : null"
+         [matTooltip]="collapsed() ? item.label : ''"
+         matTooltipPosition="after">
+        <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
+        @if (!collapsed()) {
+          <span class="nav-label">{{ item.label }}</span>
+          @if (item.comingSoon) {
+            <span class="nav-soon-badge">Pronto</span>
+          }
+        }
+      </a>
+    }
+  </div>
+
+  <!-- Footer: usuario + rol -->
+  <div class="sidenav-footer">
+    <div class="nav-divider" role="separator"></div>
+    <div class="user-section">
+      <div class="user-avatar">{{ userInitials() }}</div>
+      @if (!collapsed()) {
+        <div class="user-details">
+          <span class="user-name">Usuario</span>
+          <span class="user-role-label">{{ roleLabel() }}</span>
+        </div>
+      }
+    </div>
+  </div>
+
+</nav>
