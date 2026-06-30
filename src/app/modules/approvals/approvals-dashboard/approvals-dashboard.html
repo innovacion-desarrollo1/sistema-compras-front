@@ -58,6 +58,16 @@
         </td>
       </ng-container>
 
+      <ng-container matColumnDef="escala">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let item">
+          <span *ngIf="escalaBadge(item)" class="escala-badge" matTooltip="Escalará a Gerente tras aprobación del Jefe">
+            <mat-icon class="escala-icon">arrow_forward</mat-icon>
+            Gerente
+          </span>
+        </td>
+      </ng-container>
+
       <ng-container matColumnDef="costo_unitario">
         <th mat-header-cell *matHeaderCellDef>Costo Unit.</th>
         <td mat-cell *matCellDef="let item" class="cell-number">
@@ -95,6 +105,9 @@
           <div class="cell-acciones">
             <mat-spinner *ngIf="actionLoading() === item.id" diameter="24"></mat-spinner>
             <ng-container *ngIf="actionLoading() !== item.id">
+              <button mat-icon-button (click)="openDetail(item)" matTooltip="Ver detalle completo">
+                <mat-icon>open_in_new</mat-icon>
+              </button>
               <button mat-icon-button color="primary" (click)="openApprove(item)" matTooltip="Aprobar">
                 <mat-icon>check_circle</mat-icon>
               </button>

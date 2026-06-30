@@ -20,6 +20,12 @@ export const routes: Routes = [
           import('./modules/approvals/approvals-dashboard/approvals-dashboard')
             .then(m => m.ApprovalsDashboard),
       },
+      {
+        path: 'approvals/:id',
+        loadComponent: () =>
+          import('./modules/approvals/gerencia-review-panel/gerencia-review-panel')
+            .then(m => m.GerenciaReviewPanel),
+      },
       { path: 'centinela',   component: PlaceholderComponent },
       { path: 'traceability', component: PlaceholderComponent },
       { path: 'settings',    component: PlaceholderComponent },

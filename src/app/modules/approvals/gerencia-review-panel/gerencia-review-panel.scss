@@ -1,0 +1,300 @@
+@import '../../../../styles/themes/design-tokens';
+@import '../../../../styles/tokens/neuro-tokens';
+@import '../../../../styles/tokens/financial-colors';
+
+.panel-container {
+  padding: $spacing-lg;
+  padding-bottom: 100px; // space for sticky actions
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+}
+
+// ── Loading ──
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-md;
+  padding: $spacing-2xl;
+  color: rgba($duana-text, 0.5);
+}
+
+// ── Header ──
+.panel-role-label {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: $duana-primary;
+  opacity: 0.7;
+}
+
+.panel-header {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+  padding: $spacing-md $spacing-lg;
+  background: $neuro-bg-white;
+  border-radius: $neuro-radius-lg;
+  box-shadow: $neuro-shadow-embossed;
+}
+
+.back-btn {
+  align-self: flex-start;
+  color: rgba($duana-text, 0.6);
+  font-size: 13px;
+  margin-left: -8px;
+}
+
+.product-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: $duana-text;
+  line-height: 1.3;
+}
+
+.header-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.chip-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+  margin-right: 2px;
+}
+
+.estado-pendiente {
+  background: #FFF7ED !important;
+  color: #C2410C !important;
+  border: 1px solid #FED7AA !important;
+}
+
+.solicitante-chip {
+  background: #EFF6FF !important;
+  color: #1D4ED8 !important;
+  border: 1px solid #BFDBFE !important;
+}
+
+// ── Sections grid ──
+.sections-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-lg;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.section-historial {
+  grid-column: 1 / -1;
+}
+
+// ── Section cards ──
+.section-card {
+  background: $neuro-bg-white !important;
+  border-radius: $neuro-radius-lg !important;
+  box-shadow: $neuro-shadow-embossed !important;
+
+  .section-icon {
+    color: $duana-primary;
+  }
+}
+
+// ── Info grid (2-col inside cards) ──
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-sm $spacing-md;
+  margin-top: $spacing-sm;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  &.full-width {
+    grid-column: 1 / -1;
+  }
+}
+
+.info-label {
+  font-size: 11px;
+  color: rgba($duana-text, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.info-value {
+  font-size: 14px;
+  font-weight: 500;
+  color: $duana-text;
+
+  &.highlight {
+    color: $duana-primary;
+    font-weight: 700;
+    font-size: 15px;
+  }
+
+  &.not-available {
+    color: rgba($duana-text, 0.4);
+    font-style: italic;
+  }
+}
+
+.score-badge {
+  display: inline-block;
+  margin-left: 8px;
+  background: rgba($duana-primary, 0.1);
+  color: $duana-primary;
+  padding: 1px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+// ── KPI cards ──
+.kpi-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-sm;
+  margin-top: $spacing-sm;
+}
+
+.kpi-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $neuro-radius-md;
+  background: $neuro-bg-light;
+  border-left: 4px solid transparent;
+}
+
+.kpi-label {
+  font-size: 11px;
+  color: rgba($duana-text, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.kpi-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: $duana-text;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.kpi-riesgo {
+  font-size: 15px;
+}
+
+.kpi-neutral  { border-left-color: rgba($duana-primary, 0.3); }
+.kpi-verde    { border-left-color: #22C55E; background: #F0FDF4; .kpi-value { color: #15803D; } }
+.kpi-amarillo { border-left-color: #F59E0B; background: #FFFBEB; .kpi-value { color: #92400E; } }
+.kpi-naranja  { border-left-color: #F97316; background: #FFF7ED; .kpi-value { color: #C2410C; } }
+.kpi-rojo     { border-left-color: #EF4444; background: #FEF2F2; .kpi-value { color: #B91C1C; } }
+
+// ── Dusoft banner ──
+.dusoft-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  border-radius: $neuro-radius-sm;
+  padding: $spacing-sm $spacing-md;
+  margin-bottom: $spacing-sm;
+  color: #92400E;
+  font-size: 13px;
+
+  mat-icon { color: #F59E0B; font-size: 18px; width: 18px; height: 18px; }
+}
+
+// ── Historial table ──
+.historial-table {
+  width: 100%;
+  font-size: 13px;
+}
+
+.cell-num {
+  text-align: right;
+}
+
+.decision-chip {
+  font-size: 11px;
+  height: 20px;
+  min-height: 20px;
+  padding: 0 8px;
+}
+
+.decision-verde    { background: #DCFCE7 !important; color: #15803D !important; border: 1px solid #BBF7D0 !important; }
+.decision-amarillo { background: #FEF9C3 !important; color: #854D0E !important; border: 1px solid #FDE047 !important; }
+.decision-rojo     { background: #FEE2E2 !important; color: #B91C1C !important; border: 1px solid #FECACA !important; }
+
+.empty-historial {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba($duana-text, 0.4);
+  font-style: italic;
+  padding: $spacing-sm 0;
+}
+
+// ── Familia chips (reuse from dashboard) ──
+.familia-chip { font-size: 11px; height: 22px; min-height: 22px; padding: 0 8px; }
+.familia-f1 { background: #FFF7ED !important; color: #C2410C !important; border: 1px solid #FED7AA !important; }
+.familia-f2 { background: #EFF6FF !important; color: #1D4ED8 !important; border: 1px solid #BFDBFE !important; }
+.familia-f3 { background: #FFF1F2 !important; color: #BE123C !important; border: 1px solid #FECDD3 !important; }
+.familia-f4 { background: #F0FDF4 !important; color: #15803D !important; border: 1px solid #BBF7D0 !important; }
+
+// ── Sticky actions panel ──
+.actions-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: $spacing-md;
+  padding: $spacing-md $spacing-xl;
+  background: $neuro-bg-white;
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.08);
+  z-index: 100;
+}
+
+.actions-loading {
+  justify-content: center;
+  gap: $spacing-sm;
+  color: rgba($duana-text, 0.6);
+}
+
+.action-btn {
+  min-width: 140px;
+  height: 42px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.action-return {
+  color: #F59E0B;
+  border-color: #F59E0B;
+}
+
+.action-approve {
+  min-width: 160px;
+}

@@ -8,6 +8,7 @@ import {
   computed,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -53,6 +54,7 @@ export class ApprovalsDashboard implements OnInit, OnDestroy {
   private approvalService = inject(ApprovalWorkflowService);
   private auth            = inject(AuthService);
   private dialog          = inject(MatDialog);
+  private router          = inject(Router);
 
   readonly loading       = signal(true);
   readonly items         = signal<AprobacionItem[]>([]);
@@ -85,8 +87,12 @@ export class ApprovalsDashboard implements OnInit, OnDestroy {
   );
 
   readonly displayedColumns = [
-    'producto', 'familia', 'costo_unitario', 'cantidad', 'total', 'solicitante', 'tiempo', 'acciones',
+    'producto', 'familia', 'escala', 'costo_unitario', 'cantidad', 'total', 'solicitante', 'tiempo', 'acciones',
   ];
+
+  escalaBadge(item: AprobacionItem): boolean {
+    return item.requiere_aprobacion_gerente === true;
+  }
 
   ngOnInit(): void {
     this.pollSub = interval(30000).pipe(
@@ -207,6 +213,10 @@ export class ApprovalsDashboard implements OnInit, OnDestroy {
         else this.loading.set(false);
       });
     });
+  }
+
+  openDetail(item: AprobacionItem): void {
+    this.router.navigate(['/approvals', item.id]);
   }
 
   private _refresh(): void {
