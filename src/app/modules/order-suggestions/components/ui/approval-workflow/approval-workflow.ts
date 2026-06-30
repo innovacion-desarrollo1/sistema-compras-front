@@ -9,7 +9,11 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { interval, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { ApprovalWorkflowService, ApprovalRequest } from '../../../../../core/services/approval-workflow.service';
+import {
+  ApprovalWorkflowService,
+  AprobacionItem,
+  AprobacionEstado,
+} from '../../../../../core/services/approval-workflow.service';
 
 @Component({
   selector: 'app-approval-workflow',
@@ -22,24 +26,24 @@ import { ApprovalWorkflowService, ApprovalRequest } from '../../../../../core/se
     MatStepperModule,
     MatChipsModule,
     MatDividerModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
   ],
   templateUrl: './approval-workflow.html',
   styleUrl: './approval-workflow.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ApprovalWorkflow implements OnInit, OnDestroy {
   @Input() requestId?: number;
-  @Output() approved = new EventEmitter<ApprovalRequest>();
-  @Output() rejected = new EventEmitter<ApprovalRequest>();
-  
-  currentRequest: ApprovalRequest | null = null;
+  @Output() approved = new EventEmitter<AprobacionItem>();
+  @Output() rejected = new EventEmitter<AprobacionItem>();
+
+  currentRequest: AprobacionItem | null = null;
   polling$?: Subscription;
   isLoading = true;
 
   constructor(
     private approvalService: ApprovalWorkflowService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -50,67 +54,55 @@ export class ApprovalWorkflow implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.polling$) {
-      this.polling$.unsubscribe();
-    }
+    this.polling$?.unsubscribe();
   }
 
   loadRequestStatus(id: number): void {
     this.isLoading = true;
-    this.approvalService.getRequest(id).subscribe({
-      next: (req) => {
-        this.currentRequest = req;
-        this.isLoading = false;
-        this.cdr.markForCheck();
-        // Emit events based on status
-        if (req.estado === 'APROBADO') {
-          this.approved.emit(req);
-        } else if (req.estado === 'RECHAZADO') {
-          this.rejected.emit(req);
-        }
-      },
-      error: (err) => {
-        console.error('Failed to load approval request:', err);
-        this.isLoading = false;
-        this.cdr.markForCheck();
-      }
+    this.approvalService.getById(id).subscribe(req => {
+      this.currentRequest = req;
+      this.isLoading = false;
+      this.cdr.markForCheck();
+      if (req?.estado_aprobacion?.startsWith('APROBADO')) this.approved.emit(req);
+      else if (req?.estado_aprobacion?.startsWith('RECHAZADO')) this.rejected.emit(req!);
     });
   }
 
   startPolling(id: number): void {
-    this.polling$ = interval(10000) // Poll every 10 seconds
-      .pipe(switchMap(() => this.approvalService.getRequest(id)))
-      .subscribe({
-        next: (req) => {
-          this.currentRequest = req;
-          this.cdr.markForCheck();
-          if (req.estado !== 'PENDIENTE') {
-            this.polling$?.unsubscribe(); // Stop polling when decided
-            
-            if (req.estado === 'APROBADO') {
-              this.approved.emit(req);
-            } else if (req.estado === 'RECHAZADO') {
-              this.rejected.emit(req);
-            }
-          }
+    this.polling$ = interval(10000)
+      .pipe(switchMap(() => this.approvalService.getById(id)))
+      .subscribe(req => {
+        if (!req) return;
+        this.currentRequest = req;
+        this.cdr.markForCheck();
+        if (!req.estado_aprobacion.startsWith('PENDIENTE')) {
+          this.polling$?.unsubscribe();
+          if (req.estado_aprobacion.startsWith('APROBADO')) this.approved.emit(req);
+          else if (req.estado_aprobacion.startsWith('RECHAZADO')) this.rejected.emit(req);
         }
       });
   }
 
-  getStepIndex(estado: string): number {
-    if (estado === 'PENDIENTE') return 1;
-    return 2; // APROBADO or RECHAZADO
+  getStepIndex(estado: AprobacionEstado): number {
+    if (estado.startsWith('PENDIENTE')) return 1;
+    return 2;
   }
 
-  getEstadoColor(estado: string): string {
-    if (estado === 'APROBADO') return 'verde';
-    if (estado === 'RECHAZADO') return 'rojo';
-    return 'amarillo'; // PENDIENTE
+  getEstadoColor(estado: AprobacionEstado): string {
+    if (estado.startsWith('APROBADO'))  return 'verde';
+    if (estado.startsWith('RECHAZADO')) return 'rojo';
+    if (estado === 'MODIFICACION')      return 'amarillo';
+    return 'naranja';
   }
 
-  getEstadoIcon(estado: string): string {
-    if (estado === 'APROBADO') return 'check_circle';
-    if (estado === 'RECHAZADO') return 'cancel';
-    return 'schedule'; // PENDIENTE
+  getEstadoIcon(estado: AprobacionEstado): string {
+    if (estado.startsWith('APROBADO'))  return 'check_circle';
+    if (estado.startsWith('RECHAZADO')) return 'cancel';
+    if (estado === 'MODIFICACION')      return 'undo';
+    return 'schedule';
+  }
+
+  motivoLabel(motivo: 'FAMILIA_1' | 'ALTO_COSTO'): string {
+    return motivo === 'FAMILIA_1' ? 'Familia F1 Estratégico' : 'Costo > $50.000';
   }
 }

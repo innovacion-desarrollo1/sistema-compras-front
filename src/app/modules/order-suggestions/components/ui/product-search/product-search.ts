@@ -14,8 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSelectModule } from '@angular/material/select';
-import { ScrollingModule } from '@angular/cdk/scrolling';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { debounceTime, switchMap, distinctUntilChanged, filter } from 'rxjs/operators';
 import { ProductService } from '../../../../../core/services/product.service';
 import { Molecula } from '../../../../../core/services/molecula.service';
@@ -34,7 +33,6 @@ import { SemaphoreHelper } from '../../../../../shared/utils/semaphore.util';
     MatButtonModule,
     MatChipsModule,
     MatSelectModule,
-    ScrollingModule,
   ],
   templateUrl: './product-search.html',
   styleUrl: './product-search.scss',
@@ -45,6 +43,7 @@ export class ProductSearch implements OnInit {
   periodoControl = new FormControl('4'); // Default: 4 semanas
 
   filteredProductos$!: Observable<Molecula[]>;
+  private pipeline$!: Observable<Molecula[]>;
 
   @Output() moleculaSelected = new EventEmitter<{ molecula: Molecula; periodo_semanas: number }>();
 
@@ -58,13 +57,13 @@ export class ProductSearch implements OnInit {
   constructor(private productService: ProductService) {}
 
   ngOnInit(): void {
-    this.filteredProductos$ = this.searchControl.valueChanges.pipe(
-      // HIS-009 CA-5: guard — no llamar API con menos de 2 caracteres
+    this.pipeline$ = this.searchControl.valueChanges.pipe(
       filter(q => typeof q === 'string' && q.trim().length >= 2),
       debounceTime(300),
       distinctUntilChanged(),
       switchMap(query => this.productService.searchProducts(query as string)),
     );
+    this.filteredProductos$ = this.pipeline$;
   }
 
   displayFn(item: Molecula | string | null): string {
@@ -100,6 +99,6 @@ export class ProductSearch implements OnInit {
 
   clearSearch(): void {
     this.searchControl.setValue('');
-    this.filteredProductos$ = of([]);
+    this.filteredProductos$ = this.pipeline$;
   }
 }

@@ -49,33 +49,28 @@
         (optionSelected)="onProductoSelect($event.option.value)"
         class="molecula-autocomplete-panel">
 
-        <!-- Virtual Scroll para Rendimiento (HIS-009 CA-1) -->
-        <cdk-virtual-scroll-viewport itemSize="64" class="autocomplete-viewport">
-          <mat-option
-            *cdkVirtualFor="let producto of filteredProductos$ | async"
-            [value]="producto"
-            class="molecula-option">
+        <mat-option
+          *ngFor="let producto of filteredProductos$ | async"
+          [value]="producto"
+          class="molecula-option">
 
-            <div class="molecula-option-content">
-              <!-- Información Principal -->
-              <div class="molecula-main">
-                <span class="molecula-name">{{ producto.nombre }}</span>
-                <span class="molecula-code">Cód: {{ producto.codigo }}</span>
-              </div>
-
-              <!-- Chip de Semáforo -->
-              <div class="molecula-meta">
-                <mat-chip
-                  [ngClass]="'semaphore-chip-' + getSemaphoreColor(producto)"
-                  class="molecula-semaphore">
-                  <mat-icon matChipAvatar>{{ getSemaphoreIcon(producto) }}</mat-icon>
-                  <span>{{ getSemaphoreText(producto) }}</span>
-                </mat-chip>
-              </div>
+          <div class="molecula-option-content">
+            <div class="molecula-main">
+              <span class="molecula-name">{{ producto.nombre }}</span>
+              <span class="molecula-code">Cód: {{ producto.codigo }}</span>
             </div>
 
-          </mat-option>
-        </cdk-virtual-scroll-viewport>
+            <div class="molecula-meta">
+              <mat-chip
+                [ngClass]="'semaphore-chip-' + getSemaphoreColor(producto)"
+                class="molecula-semaphore">
+                <mat-icon matChipAvatar>{{ getSemaphoreIcon(producto) }}</mat-icon>
+                <span>{{ getSemaphoreText(producto) }}</span>
+              </mat-chip>
+            </div>
+          </div>
+
+        </mat-option>
 
         <!-- Sin Resultados -->
         <mat-option

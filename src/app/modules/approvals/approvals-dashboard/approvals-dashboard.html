@@ -1,0 +1,118 @@
+<div class="approvals-container">
+
+  <!-- Header -->
+  <div class="approvals-header">
+    <div class="header-info">
+      <mat-icon class="header-icon">approval</mat-icon>
+      <div>
+        <h2 class="header-title">Cola de Aprobaciones</h2>
+        <p class="header-subtitle">{{ subTitle() }}</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button
+        mat-flat-button
+        color="primary"
+        [disabled]="filteredItems().length === 0 || loading()"
+        (click)="approveAll()"
+        class="approve-all-btn">
+        <mat-icon>done_all</mat-icon>
+        Aprobar Todo ({{ filteredItems().length }})
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading()" class="loading-state">
+    <mat-spinner diameter="40"></mat-spinner>
+    <span>Cargando cola de aprobaciones...</span>
+  </div>
+
+  <!-- Empty -->
+  <div *ngIf="!loading() && filteredItems().length === 0" class="empty-state">
+    <mat-icon class="empty-icon">inbox</mat-icon>
+    <h3>Sin ítems pendientes</h3>
+    <p>No hay ítems pendientes de aprobación en tu nivel.</p>
+  </div>
+
+  <!-- Tabla -->
+  <div *ngIf="!loading() && filteredItems().length > 0" class="table-wrapper">
+    <table mat-table [dataSource]="filteredItems()" class="approvals-table">
+
+      <ng-container matColumnDef="producto">
+        <th mat-header-cell *matHeaderCellDef>Producto</th>
+        <td mat-cell *matCellDef="let item">
+          <div class="cell-producto">
+            <span class="producto-nombre">{{ item.producto_nombre }}</span>
+            <span class="producto-proveedor">{{ item.proveedor_nombre }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="familia">
+        <th mat-header-cell *matHeaderCellDef>Familia</th>
+        <td mat-cell *matCellDef="let item">
+          <mat-chip class="familia-chip" [ngClass]="'familia-f' + item.familia">
+            {{ familiaLabel(item.familia) }}
+          </mat-chip>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="costo_unitario">
+        <th mat-header-cell *matHeaderCellDef>Costo Unit.</th>
+        <td mat-cell *matCellDef="let item" class="cell-number">
+          {{ item.costo_unitario | currency:'COP':'symbol-narrow':'1.0-0' }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="cantidad">
+        <th mat-header-cell *matHeaderCellDef>Cant.</th>
+        <td mat-cell *matCellDef="let item" class="cell-number">{{ item.cantidad }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="total">
+        <th mat-header-cell *matHeaderCellDef>Total</th>
+        <td mat-cell *matCellDef="let item" class="cell-number cell-total">
+          {{ item.costo_total | currency:'COP':'symbol-narrow':'1.0-0' }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="solicitante">
+        <th mat-header-cell *matHeaderCellDef>Solicitante</th>
+        <td mat-cell *matCellDef="let item">{{ item.solicitante_nombre }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="tiempo">
+        <th mat-header-cell *matHeaderCellDef>Espera</th>
+        <td mat-cell *matCellDef="let item">
+          <span class="tiempo-badge">{{ tiempoTranscurrido(item.fecha_solicitud) }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let item">
+          <div class="cell-acciones">
+            <mat-spinner *ngIf="actionLoading() === item.id" diameter="24"></mat-spinner>
+            <ng-container *ngIf="actionLoading() !== item.id">
+              <button mat-icon-button color="primary" (click)="openApprove(item)" matTooltip="Aprobar">
+                <mat-icon>check_circle</mat-icon>
+              </button>
+              <button mat-icon-button (click)="openReturn(item)" matTooltip="Devolver a modificación" style="color:#F59E0B">
+                <mat-icon>undo</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="openReject(item)" matTooltip="Rechazar">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </ng-container>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="approval-row"></tr>
+
+    </table>
+  </div>
+
+</div>

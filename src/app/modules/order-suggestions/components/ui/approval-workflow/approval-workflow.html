@@ -5,7 +5,7 @@
       Estado de Solicitud de Aprobación
     </mat-card-title>
     <mat-card-subtitle>
-      Gobernanza Clase C · Autorización gerencial requerida
+      Governance — Autorización requerida ({{ motivoLabel(currentRequest.motivo) }})
     </mat-card-subtitle>
   </mat-card-header>
 
@@ -25,7 +25,7 @@
       <div class="request-details-grid">
         <div class="detail-item">
           <span class="detail-label">Cantidad</span>
-          <span class="detail-value">{{ currentRequest.cantidad_solicitada }} unidades</span>
+          <span class="detail-value">{{ currentRequest.cantidad }} unidades</span>
         </div>
         <div class="detail-item">
           <span class="detail-label">Proveedor</span>
@@ -33,11 +33,11 @@
         </div>
         <div class="detail-item">
           <span class="detail-label">Costo Total</span>
-          <span class="detail-value detail-cost">${{ currentRequest.costo_total | number:'1.0-0' }}</span>
+          <span class="detail-value detail-cost">{{ currentRequest.costo_total | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
         </div>
         <div class="detail-item detail-full">
           <span class="detail-label">Motivo de Aprobación</span>
-          <span class="detail-value">{{ currentRequest.motivo_clase_c }}</span>
+          <span class="detail-value">{{ motivoLabel(currentRequest.motivo) }}</span>
         </div>
       </div>
     </div>
@@ -45,45 +45,51 @@
     <mat-divider *ngIf="!isLoading"></mat-divider>
 
     <!-- Status Stepper -->
-    <mat-stepper *ngIf="!isLoading" [selectedIndex]="getStepIndex(currentRequest.estado)" class="approval-stepper">
+    <mat-stepper *ngIf="!isLoading" [selectedIndex]="getStepIndex(currentRequest.estado_aprobacion)" class="approval-stepper">
       <mat-step label="Enviada">
         <p>Solicitud enviada el {{ currentRequest.fecha_solicitud | date:'medium' }}</p>
         <p>Por: {{ currentRequest.solicitante_nombre }}</p>
       </mat-step>
 
       <mat-step label="En Revisión">
-        <div *ngIf="currentRequest.estado === 'PENDIENTE'" class="pending-state">
+        <div *ngIf="currentRequest.estado_aprobacion.startsWith('PENDIENTE')" class="pending-state">
           <mat-icon class="spin-icon pending-icon">autorenew</mat-icon>
-          <p>Esperando decisión del Jefe de Compras...</p>
+          <p>Esperando decisión del {{ currentRequest.nivel_aprobacion === 'GERENTE' ? 'Gerente' : 'Jefe de Compras' }}...</p>
         </div>
-        <p *ngIf="currentRequest.estado !== 'PENDIENTE'">
-          Revisada el {{ currentRequest.fecha_decision | date:'medium' }}
+        <p *ngIf="!currentRequest.estado_aprobacion.startsWith('PENDIENTE')">
+          Revisión completada.
         </p>
       </mat-step>
 
       <mat-step label="Decisión">
-        <mat-chip 
-          [ngClass]="'semaphore-chip-' + getEstadoColor(currentRequest.estado)"
+        <mat-chip
+          [ngClass]="'semaphore-chip-' + getEstadoColor(currentRequest.estado_aprobacion)"
           class="estado-chip">
-          <mat-icon>{{ getEstadoIcon(currentRequest.estado) }}</mat-icon>
-          {{ currentRequest.estado }}
+          <mat-icon>{{ getEstadoIcon(currentRequest.estado_aprobacion) }}</mat-icon>
+          {{ currentRequest.estado_aprobacion }}
         </mat-chip>
-        
-        <div *ngIf="currentRequest.estado === 'APROBADO'" class="decision-details approved">
+
+        <div *ngIf="currentRequest.estado_aprobacion.startsWith('APROBADO')" class="decision-details approved">
           <mat-icon class="decision-icon">check_circle</mat-icon>
           <div>
-            <p><strong>Aprobado por:</strong> {{ currentRequest.aprobador_nombre }}</p>
-            <p *ngIf="currentRequest.comentario_aprobador">
-              <strong>Comentario:</strong> {{ currentRequest.comentario_aprobador }}
-            </p>
+            <p *ngIf="currentRequest.aprobador_nombre"><strong>Aprobado por:</strong> {{ currentRequest.aprobador_nombre }}</p>
+            <p *ngIf="currentRequest.comentario"><strong>Comentario:</strong> {{ currentRequest.comentario }}</p>
           </div>
         </div>
 
-        <div *ngIf="currentRequest.estado === 'RECHAZADO'" class="decision-details rejection">
+        <div *ngIf="currentRequest.estado_aprobacion.startsWith('RECHAZADO')" class="decision-details rejection">
           <mat-icon class="decision-icon rejection-icon">error</mat-icon>
           <div>
-            <p><strong>Rechazado por:</strong> {{ currentRequest.aprobador_nombre }}</p>
-            <p><strong>Motivo:</strong> {{ currentRequest.comentario_aprobador }}</p>
+            <p *ngIf="currentRequest.aprobador_nombre"><strong>Rechazado por:</strong> {{ currentRequest.aprobador_nombre }}</p>
+            <p *ngIf="currentRequest.comentario"><strong>Motivo:</strong> {{ currentRequest.comentario }}</p>
+          </div>
+        </div>
+
+        <div *ngIf="currentRequest.estado_aprobacion === 'MODIFICACION'" class="decision-details modification">
+          <mat-icon class="decision-icon">undo</mat-icon>
+          <div>
+            <p><strong>Devuelto para modificación</strong></p>
+            <p *ngIf="currentRequest.comentario"><strong>Indicación:</strong> {{ currentRequest.comentario }}</p>
           </div>
         </div>
       </mat-step>

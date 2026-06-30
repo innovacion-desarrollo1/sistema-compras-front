@@ -14,7 +14,12 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'order-suggestions', pathMatch: 'full' },
       { path: 'order-suggestions', component: SuggestionsDashboard },
-      { path: 'approvals',    component: PlaceholderComponent },
+      {
+        path: 'approvals',
+        loadComponent: () =>
+          import('./modules/approvals/approvals-dashboard/approvals-dashboard')
+            .then(m => m.ApprovalsDashboard),
+      },
       { path: 'centinela',   component: PlaceholderComponent },
       { path: 'traceability', component: PlaceholderComponent },
       { path: 'settings',    component: PlaceholderComponent },

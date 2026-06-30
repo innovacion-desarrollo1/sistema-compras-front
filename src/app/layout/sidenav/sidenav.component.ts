@@ -10,8 +10,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatBadgeModule } from '@angular/material/badge';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { interval, switchMap, startWith, map } from 'rxjs';
 import { SidenavStateService } from '../../core/services/sidenav-state.service';
 import { AuthService } from '../../core/services/auth.service';
+import { ApprovalWorkflowService } from '../../core/services/approval-workflow.service';
 import { NavItem, DuanaRole } from './nav-item.model';
 
 const NAV_ITEMS: NavItem[] = [
@@ -28,8 +32,7 @@ const NAV_ITEMS: NavItem[] = [
     label: 'Aprobaciones',
     icon: 'gavel',
     route: '/approvals',
-    roles: ['JEFE_COMPRAS', 'GERENTE', 'ADMIN', 'AUXILIAR_COMPRAS'],
-    comingSoon: true, // HIS-008: habilitar cuando se implemente la funcionalidad de aprobaciones
+    roles: ['JEFE_COMPRAS', 'GERENTE', 'ADMIN'],
   },
   {
     id: 'centinela',
@@ -59,19 +62,40 @@ const NAV_ITEMS: NavItem[] = [
 @Component({
   selector: 'app-sidenav',
   standalone: true,
-  imports: [MatIconModule, MatButtonModule, MatTooltipModule, MatMenuModule, MatDividerModule, RouterLink],
+  imports: [MatIconModule, MatButtonModule, MatTooltipModule, MatMenuModule, MatDividerModule, MatBadgeModule, RouterLink],
   templateUrl: './sidenav.component.html',
   styleUrl: './sidenav.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidenavComponent {
-  protected navState = inject(SidenavStateService);
-  protected auth     = inject(AuthService);
-  private router     = inject(Router);
+  protected navState      = inject(SidenavStateService);
+  protected auth          = inject(AuthService);
+  private router          = inject(Router);
+  private approvalService = inject(ApprovalWorkflowService);
 
   collapsed = this.navState.collapsed;
 
   currentRole = computed<DuanaRole>(() => this.auth.getRole() ?? 'AUXILIAR_COMPRAS');
+
+  private _allPending = toSignal(
+    interval(30000).pipe(
+      startWith(0),
+      switchMap(() => this.approvalService.getPending()),
+    ),
+    { initialValue: [] },
+  );
+
+  pendingCount = computed(() => {
+    const role  = this.currentRole();
+    const items = this._allPending();
+    if (role === 'GERENTE' || role === 'ADMIN') {
+      return items.filter(i => i.estado_aprobacion === 'PENDIENTE_GERENTE').length;
+    }
+    if (role === 'JEFE_COMPRAS') {
+      return items.filter(i => i.estado_aprobacion === 'PENDIENTE_JEFE').length;
+    }
+    return 0;
+  });
 
   visibleItems = computed(() =>
     NAV_ITEMS.filter(item => item.roles.includes(this.currentRole()))

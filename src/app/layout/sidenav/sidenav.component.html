@@ -24,7 +24,14 @@
          [attr.aria-disabled]="item.comingSoon ? 'true' : null"
          [matTooltip]="collapsed() ? item.label : ''"
          matTooltipPosition="after">
-        <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
+        <mat-icon
+          class="nav-icon"
+          [matBadge]="item.id === 'approvals' && pendingCount() ? pendingCount() : null"
+          matBadgeColor="warn"
+          matBadgeSize="small"
+          [matBadgeHidden]="item.id !== 'approvals' || !pendingCount()">
+          {{ item.icon }}
+        </mat-icon>
         @if (!collapsed()) {
           <span class="nav-label">{{ item.label }}</span>
           @if (item.comingSoon) {
