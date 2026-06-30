@@ -40,11 +40,16 @@ export class ProductService {
       .set('q', query.trim())
       .set('limit', '50');
 
+    console.log('[ProductService] Buscando:', query.trim());
+
     return this.http
       .get<ProductoSearchListApiResponse>(`${this.apiUrl}/search`, { params })
       .pipe(
         map(r => r.productos.map(p => this._toMolecula(p))),
-        catchError(() => of([])),
+        catchError((err) => {
+          console.error('[ProductService] Error en búsqueda:', err);
+          return of([]);
+        }),
       );
   }
 
