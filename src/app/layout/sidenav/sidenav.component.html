@@ -35,16 +35,23 @@
     }
   </div>
 
-  <!-- Footer: usuario + rol -->
+  <!-- Footer: usuario + rol + logout -->
   <div class="sidenav-footer">
     <div class="nav-divider" role="separator"></div>
     <div class="user-section">
       <div class="user-avatar">{{ userInitials() }}</div>
       @if (!collapsed()) {
         <div class="user-details">
-          <span class="user-name">Usuario</span>
+          <span class="user-name">{{ userName() }}</span>
           <span class="user-role-label">{{ roleLabel() }}</span>
         </div>
+        <button mat-icon-button class="logout-btn"
+                (click)="logout()"
+                matTooltip="Cerrar sesión"
+                matTooltipPosition="above"
+                aria-label="Cerrar sesión">
+          <mat-icon>logout</mat-icon>
+        </button>
       }
     </div>
   </div>
