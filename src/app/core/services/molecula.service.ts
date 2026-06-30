@@ -5,6 +5,7 @@ export interface Molecula {
   id: number;
   nombre: string;
   codigo: string;
+  codigo_sdr?: string;       // SDR local (usado en llamadas de sugerencias y carrito)
   familia: number;
   es_clase_c: boolean;
   productos_count: number; // Number of products with this molecule

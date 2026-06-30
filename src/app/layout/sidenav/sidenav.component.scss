@@ -167,11 +167,37 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 12px var(--neuro-spacing-md);
+  padding: 10px var(--neuro-spacing-md);
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 0;
+  text-align: left;
+  transition: background 150ms ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.07);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--duana-primary);
+    outline-offset: -2px;
+  }
 }
 
 .collapsed .user-section {
   justify-content: center;
+  padding: 10px 0;
+}
+
+.user-chevron {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: rgba(255, 255, 255, 0.45);
+  flex-shrink: 0;
+  margin-left: auto;
 }
 
 .user-avatar {

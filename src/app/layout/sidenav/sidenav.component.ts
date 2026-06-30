@@ -8,6 +8,8 @@ import { RouterLink, Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
 import { SidenavStateService } from '../../core/services/sidenav-state.service';
 import { AuthService } from '../../core/services/auth.service';
 import { NavItem, DuanaRole } from './nav-item.model';
@@ -57,7 +59,7 @@ const NAV_ITEMS: NavItem[] = [
 @Component({
   selector: 'app-sidenav',
   standalone: true,
-  imports: [MatIconModule, MatButtonModule, MatTooltipModule, RouterLink],
+  imports: [MatIconModule, MatButtonModule, MatTooltipModule, MatMenuModule, MatDividerModule, RouterLink],
   templateUrl: './sidenav.component.html',
   styleUrl: './sidenav.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

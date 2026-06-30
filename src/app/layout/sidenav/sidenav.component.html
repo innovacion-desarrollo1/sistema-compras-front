@@ -35,25 +35,37 @@
     }
   </div>
 
-  <!-- Footer: usuario + rol + logout -->
+  <!-- Footer: usuario + rol (abre menú con opciones) -->
   <div class="sidenav-footer">
     <div class="nav-divider" role="separator"></div>
-    <div class="user-section">
+
+    <button class="user-section"
+            [matMenuTriggerFor]="userMenu"
+            [matTooltip]="collapsed() ? (userName() + ' — ' + roleLabel()) : ''"
+            matTooltipPosition="after"
+            aria-label="Opciones de usuario">
       <div class="user-avatar">{{ userInitials() }}</div>
       @if (!collapsed()) {
         <div class="user-details">
           <span class="user-name">{{ userName() }}</span>
           <span class="user-role-label">{{ roleLabel() }}</span>
         </div>
-        <button mat-icon-button class="logout-btn"
-                (click)="logout()"
-                matTooltip="Cerrar sesión"
-                matTooltipPosition="above"
-                aria-label="Cerrar sesión">
-          <mat-icon>logout</mat-icon>
-        </button>
+        <mat-icon class="user-chevron">expand_less</mat-icon>
       }
-    </div>
+    </button>
   </div>
+
+  <!-- Menú de usuario -->
+  <mat-menu #userMenu="matMenu" yPosition="above">
+    <div class="menu-user-header" mat-menu-item disabled>
+      <div class="menu-header-name">{{ userName() }}</div>
+      <div class="menu-header-email">{{ auth.getCurrentUser()?.email }}</div>
+    </div>
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      <span>Cerrar sesión</span>
+    </button>
+  </mat-menu>
 
 </nav>

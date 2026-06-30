@@ -1,114 +1,72 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { map, delay } from 'rxjs/operators';
-import { Producto } from '../../modules/order-suggestions/services/suggestion-state.service';
+import { map, catchError } from 'rxjs/operators';
+import { Molecula } from './molecula.service';
+
+/** DTO que devuelve GET /api/v1/products/search */
+interface ProductoSearchApiResponse {
+  codigo_producto: string;
+  descripcion:     string;
+  dci?:            string | null;
+  laboratorio?:    string | null;
+  codigo_sdr?:     string | null;
+  activo:          boolean;
+  familia?:        number | null;
+  familia_descripcion?: string | null;
+  stock_actual?:   number | null;
+  cobertura_dias?: number | null;
+  rop?:            number | null;
+  ss?:             number | null;
+}
+
+interface ProductoSearchListApiResponse {
+  total:     number;
+  productos: ProductoSearchApiResponse[];
+}
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
-  private apiUrl = '/api/v1/products';
+  private readonly apiUrl = '/api/v1/products';
 
   constructor(private http: HttpClient) {}
 
-  searchProducts(query: string): Observable<Producto[]> {
-    if (!query || query.trim().length === 0) {
+  searchProducts(query: string): Observable<Molecula[]> {
+    if (!query || query.trim().length < 2) {
       return of([]);
     }
 
-    // TODO: Replace with actual API call when backend is ready
-    // For now, return mock data
-    return this._getMockProducts(query);
-    
-    /* Production code:
     const params = new HttpParams()
-      .set('q', query)
+      .set('q', query.trim())
       .set('limit', '50');
 
-    return this.http.get<Producto[]>(`${this.apiUrl}/search`, { params }).pipe(
-      map(products => this._enrichWithGovernance(products))
-    );
-    */
+    return this.http
+      .get<ProductoSearchListApiResponse>(`${this.apiUrl}/search`, { params })
+      .pipe(
+        map(r => r.productos.map(p => this._toMolecula(p))),
+        catchError(() => of([])),
+      );
   }
 
-  private _getMockProducts(query: string): Observable<Producto[]> {
-    const mockData: Producto[] = [
-      {
-        id: 1,
-        codigo: 'MED-001',
-        nombre_comercial: 'Acetaminofen 500mg',
-        molecula: 'Paracetamol',
-        categoria_invima: 'Analgesico',
-        familia: 1,
-        es_clase_c: false,
-        stock_actual: 1500,
-        unidad_medida: 'TAB'
-      },
-      {
-        id: 2,
-        codigo: 'MED-002',
-        nombre_comercial: 'Ibuprofeno 400mg',
-        molecula: 'Ibuprofeno',
-        categoria_invima: 'Antiinflamatorio',
-        familia: 1,
-        es_clase_c: false,
-        stock_actual: 800,
-        unidad_medida: 'TAB'
-      },
-      {
-        id: 3,
-        codigo: 'MED-003',
-        nombre_comercial: 'Amoxicilina 500mg',
-        molecula: 'Amoxicilina',
-        categoria_invima: 'Antibiotico',
-        familia: 2,
-        es_clase_c: true,
-        stock_actual: 250,
-        unidad_medida: 'CAP'
-      },
-      {
-        id: 4,
-        codigo: 'INS-001',
-        nombre_comercial: 'Guantes de Nitrilo Talla M',
-        molecula: 'N/A',
-        categoria_invima: 'Insumo Medico',
-        familia: 3,
-        es_clase_c: false,
-        stock_actual: 5000,
-        unidad_medida: 'UND'
-      },
-      {
-        id: 5,
-        codigo: 'MED-004',
-        nombre_comercial: 'Losartan 50mg',
-        molecula: 'Losartan',
-        categoria_invima: 'Antihipertensivo',
-        familia: 2,
-        es_clase_c: true,
-        stock_actual: 0,
-        unidad_medida: 'TAB'
-      }
-    ];
-
-    const filtered = mockData.filter(p => 
-      p.nombre_comercial.toLowerCase().includes(query.toLowerCase()) ||
-      p.molecula.toLowerCase().includes(query.toLowerCase()) ||
-      p.codigo.toLowerCase().includes(query.toLowerCase())
-    );
-
-    return of(filtered).pipe(delay(200)); // Simulate network delay
-  }
-
-  private _enrichWithGovernance(products: Producto[]): Producto[] {
-    return products.map(p => ({
-      ...p,
-      es_clase_c: this._isClaseC(p)
-    }));
-  }
-
-  private _isClaseC(producto: Producto): boolean {
-    // Class C criteria: High-cost or controlled substances
-    return producto.categoria_invima === 'Antibiotico' || 
-           producto.categoria_invima === 'Antihipertensivo' ||
-           producto.familia === 2;
+  private _toMolecula(p: ProductoSearchApiResponse): Molecula {
+    return {
+      id:                    0,
+      nombre:                p.descripcion,
+      codigo:                p.codigo_producto,
+      // Preserve SDR code for downstream API calls (suggestions, cart)
+      codigo_sdr:            p.codigo_sdr ?? undefined,
+      familia:               p.familia ?? 4,
+      es_clase_c:            p.familia === 1 || p.familia === 3,
+      productos_count:       1,
+      stock_actual:          p.stock_actual ?? 0,
+      stock_minimo:          p.rop ?? 0,
+      stock_seguridad:       p.ss ?? 0,
+      precio_promedio:       0,
+      cobertura_dias:        p.cobertura_dias ?? 0,
+      demanda_promedio_diaria: 0,
+      lt_sistema_dias:       7,
+      eoq:                   0,
+      pendientes_diarios:    0,
+    };
   }
 }

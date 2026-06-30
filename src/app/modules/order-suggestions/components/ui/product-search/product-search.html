@@ -4,7 +4,7 @@
     <mat-icon class="search-header-icon">manage_search</mat-icon>
     <div class="search-header-text">
       <h3 class="search-title">Buscar Producto</h3>
-      <p class="search-subtitle">Seleccione un periodo y busque por ID, nombre o principio activo</p>
+      <p class="search-subtitle">Buscar por código, nombre comercial o principio activo (mínimo 2 caracteres)</p>
     </div>
   </div>
 
@@ -21,70 +21,74 @@
       <mat-hint>Periodo que desea cubrir</mat-hint>
     </mat-form-field>
 
-    <!-- Búsqueda de Producto por ID -->
+    <!-- Búsqueda de Producto -->
     <mat-form-field appearance="outline" class="molecula-search-field">
-      <mat-label>Buscar Producto por ID o Nombre</mat-label>
-      <input 
+      <mat-label>Buscar Producto por Código o Nombre</mat-label>
+      <input
         type="text"
         matInput
         [formControl]="searchControl"
         [matAutocomplete]="auto"
         placeholder="ej: 12345, ACETAMINOFEN 500MG, IBUPROFENO"
+        autocomplete="off"
         aria-label="Búsqueda de productos">
       <mat-icon matPrefix>search</mat-icon>
-      <button 
-        *ngIf="searchControl.value" 
-        matSuffix 
-        mat-icon-button 
+      <button
+        *ngIf="searchControl.value"
+        matSuffix
+        mat-icon-button
+        type="button"
         aria-label="Limpiar búsqueda"
-        (click)="searchControl.setValue('')">
+        (click)="clearSearch()">
         <mat-icon>close</mat-icon>
       </button>
-      
-      <mat-autocomplete 
-        #auto="matAutocomplete" 
+
+      <mat-autocomplete
+        #auto="matAutocomplete"
         [displayWith]="displayFn"
-        (optionSelected)="onMoleculaSelect($event.option.value)"
+        (optionSelected)="onProductoSelect($event.option.value)"
         class="molecula-autocomplete-panel">
-        
-        <!-- Virtual Scroll para Rendimiento -->
-        <cdk-virtual-scroll-viewport itemSize="60" class="autocomplete-viewport">
-          <mat-option 
-            *cdkVirtualFor="let molecula of filteredMoleculas$ | async" 
-            [value]="molecula"
+
+        <!-- Virtual Scroll para Rendimiento (HIS-009 CA-1) -->
+        <cdk-virtual-scroll-viewport itemSize="64" class="autocomplete-viewport">
+          <mat-option
+            *cdkVirtualFor="let producto of filteredProductos$ | async"
+            [value]="producto"
             class="molecula-option">
-            
+
             <div class="molecula-option-content">
               <!-- Información Principal -->
               <div class="molecula-main">
-                <span class="molecula-name">{{ molecula.nombre }}</span>
-                <span class="molecula-code">ID: {{ molecula.codigo }}</span>
+                <span class="molecula-name">{{ producto.nombre }}</span>
+                <span class="molecula-code">Cód: {{ producto.codigo }}</span>
               </div>
-              
+
               <!-- Chip de Semáforo -->
               <div class="molecula-meta">
-                <mat-chip 
-                  [ngClass]="'semaphore-chip-' + getSemaphoreColor(molecula)"
+                <mat-chip
+                  [ngClass]="'semaphore-chip-' + getSemaphoreColor(producto)"
                   class="molecula-semaphore">
-                  <mat-icon>{{ getSemaphoreIcon(molecula) }}</mat-icon>
-                  <span>{{ getSemaphoreText(molecula) }}</span>
+                  <mat-icon matChipAvatar>{{ getSemaphoreIcon(producto) }}</mat-icon>
+                  <span>{{ getSemaphoreText(producto) }}</span>
                 </mat-chip>
               </div>
             </div>
+
           </mat-option>
         </cdk-virtual-scroll-viewport>
-        
-        <!-- Mensaje de Sin Resultados -->
-        <mat-option 
-          *ngIf="(filteredMoleculas$ | async)?.length === 0 && searchControl.value" 
+
+        <!-- Sin Resultados -->
+        <mat-option
+          *ngIf="(filteredProductos$ | async)?.length === 0 && (searchControl.value?.length ?? 0) >= 2"
           disabled
           class="no-results">
           <mat-icon>search_off</mat-icon>
           No se encontraron productos para "{{ searchControl.value }}"
         </mat-option>
+
       </mat-autocomplete>
-      
-      <mat-hint>Buscar por ID, nombre del producto o principio activo</mat-hint>
+
+      <mat-hint>Ingrese al menos 2 caracteres para buscar</mat-hint>
     </mat-form-field>
   </div>
 </div>
