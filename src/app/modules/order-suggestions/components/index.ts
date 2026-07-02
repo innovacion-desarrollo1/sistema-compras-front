@@ -9,4 +9,4 @@ export { CostSimulationTable } from './ui/cost-simulation-table/cost-simulation-
 export { ApprovalWorkflow } from './ui/approval-workflow/approval-workflow';
 export { SuggestionHistory } from './ui/suggestion-history/suggestion-history';
 export { CartView } from './ui/cart-view/cart-view';
-export { MoleculeInventoryInfo } from './ui/molecule-inventory-info/molecule-inventory-info';
+export { SdrIdInventoryInfo } from './ui/sdr-id-inventory-info/sdr-id-inventory-info';

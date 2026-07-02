@@ -1,13 +1,13 @@
-<mat-card class="inventory-card" *ngIf="molecula">
+<mat-card class="inventory-card" *ngIf="sdr">
   <mat-card-header>
     <mat-card-title>
       <mat-icon>inventory_2</mat-icon>
-      Información de Inventario · {{ molecula.nombre }}
+      Información de Inventario · {{ sdr.nombre }}
     </mat-card-title>
     <mat-card-subtitle>
       <span class="subtitle-text">{{ getFamilyName() }}</span>
-      <mat-chip 
-        *ngIf="molecula.es_clase_c" 
+      <mat-chip
+        *ngIf="sdr.es_clase_c"
         class="semaphore-chip-naranja clase-c-chip">
         <mat-icon>gavel</mat-icon>
         Clase C — Requiere Aprobación
@@ -37,35 +37,35 @@
           <mat-icon>inventory</mat-icon>
           <span class="metric-label">Stock Actual</span>
         </div>
-        <div class="metric-value">{{ molecula.stock_actual | number:'1.0-0' }}</div>
+        <div class="metric-value">{{ sdr.stock_actual | number:'1.0-0' }}</div>
         <div class="metric-sublabel">unidades disponibles</div>
       </div>
 
       <!-- Stock Mínimo (ROP) -->
       <div class="metric-card">
         <div class="metric-header">
-          <mat-icon 
+          <mat-icon
             matTooltip="Reorder Point: punto en el que se debe reordenar"
             matTooltipPosition="above">
             priority_high
           </mat-icon>
           <span class="metric-label">Stock Mínimo (ROP)</span>
         </div>
-        <div class="metric-value">{{ molecula.stock_minimo | number:'1.0-0' }}</div>
+        <div class="metric-value">{{ sdr.stock_minimo | number:'1.0-0' }}</div>
         <div class="metric-sublabel">punto de reorden</div>
       </div>
 
       <!-- Stock de Seguridad (SS) -->
       <div class="metric-card">
         <div class="metric-header">
-          <mat-icon 
+          <mat-icon
             matTooltip="Safety Stock: inventario de seguridad para variaciones"
             matTooltipPosition="above">
             shield
           </mat-icon>
           <span class="metric-label">Stock de Seguridad (SS)</span>
         </div>
-        <div class="metric-value">{{ molecula.stock_seguridad | number:'1.0-0' }}</div>
+        <div class="metric-value">{{ sdr.stock_seguridad | number:'1.0-0' }}</div>
         <div class="metric-sublabel">buffer de seguridad</div>
       </div>
 
@@ -75,21 +75,21 @@
           <mat-icon>monetization_on</mat-icon>
           <span class="metric-label">Precio Promedio</span>
         </div>
-        <div class="metric-value">${{ molecula.precio_promedio | number:'1.0-0' }}</div>
+        <div class="metric-value">${{ sdr.precio_promedio | number:'1.0-0' }}</div>
         <div class="metric-sublabel">costo unitario</div>
       </div>
 
       <!-- Cobertura en Días -->
       <div class="metric-card">
         <div class="metric-header">
-          <mat-icon 
+          <mat-icon
             matTooltip="Días que puede abastecer con stock actual"
             matTooltipPosition="above">
             calendar_today
           </mat-icon>
           <span class="metric-label">Cobertura</span>
         </div>
-        <div class="metric-value">{{ molecula.cobertura_dias | number:'1.1-1' }}</div>
+        <div class="metric-value">{{ sdr.cobertura_dias | number:'1.1-1' }}</div>
         <div class="metric-sublabel">días de inventario</div>
       </div>
 
@@ -99,21 +99,21 @@
           <mat-icon>trending_up</mat-icon>
           <span class="metric-label">Demanda Diaria</span>
         </div>
-        <div class="metric-value">{{ molecula.demanda_promedio_diaria | number:'1.0-0' }}</div>
+        <div class="metric-value">{{ sdr.demanda_promedio_diaria | number:'1.0-0' }}</div>
         <div class="metric-sublabel">unidades/día</div>
       </div>
 
       <!-- Pendientes Diarios -->
       <div class="metric-card">
         <div class="metric-header">
-          <mat-icon 
+          <mat-icon
             matTooltip="Demanda pendiente de despacho diaria"
             matTooltipPosition="above">
             pending_actions
           </mat-icon>
           <span class="metric-label">Pendientes</span>
         </div>
-        <div class="metric-value">{{ molecula.pendientes_diarios | number:'1.0-0' }}</div>
+        <div class="metric-value">{{ sdr.pendientes_diarios | number:'1.0-0' }}</div>
         <div class="metric-sublabel">unidades pendientes</div>
       </div>
     </div>
@@ -134,10 +134,10 @@
         <div class="formula-line">
           <span class="formula-label"></span>
           <span class="formula-value">
-            = {{ molecula.stock_minimo | number:'1.0-0' }} 
-            + {{ molecula.stock_seguridad | number:'1.0-0' }} 
-            - {{ molecula.stock_actual | number:'1.0-0' }} 
-            - {{ molecula.pendientes_diarios | number:'1.0-0' }}
+            = {{ sdr.stock_minimo | number:'1.0-0' }}
+            + {{ sdr.stock_seguridad | number:'1.0-0' }}
+            - {{ sdr.stock_actual | number:'1.0-0' }}
+            - {{ sdr.pendientes_diarios | number:'1.0-0' }}
           </span>
         </div>
         <div class="formula-line result">

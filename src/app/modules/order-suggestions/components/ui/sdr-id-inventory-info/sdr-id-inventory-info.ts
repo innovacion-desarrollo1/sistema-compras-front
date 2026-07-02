@@ -8,7 +8,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { Molecula } from '../../../../../core/services/molecula.service';
 
 @Component({
-  selector: 'app-molecule-inventory-info',
+  selector: 'app-sdr-id-inventory-info',
   standalone: true,
   imports: [
     CommonModule,
@@ -18,12 +18,12 @@ import { Molecula } from '../../../../../core/services/molecula.service';
     MatTooltipModule,
     MatDividerModule
   ],
-  templateUrl: './molecule-inventory-info.html',
-  styleUrl: './molecule-inventory-info.scss',
+  templateUrl: './sdr-id-inventory-info.html',
+  styleUrl: './sdr-id-inventory-info.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MoleculeInventoryInfo implements OnChanges {
-  @Input() molecula!: Molecula;
+export class SdrIdInventoryInfo implements OnChanges {
+  @Input() sdr!: Molecula;
   @Input() periodoSemanas: number = 4;
 
   stockStatus: 'CRITICO' | 'BAJO' | 'OPTIMO' | 'EXCESO' = 'OPTIMO';
@@ -31,22 +31,20 @@ export class MoleculeInventoryInfo implements OnChanges {
   cantidadSugerida: number = 0;
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['molecula'] && this.molecula) {
+    if (changes['sdr'] && this.sdr) {
       this.calculateStockStatus();
       this.calculateSuggestedOrderQuantity();
     }
   }
 
   calculateStockStatus(): void {
-    const stock = this.molecula.stock_actual;
-    const rop = this.molecula.stock_minimo;
-    const ss = this.molecula.stock_seguridad;
+    const stock = this.sdr.stock_actual;
+    const rop = this.sdr.stock_minimo;
+    const ss = this.sdr.stock_seguridad;
 
-    // Calculate as percentage of optimal stock (ROP + SS)
     const optimalStock = rop + ss;
-    this.stockPercentage = (stock / optimalStock) * 100;
+    this.stockPercentage = optimalStock > 0 ? (stock / optimalStock) * 100 : 0;
 
-    // Determine status
     if (stock === 0) {
       this.stockStatus = 'CRITICO';
     } else if (stock < ss) {
@@ -61,18 +59,16 @@ export class MoleculeInventoryInfo implements OnChanges {
   }
 
   calculateSuggestedOrderQuantity(): void {
-    const stock = this.molecula.stock_actual;
-    const rop = this.molecula.stock_minimo;
-    const ss = this.molecula.stock_seguridad;
-    const pendientes = this.molecula.pendientes_diarios;
+    const stock = this.sdr.stock_actual;
+    const rop = this.sdr.stock_minimo;
+    const ss = this.sdr.stock_seguridad;
+    const pendientes = this.sdr.pendientes_diarios;
 
-    // Suggested Qty = ROP + SS - Stock Actual - Pendientes
     this.cantidadSugerida = Math.max(0, rop + ss - stock - pendientes);
 
-    // Round up to nearest EOQ multiple if applicable
-    if (this.cantidadSugerida > 0 && this.molecula.eoq > 0) {
-      const multiples = Math.ceil(this.cantidadSugerida / this.molecula.eoq);
-      this.cantidadSugerida = multiples * this.molecula.eoq;
+    if (this.cantidadSugerida > 0 && this.sdr.eoq > 0) {
+      const multiples = Math.ceil(this.cantidadSugerida / this.sdr.eoq);
+      this.cantidadSugerida = multiples * this.sdr.eoq;
     }
   }
 
@@ -107,10 +103,9 @@ export class MoleculeInventoryInfo implements OnChanges {
   }
 
   getDemandaCoverage(): number {
-    // Coverage calculation based on period
     const diasPeriodo = this.periodoSemanas * 7;
-    const demandaPeriodo = this.molecula.demanda_promedio_diaria * diasPeriodo;
-    return this.molecula.stock_actual / demandaPeriodo;
+    const demandaPeriodo = this.sdr.demanda_promedio_diaria * diasPeriodo;
+    return demandaPeriodo > 0 ? this.sdr.stock_actual / demandaPeriodo : 0;
   }
 
   getFamilyName(): string {
@@ -120,6 +115,6 @@ export class MoleculeInventoryInfo implements OnChanges {
       3: 'Familia 3: Especializados',
       4: 'Familia 4: Estratégicos'
     };
-    return familyNames[this.molecula.familia] || `Familia ${this.molecula.familia}`;
+    return familyNames[this.sdr.familia] || `Familia ${this.sdr.familia}`;
   }
 }

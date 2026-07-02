@@ -45,7 +45,7 @@
       <mat-icon class="kpi-icon">speed</mat-icon>
       <div class="kpi-body">
         <span class="kpi-label">Estado del Flujo</span>
-        <span class="kpi-value kpi-status">{{ selectedMolecula ? (currentSuggestion ? 'Sugerencia Lista' : 'Evaluando') : 'Esperando producto' }}</span>
+        <span class="kpi-value kpi-status">{{ selectedSdr ? (currentSuggestion ? 'Sugerencia Lista' : 'Evaluando') : 'Esperando producto' }}</span>
       </div>
     </div>
   </section>
@@ -61,23 +61,23 @@
       <!-- Step 1: Product Search -->
       <section class="workflow-step animate-fadeIn" aria-label="Paso 1: Búsqueda de producto">
         <div class="step-indicator">
-          <span class="step-number" [class.step-active]="!selectedMolecula" [class.step-done]="selectedMolecula">
-            <mat-icon *ngIf="selectedMolecula">check</mat-icon>
-            <span *ngIf="!selectedMolecula">1</span>
+          <span class="step-number" [class.step-active]="!selectedSdr" [class.step-done]="selectedSdr">
+            <mat-icon *ngIf="selectedSdr">check</mat-icon>
+            <span *ngIf="!selectedSdr">1</span>
           </span>
           <span class="step-label">Seleccionar Producto y Periodo</span>
         </div>
         <mat-card class="search-card neuro-card">
           <mat-card-content>
             <app-product-search
-              (moleculaSelected)="onMoleculaSelected($event)">
+              (moleculaSelected)="onSdrSelected($event)">
             </app-product-search>
           </mat-card-content>
         </mat-card>
       </section>
 
       <!-- Step 2: Inventory Context -->
-      <section *ngIf="selectedMolecula" class="workflow-step animate-slideInUp" aria-label="Paso 2: Contexto de inventario">
+      <section *ngIf="selectedSdr" class="workflow-step animate-slideInUp" aria-label="Paso 2: Contexto de inventario">
         <div class="step-indicator">
           <span class="step-number step-active">2</span>
           <span class="step-label">Inventario Actual</span>
@@ -86,14 +86,14 @@
             Datos actualizados
           </span>
         </div>
-        <app-molecule-inventory-info
-          [molecula]="selectedMolecula"
+        <app-sdr-id-inventory-info
+          [sdr]="selectedSdr"
           [periodoSemanas]="periodoSemanas">
-        </app-molecule-inventory-info>
+        </app-sdr-id-inventory-info>
       </section>
 
       <!-- Step 3: Supplier Ranking (80/20 Score) -->
-      <section *ngIf="showSupplierRanking && selectedMolecula" class="workflow-step animate-slideInUp" aria-label="Paso 3: Comparación de proveedores">
+      <section *ngIf="showSupplierRanking && selectedSdr" class="workflow-step animate-slideInUp" aria-label="Paso 3: Comparación de proveedores">
         <div class="step-indicator">
           <span class="step-number" [class.step-active]="!currentSuggestion" [class.step-done]="currentSuggestion">
             <mat-icon *ngIf="currentSuggestion">check</mat-icon>
@@ -106,11 +106,11 @@
           </span>
         </div>
         <app-supplier-ranking-table 
-          [productoId]="selectedMolecula.id"
+          [productoId]="selectedSdr.id"
           [periodoSemanas]="periodoSemanas"
-          [moleculaNombre]="selectedMolecula.nombre"
-          [moleculaFamilia]="selectedMolecula.familia"
-          [esClaseC]="selectedMolecula.familia === 1"
+          [moleculaNombre]="selectedSdr.nombre"
+          [moleculaFamilia]="selectedSdr.familia"
+          [esClaseC]="selectedSdr.familia === 1"
           (addedToCart)="onCartUpdated()"
           (supplierSelected)="onSupplierSelected($event)">
         </app-supplier-ranking-table>
