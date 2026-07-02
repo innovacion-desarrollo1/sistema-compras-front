@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+﻿import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,11 +16,12 @@ import { CostSimulationTable } from '../../ui/cost-simulation-table/cost-simulat
 import { SupplierRankingTableComponent } from '../../ui/supplier-ranking-table/supplier-ranking-table';
 import { ApprovalWorkflow } from '../../ui/approval-workflow/approval-workflow';
 import { SuggestionHistory } from '../../ui/suggestion-history/suggestion-history';
-import { MoleculeInventoryInfo } from '../../ui/molecule-inventory-info/molecule-inventory-info';
+import { SdrIdInventoryInfo } from '../../ui/sdr-id-inventory-info/sdr-id-inventory-info';
 import { CartView } from '../../ui/cart-view/cart-view';
 import { Producto, SugerenciaOrden, SuggestionStateService } from '../../../services/suggestion-state.service';
 import { Molecula } from '../../../../../core/services/molecula.service';
 import { CartService } from '../../../../../core/services/cart.service';
+import { ProductService } from '../../../../../core/services/product.service';
 
 @Component({
   selector: 'app-suggestions-dashboard',
@@ -39,7 +40,7 @@ import { CartService } from '../../../../../core/services/cart.service';
     SupplierRankingTableComponent,
     ApprovalWorkflow,
     SuggestionHistory,
-    MoleculeInventoryInfo,
+    SdrIdInventoryInfo,
     CartView
   ],
   templateUrl: './suggestions-dashboard.html',
@@ -57,7 +58,7 @@ export class SuggestionsDashboard {
 
   private _nextSuggestionId = 0;
   // State flags
-  selectedMolecula: Molecula | null = null;
+  selectedSdr: Molecula | null = null;
   periodoSemanas: number = 4;
   selectedProduct: Producto | null = null;
   currentSuggestion: SugerenciaOrden | null = null;
@@ -73,20 +74,26 @@ export class SuggestionsDashboard {
 
   constructor(
     private stateService: SuggestionStateService,
-    public cartService: CartService
+    public cartService: CartService,
+    private productService: ProductService,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   // Event Handlers
-  onMoleculaSelected(event: {molecula: Molecula, periodo_semanas: number}): void {
-    console.log('Molécula seleccionada:', event.molecula, 'Periodo:', event.periodo_semanas, 'semanas');
-    this.selectedMolecula = event.molecula;
+  onSdrSelected(event: {molecula: Molecula, periodo_semanas: number}): void {
+    this.selectedSdr = event.molecula;
     this.periodoSemanas = event.periodo_semanas;
-    
-    // Reset downstream state
     this.resetSuggestion();
-    
-    // Trigger dependent components
-    this.showSupplierRanking = true; // Show supplier ranking immediately
+    this.showSupplierRanking = true;
+
+    // Enrich with real inventory data from backend
+    this.productService.getSdrDetail(event.molecula.codigo_sdr ?? event.molecula.codigo)
+      .subscribe(detail => {
+        if (detail?.sdr_id) {
+          this.selectedSdr = this.productService.sdrDetailToMolecula(event.molecula, detail);
+          this.cdr.markForCheck();
+        }
+      });
   }
 
   // Cuando el usuario selecciona un proveedor (con bonificaciones aplicadas)
@@ -101,14 +108,14 @@ export class SuggestionsDashboard {
     this.isLoading = true;
 
     const precioUnitario: number = supplierData.precio_unitario || 1000;
-    const familia: number = this.selectedMolecula?.familia ?? 4;
+    const familia: number = this.selectedSdr?.familia ?? 4;
     const requiereGerente = familia === 1 || precioUnitario > 50_000;
 
     // TODO: reemplazar con llamada real a POST /api/v1/suggestions/calculate (HIS-001/HIS-002)
     const suggestion: SugerenciaOrden = {
       id: ++this._nextSuggestionId,
-      producto_id: this.selectedMolecula?.id ?? 0,
-      producto_nombre: this.selectedMolecula?.nombre || '',
+      producto_id: this.selectedSdr?.id ?? 0,
+      producto_nombre: this.selectedSdr?.nombre || '',
       cantidad_sugerida: supplierData.cantidad_calculada || 300,
       unidad_medida: 'unidades',
       proveedor_id: supplierData.proveedor_id,
