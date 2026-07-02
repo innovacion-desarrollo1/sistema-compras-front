@@ -19,6 +19,9 @@ export interface Molecula {
   lt_sistema_dias: number; // Lead time in days
   eoq: number; // Economic Order Quantity
   pendientes_diarios: number; // Daily pending demand
+  clasificacion_abc?: string; // "A", "B", "C"
+  clasificacion_ved?: string; // "V", "E", "D"
+  clasificacion_hml?: string; // "H", "M", "L"
 }
 
 @Injectable({

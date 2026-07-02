@@ -12,6 +12,9 @@
         <mat-icon>gavel</mat-icon>
         Clase C — Requiere Aprobación
       </mat-chip>
+      <mat-chip *ngIf="sdr.clasificacion_abc" class="clasificacion-chip abc-chip">{{ getAbcLabel() }}</mat-chip>
+      <mat-chip *ngIf="sdr.clasificacion_ved" class="clasificacion-chip ved-chip">{{ getVedLabel() }}</mat-chip>
+      <mat-chip *ngIf="sdr.clasificacion_hml" class="clasificacion-chip hml-chip">{{ getHmlLabel() }}</mat-chip>
       <span class="trust-badge">
         <mat-icon>update</mat-icon>
         Datos en tiempo real

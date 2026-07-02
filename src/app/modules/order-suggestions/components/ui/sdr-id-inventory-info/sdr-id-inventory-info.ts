@@ -117,4 +117,19 @@ export class SdrIdInventoryInfo implements OnChanges {
     };
     return familyNames[this.sdr.familia] || `Familia ${this.sdr.familia}`;
   }
+
+  getAbcLabel(): string {
+    const labels: Record<string, string> = { A: 'ABC: A', B: 'ABC: B', C: 'ABC: C' };
+    return this.sdr.clasificacion_abc ? (labels[this.sdr.clasificacion_abc] ?? `ABC: ${this.sdr.clasificacion_abc}`) : '';
+  }
+
+  getVedLabel(): string {
+    const labels: Record<string, string> = { V: 'VED: V', E: 'VED: E', D: 'VED: D' };
+    return this.sdr.clasificacion_ved ? (labels[this.sdr.clasificacion_ved] ?? `VED: ${this.sdr.clasificacion_ved}`) : '';
+  }
+
+  getHmlLabel(): string {
+    const labels: Record<string, string> = { H: 'HML: H', M: 'HML: M', L: 'HML: L' };
+    return this.sdr.clasificacion_hml ? (labels[this.sdr.clasificacion_hml] ?? `HML: ${this.sdr.clasificacion_hml}`) : '';
+  }
 }

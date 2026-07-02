@@ -31,6 +31,9 @@ export interface SdrDetailApiResponse {
   familia:                     number | null;
   eoq:                         number | null;
   lt_sistema_dias:             number | null;
+  clasificacion_abc:           string | null;
+  clasificacion_ved:           string | null;
+  clasificacion_hml:           string | null;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -99,6 +102,9 @@ export class ProductService {
       familia,
       // familia===1 (Estratégicos) siempre requiere aprobación GERENTE (HIS-009 bug #4)
       es_clase_c:             familia === 1,
+      clasificacion_abc:      d.clasificacion_abc       ?? base.clasificacion_abc,
+      clasificacion_ved:      d.clasificacion_ved       ?? base.clasificacion_ved,
+      clasificacion_hml:      d.clasificacion_hml       ?? base.clasificacion_hml,
     };
   }
 }
