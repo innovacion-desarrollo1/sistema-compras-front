@@ -16,6 +16,23 @@ interface SdrSearchApiResponse {
   sdrs:  SdrSearchApiItem[];
 }
 
+/** DTO que devuelve GET /api/v1/sdr/{sdr_id} */
+export interface SdrDetailApiResponse {
+  sdr_id:                      string;
+  descripcion:                 string | null;
+  stock_actual:                number | null;
+  stock_seguridad:             number | null;
+  rop:                         number | null;   // → Molecula.stock_minimo
+  demanda_promedio_diaria:     number | null;
+  cobertura_dias:              number | null;
+  precio_promedio_inventario:  number | null;   // siempre null en v1 (HIS-018)
+  precio_promedio_adquisicion: number | null;   // → Molecula.precio_promedio
+  pendientes:                  number | null;   // → Molecula.pendientes_diarios
+  familia:                     number | null;
+  eoq:                         number | null;
+  lt_sistema_dias:             number | null;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ProductService {
   private readonly apiUrl = '/api/v1/sdr';
@@ -39,6 +56,12 @@ export class ProductService {
       );
   }
 
+  getSdrDetail(sdrId: string): Observable<SdrDetailApiResponse> {
+    return this.http
+      .get<SdrDetailApiResponse>(`${this.apiUrl}/${encodeURIComponent(sdrId)}`)
+      .pipe(catchError(() => of({} as SdrDetailApiResponse)));
+  }
+
   private _sdrToMolecula(s: SdrSearchApiItem): Molecula {
     return {
       id:                    0,
@@ -57,6 +80,25 @@ export class ProductService {
       lt_sistema_dias:       7,
       eoq:                   0,
       pendientes_diarios:    0,
+    };
+  }
+
+  sdrDetailToMolecula(base: Molecula, d: SdrDetailApiResponse): Molecula {
+    const familia = d.familia ?? base.familia;
+    return {
+      ...base,
+      stock_actual:           d.stock_actual            ?? base.stock_actual,
+      stock_minimo:           d.rop                     ?? base.stock_minimo,
+      stock_seguridad:        d.stock_seguridad         ?? base.stock_seguridad,
+      precio_promedio:        d.precio_promedio_adquisicion ?? base.precio_promedio,
+      cobertura_dias:         d.cobertura_dias          ?? base.cobertura_dias,
+      demanda_promedio_diaria: d.demanda_promedio_diaria ?? base.demanda_promedio_diaria,
+      lt_sistema_dias:        d.lt_sistema_dias         ?? base.lt_sistema_dias,
+      eoq:                    d.eoq                     ?? base.eoq,
+      pendientes_diarios:     d.pendientes              ?? base.pendientes_diarios,
+      familia,
+      // familia===1 (Estratégicos) siempre requiere aprobación GERENTE (HIS-009 bug #4)
+      es_clase_c:             familia === 1,
     };
   }
 }
