@@ -8,7 +8,7 @@ import { delay, tap } from 'rxjs/operators';
 
 export interface CartItem {
   id: number;
-  producto_id: number;
+  producto_id: string;   // código SDR (identidad de producto en la UI)
   nombre_comercial: string;
   molecula: string;
   familia: number;
@@ -94,13 +94,13 @@ export class CartService {
   }
 
   /** Check if a producto_id already exists in the cart (any supplier) */
-  hasProduct(productoId: number): boolean {
+  hasProduct(productoId: string): boolean {
     return this.cartSubject.value?.items.some(i => i.producto_id === productoId) ?? false;
   }
 
   /** Add item to cart. Creates cart if none exists. */
   addItem(item: {
-    producto_id: number;
+    producto_id: string;
     nombre_comercial: string;
     molecula: string;
     familia: number;

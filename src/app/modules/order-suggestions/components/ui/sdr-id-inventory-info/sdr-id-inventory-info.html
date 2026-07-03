@@ -28,7 +28,7 @@
       <mat-icon>{{ getStockIcon() }}</mat-icon>
       <div class="status-text">
         <span class="status-label">{{ getStockStatusText() }}</span>
-        <span class="status-detail">{{ stockPercentage | number:'1.0-1' }}% del nivel óptimo</span>
+        <span class="status-detail">{{ sdr.stock_actual | number:'1.0-0' }} / {{ stockOptimo | number:'1.0-0' }} unidades ({{ stockPercentage | number:'1.0-1' }}% del nivel óptimo)</span>
       </div>
     </div>
 
@@ -70,6 +70,20 @@
         </div>
         <div class="metric-value">{{ sdr.stock_seguridad | number:'1.0-0' }}</div>
         <div class="metric-sublabel">buffer de seguridad</div>
+      </div>
+
+      <!-- Stock Óptimo (ROP + SS) -->
+      <div class="metric-card">
+        <div class="metric-header">
+          <mat-icon
+            matTooltip="Nivel óptimo de inventario = ROP + Stock de Seguridad"
+            matTooltipPosition="above">
+            adjust
+          </mat-icon>
+          <span class="metric-label">Stock Óptimo</span>
+        </div>
+        <div class="metric-value">{{ stockOptimo | number:'1.0-0' }}</div>
+        <div class="metric-sublabel">ROP + SS</div>
       </div>
 
       <!-- Precio Promedio -->

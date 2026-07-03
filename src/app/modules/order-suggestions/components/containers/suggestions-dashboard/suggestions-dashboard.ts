@@ -71,6 +71,8 @@ export class SuggestionsDashboard {
   showApprovalWorkflow = false;
   showHistory = false;
   isLoading = false;
+  inventoryLoading = false;
+  inventoryError = false;
 
   constructor(
     private stateService: SuggestionStateService,
@@ -85,15 +87,36 @@ export class SuggestionsDashboard {
     this.periodoSemanas = event.periodo_semanas;
     this.resetSuggestion();
     this.showSupplierRanking = true;
+    // El detalle aún no llega: mostramos spinner en vez de renderizar el objeto
+    // base en ceros como si fueran datos reales (causaba el "todo en 0").
+    this.inventoryLoading = true;
+    this.inventoryError = false;
 
     // Enrich with real inventory data from backend
     this.productService.getSdrDetail(event.molecula.codigo_sdr ?? event.molecula.codigo)
-      .subscribe(detail => {
-        if (detail?.sdr_id) {
-          this.selectedSdr = this.productService.sdrDetailToMolecula(event.molecula, detail);
+      .subscribe({
+        next: detail => {
+          if (detail?.sdr_id) {
+            this.selectedSdr = this.productService.sdrDetailToMolecula(event.molecula, detail);
+          } else {
+            this.inventoryError = true;
+          }
+          this.inventoryLoading = false;
           this.cdr.markForCheck();
-        }
+        },
+        error: () => {
+          // 502/timeout de rotacion/dusoft tras reintento: no dejamos ceros mudos
+          this.inventoryLoading = false;
+          this.inventoryError = true;
+          this.cdr.markForCheck();
+        },
       });
+  }
+
+  retrySdrDetail(): void {
+    if (this.selectedSdr) {
+      this.onSdrSelected({ molecula: this.selectedSdr, periodo_semanas: this.periodoSemanas });
+    }
   }
 
   // Cuando el usuario selecciona un proveedor (con bonificaciones aplicadas)
@@ -114,7 +137,7 @@ export class SuggestionsDashboard {
     // TODO: reemplazar con llamada real a POST /api/v1/suggestions/calculate (HIS-001/HIS-002)
     const suggestion: SugerenciaOrden = {
       id: ++this._nextSuggestionId,
-      producto_id: this.selectedSdr?.id ?? 0,
+      producto_id: this.selectedSdr?.codigo_sdr ?? this.selectedSdr?.codigo ?? '',
       producto_nombre: this.selectedSdr?.nombre || '',
       cantidad_sugerida: supplierData.cantidad_calculada || 300,
       unidad_medida: 'unidades',

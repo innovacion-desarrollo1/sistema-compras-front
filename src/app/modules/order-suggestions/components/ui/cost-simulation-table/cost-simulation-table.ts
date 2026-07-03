@@ -23,7 +23,7 @@ import { CostSimulationService, CostScenario } from '../../../../../core/service
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CostSimulationTable implements OnInit, OnChanges {
-  @Input() productoId!: number;
+  @Input() productoId!: string;
   @Input() baseQuantity!: number;
   @Input() proveedorId: number = 1; // Default supplier
   

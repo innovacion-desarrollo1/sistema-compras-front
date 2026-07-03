@@ -28,6 +28,7 @@ export class SdrIdInventoryInfo implements OnChanges {
 
   stockStatus: 'CRITICO' | 'BAJO' | 'OPTIMO' | 'EXCESO' = 'OPTIMO';
   stockPercentage: number = 0;
+  stockOptimo: number = 0;   // nivel óptimo = ROP + SS
   cantidadSugerida: number = 0;
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -43,6 +44,7 @@ export class SdrIdInventoryInfo implements OnChanges {
     const ss = this.sdr.stock_seguridad;
 
     const optimalStock = rop + ss;
+    this.stockOptimo = optimalStock;
     this.stockPercentage = optimalStock > 0 ? (stock / optimalStock) * 100 : 0;
 
     if (stock === 0) {

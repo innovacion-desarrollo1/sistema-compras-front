@@ -86,7 +86,23 @@
             Datos actualizados
           </span>
         </div>
+        <!-- Cargando detalle (rotacion/dusoft en frío puede tardar) -->
+        <div *ngIf="inventoryLoading" class="loading-skeleton animate-fadeIn" style="text-align:center; padding:24px;">
+          <mat-spinner diameter="40" style="margin:0 auto;"></mat-spinner>
+          <p class="loading-text">Cargando inventario…</p>
+        </div>
+
+        <!-- Error al cargar (502/timeout) -->
+        <mat-card *ngIf="inventoryError && !inventoryLoading" class="inventory-card" style="padding:24px; text-align:center;">
+          <mat-icon color="warn" style="font-size:40px; height:40px; width:40px;">cloud_off</mat-icon>
+          <p>No se pudo cargar el inventario de este SDR (el servicio de datos no respondió a tiempo).</p>
+          <button mat-stroked-button color="primary" (click)="retrySdrDetail()">
+            <mat-icon>refresh</mat-icon> Reintentar
+          </button>
+        </mat-card>
+
         <app-sdr-id-inventory-info
+          *ngIf="!inventoryLoading && !inventoryError"
           [sdr]="selectedSdr"
           [periodoSemanas]="periodoSemanas">
         </app-sdr-id-inventory-info>
@@ -105,8 +121,8 @@
             80% Costo + 20% Desempeño
           </span>
         </div>
-        <app-supplier-ranking-table 
-          [productoId]="selectedSdr.id"
+        <app-supplier-ranking-table
+          [productoId]="selectedSdr.codigo_sdr ?? selectedSdr.codigo"
           [periodoSemanas]="periodoSemanas"
           [moleculaNombre]="selectedSdr.nombre"
           [moleculaFamilia]="selectedSdr.familia"

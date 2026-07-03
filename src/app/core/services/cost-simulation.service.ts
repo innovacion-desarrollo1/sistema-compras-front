@@ -24,7 +24,7 @@ export class CostSimulationService {
    * @param proveedorId Supplier ID
    * @returns Observable with 7 cost scenarios
    */
-  getSimulation(productoId: number, baseQty: number, proveedorId: number): Observable<CostScenario[]> {
+  getSimulation(productoId: string, baseQty: number, proveedorId: number): Observable<CostScenario[]> {
     // TODO: Replace with actual HTTP call when backend is ready
     // const params = new HttpParams()
     //   .set('producto_id', productoId)
@@ -38,7 +38,7 @@ export class CostSimulationService {
   /**
    * Generate mock simulation data for development
    */
-  private _getMockSimulation(productoId: number, baseQty: number, proveedorId: number): Observable<CostScenario[]> {
+  private _getMockSimulation(productoId: string, baseQty: number, proveedorId: number): Observable<CostScenario[]> {
     const variations = [-0.30, -0.20, -0.10, 0, +0.10, +0.20, +0.30];
     const baseUnitCost = 1250; // Mock base unit cost
     const bonificationThreshold = 100; // Volume discount at 100+ units

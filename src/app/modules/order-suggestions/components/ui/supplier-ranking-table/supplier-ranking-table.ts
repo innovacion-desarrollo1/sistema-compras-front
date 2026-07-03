@@ -46,7 +46,7 @@ import { SemaphoreHelper } from '../../../../../shared/utils/semaphore.util';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SupplierRankingTableComponent implements OnInit, OnChanges {
-  @Input() productoId!: number;
+  @Input() productoId!: string;   // código SDR — el backend agrega todos sus equivalentes
   @Input() periodoSemanas: number = 4;
   @Input() moleculaNombre: string = '';
   @Input() moleculaFamilia: number = 1;
@@ -116,12 +116,30 @@ export class SupplierRankingTableComponent implements OnInit, OnChanges {
       },
       error: (err) => {
         console.error('Error al cargar ranking de proveedores:', err);
-        this.errorMessage = 'Error al cargar el ranking de proveedores.';
+        this.errorMessage = this.extractApiError(err);
         this.suppliers = [];
         this.isLoading = false;
         this.cdr.markForCheck();
       }
     });
+  }
+
+  /** Extrae un mensaje legible del error del backend (FastAPI HTTPException / handler global). */
+  private extractApiError(err: any): string {
+    const status = err?.status ? `[${err.status}] ` : '';
+    const e = err?.error;
+    if (e) {
+      // 404 ValueError → detail: {código, mensaje}
+      if (e.detail && typeof e.detail === 'object' && e.detail.mensaje) {
+        return `${status}${e.detail.mensaje}`;
+      }
+      // 502/HTTPException → detail: string
+      if (typeof e.detail === 'string') return `${status}${e.detail}`;
+      // handler global → {message, detail}
+      if (typeof e.message === 'string') return `${status}${e.message}`;
+    }
+    if (err?.message) return `${status}${err.message}`;
+    return `${status}No se pudo cargar el ranking de proveedores.`;
   }
 
   /** Obtiene la cantidad editable para un proveedor */

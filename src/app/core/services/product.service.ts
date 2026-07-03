@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, retry } from 'rxjs/operators';
 import { Molecula } from './molecula.service';
 
 /** DTO que devuelve GET /api/v1/sdr/search */
@@ -60,9 +60,13 @@ export class ProductService {
   }
 
   getSdrDetail(sdrId: string): Observable<SdrDetailApiResponse> {
+    // El endpoint depende de rotacion/dusoft: la 1ª llamada en frío puede tardar
+    // o dar 502; una vez que el cache (Redis 12h) se calienta responde rápido.
+    // Reintentamos 1 vez ante fallo transitorio. El error se propaga al suscriptor
+    // (NO se silencia con {}) para que la UI pueda mostrar "no se pudo cargar".
     return this.http
       .get<SdrDetailApiResponse>(`${this.apiUrl}/${encodeURIComponent(sdrId)}`)
-      .pipe(catchError(() => of({} as SdrDetailApiResponse)));
+      .pipe(retry({ count: 1, delay: 800 }));
   }
 
   private _sdrToMolecula(s: SdrSearchApiItem): Molecula {

@@ -44,7 +44,7 @@ export interface ProveedorRanking {
 
 export interface SugerenciaOrden {
   id?: number; // Generated after save
-  producto_id: number;
+  producto_id: string;   // código SDR (identidad de producto en la UI)
   producto_nombre: string;
   cantidad_sugerida: number;
   unidad_medida: string;
