@@ -29,7 +29,7 @@ describe('ProductService.sdrDetailToMolecula — precios', () => {
 
   it('deja precio_promedio_inventario en null cuando el backend lo omite', () => {
     const m = svc.sdrDetailToMolecula(base, { ...baseDetail, precio_promedio_inventario: null });
-    expect(m.precio_promedio_inventario ?? null).toBeNull();
+    expect(m.precio_promedio_inventario).toBeNull();
   });
 
   it('conserva precio_promedio (adquisición) desde precio_promedio_adquisicion', () => {
