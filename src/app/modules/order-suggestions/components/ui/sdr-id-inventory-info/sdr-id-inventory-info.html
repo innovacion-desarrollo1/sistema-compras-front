@@ -86,14 +86,37 @@
         <div class="metric-sublabel">ROP + SS</div>
       </div>
 
-      <!-- Precio Promedio -->
+      <!-- Precio Promedio de Adquisición -->
       <div class="metric-card">
         <div class="metric-header">
-          <mat-icon>monetization_on</mat-icon>
-          <span class="metric-label">Precio Promedio</span>
+          <mat-icon
+            matTooltip="Precio promedio de compra a proveedores"
+            matTooltipPosition="above">
+            shopping_cart
+          </mat-icon>
+          <span class="metric-label">Precio Prom. Adquisición</span>
         </div>
         <div class="metric-value">${{ sdr.precio_promedio | number:'1.0-0' }}</div>
-        <div class="metric-sublabel">costo unitario</div>
+        <div class="metric-sublabel">costo de compra unitario</div>
+      </div>
+
+      <!-- Precio Promedio de Inventario -->
+      <div class="metric-card">
+        <div class="metric-header">
+          <mat-icon
+            matTooltip="Costo promedio ponderado del stock actual en CEDI"
+            matTooltipPosition="above">
+            monetization_on
+          </mat-icon>
+          <span class="metric-label">Precio Prom. Inventario</span>
+        </div>
+        <div class="metric-value">
+          <ng-container *ngIf="sdr.precio_promedio_inventario != null; else ndInventario">
+            ${{ sdr.precio_promedio_inventario | number:'1.0-0' }}
+          </ng-container>
+          <ng-template #ndInventario>N/D</ng-template>
+        </div>
+        <div class="metric-sublabel">costo unitario en inventario</div>
       </div>
 
       <!-- Cobertura en Días -->
