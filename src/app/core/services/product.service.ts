@@ -98,6 +98,7 @@ export class ProductService {
       stock_minimo:           d.rop                     ?? base.stock_minimo,
       stock_seguridad:        d.stock_seguridad         ?? base.stock_seguridad,
       precio_promedio:        d.precio_promedio_adquisicion ?? base.precio_promedio,
+      precio_promedio_inventario: d.precio_promedio_inventario ?? base.precio_promedio_inventario ?? null,
       cobertura_dias:         d.cobertura_dias          ?? base.cobertura_dias,
       demanda_promedio_diaria: d.demanda_promedio_diaria ?? base.demanda_promedio_diaria,
       lt_sistema_dias:        d.lt_sistema_dias         ?? base.lt_sistema_dias,

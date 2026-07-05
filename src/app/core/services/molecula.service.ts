@@ -13,7 +13,8 @@ export interface Molecula {
   stock_actual: number;
   stock_minimo: number; // ROP (Reorder Point)
   stock_seguridad: number; // SS (Safety Stock)
-  precio_promedio: number; // Average unit cost
+  precio_promedio: number; // Precio promedio de ADQUISICIÓN (compra a proveedores)
+  precio_promedio_inventario?: number | null; // Costo prom. ponderado del stock en CEDI; null hasta integrar backend
   cobertura_dias: number; // Days of coverage at current demand
   demanda_promedio_diaria: number;
   lt_sistema_dias: number; // Lead time in days
