@@ -1,0 +1,436 @@
+:host {
+  display: block;
+}
+
+// ─── Panel Shell ───────────────────────────────────────────────────────────
+
+.detail-panel {
+  background: var(--surface-card);
+  border-radius: var(--neuro-radius-lg);
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+
+  // Sticky so the panel stays visible as the user scrolls through table rows
+  position: sticky;
+  top: 57px;                        // matches toolbar height
+  max-height: calc(100vh - 57px - 32px); // viewport minus toolbar minus vertical padding
+  overflow-y: auto;
+
+  // Entrance slide (right-to-left)
+  transform: translateX(16px);
+  opacity: 0;
+  transition:
+    transform 200ms cubic-bezier(0, 0, 0.2, 1),
+    opacity 150ms ease-out;
+
+  &--open {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+// ─── Header ───────────────────────────────────────────────────────────────
+
+.detail-panel__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 16px 16px 12px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--neuro-bg-grey);
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.detail-panel__title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.detail-panel__oc-num {
+  margin: 0;
+  font-size: var(--type-h3);
+  font-weight: var(--font-semibold);
+  color: var(--duana-primary-dark);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  font-feature-settings: 'tnum';
+}
+
+.detail-panel__close {
+  flex-shrink: 0;
+  margin-top: -4px;
+  color: var(--duana-text-muted);
+
+  &:hover { color: var(--duana-text); }
+  &:focus-visible { outline: 2px solid var(--action-cobalt); border-radius: 50%; }
+}
+
+// Estado badge on header
+.detail-panel__estado-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: var(--neuro-radius-pill);
+  font-size: 11px;
+  font-weight: var(--font-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border: 1px solid transparent;
+
+  &.estado-borrador   { color: var(--duana-text-muted); background: var(--neuro-bg-grey); border-color: var(--border-color); }
+  &.estado-validada   { color: var(--action-cobalt); background: var(--bg-accent-primary); border-color: rgba(0,74,173,0.2); }
+  &.estado-emitida    { color: var(--action-cobalt); background: var(--duana-primary-light); border-color: rgba(0,74,173,0.3); }
+  &.estado-activa     { color: var(--amarillo-text, #92400E); background: var(--amarillo-bg, #FEF3C7); border-color: #FDE68A; }
+  &.estado-cerrada    { color: var(--verde-text, #065F46); background: var(--verde-bg, #D1FAE5); border-color: #6EE7B7; }
+}
+
+// ─── Summary Strip ────────────────────────────────────────────────────────
+
+.detail-panel__summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 16px;
+  border-right: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+
+  &:nth-child(even) { border-right: none; }
+  &:last-child:nth-child(odd) { grid-column: 1 / -1; border-right: none; }
+
+  &--clase-c {
+    grid-column: 1 / -1;
+    border-right: none;
+    padding: 10px 16px;
+    background: var(--naranja-bg, #FFEDD5);
+    border-bottom: none;
+    border-top: 1px solid var(--border-color);
+  }
+}
+
+.summary-item__label {
+  font-size: 10px;
+  font-weight: var(--font-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--duana-text-muted);
+}
+
+.summary-item__value {
+  font-size: var(--type-body-small);
+  font-weight: var(--font-medium);
+  color: var(--duana-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &--money {
+    color: var(--financial-trust);
+    font-weight: var(--font-semibold);
+    font-feature-settings: 'tnum';
+  }
+
+  &--otif {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: var(--font-semibold);
+    font-feature-settings: 'tnum';
+
+    mat-icon { font-size: 14px; width: 14px; height: 14px; }
+
+    &.otif--good { color: var(--semaphore-verde); }
+    &.otif--warn { color: var(--semaphore-amarillo); }
+    &.otif--bad  { color: var(--semaphore-rojo); }
+  }
+}
+
+.clase-c-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--type-body-small);
+  font-weight: var(--font-semibold);
+  color: var(--naranja-text, #9A3412);
+
+  mat-icon { font-size: 16px; width: 16px; height: 16px; }
+}
+
+// ─── Progress Bar ─────────────────────────────────────────────────────────
+
+.detail-panel__progress {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.progress-info {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.progress-info__label {
+  font-size: 10px;
+  font-weight: var(--font-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--duana-text-muted);
+  margin-right: auto;
+}
+
+.progress-info__value {
+  font-size: var(--type-body-small);
+  color: var(--duana-text);
+  font-feature-settings: 'tnum';
+}
+
+.progress-info__pct {
+  font-size: var(--type-body-small);
+  font-weight: var(--font-semibold);
+  color: var(--duana-primary-dark);
+  font-feature-settings: 'tnum';
+  min-width: 36px;
+  text-align: right;
+}
+
+.progress-bar {
+  height: 6px;
+  background: var(--neuro-bg-grey);
+  border-radius: var(--neuro-radius-pill);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.progress-bar__fill {
+  height: 100%;
+  border-radius: var(--neuro-radius-pill);
+  transition: width 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  &--full    { background: var(--semaphore-verde); }
+  &--partial { background: var(--action-cobalt); }
+}
+
+// ─── Lifecycle section ─────────────────────────────────────────────────────
+
+.detail-panel__lifecycle {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+// ─── Tabs ─────────────────────────────────────────────────────────────────
+
+.detail-panel__tabs {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  // Override Material tabs for product UI density
+  ::ng-deep .mat-mdc-tab-header {
+    background: var(--neuro-bg-grey);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 8px;
+  }
+
+  ::ng-deep .mat-mdc-tab {
+    min-width: 80px;
+    height: 40px;
+    font-size: var(--type-body-small);
+    font-weight: var(--font-medium);
+    font-family: var(--font-body);
+    color: var(--duana-text-muted);
+    letter-spacing: 0;
+    text-transform: none;
+
+    &.mdc-tab--active {
+      color: var(--action-cobalt);
+    }
+  }
+
+  ::ng-deep .mdc-tab-indicator__content--underline {
+    border-color: var(--action-cobalt);
+  }
+
+  ::ng-deep .mat-mdc-tab-body-wrapper {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  ::ng-deep .mat-mdc-tab-body-content {
+    overflow-y: auto;
+  }
+}
+
+.tab-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+}
+
+.tab-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: var(--neuro-radius-pill);
+  font-size: 10px;
+  font-weight: var(--font-semibold);
+  background: var(--bg-accent-primary-strong);
+  color: var(--action-cobalt);
+  margin-left: 4px;
+
+  &--alert {
+    background: var(--rojo-bg, #FEE2E2);
+    color: var(--rojo-text, #991B1B);
+  }
+}
+
+.tab-content {
+  padding: 12px;
+}
+
+// ─── Audit list ────────────────────────────────────────────────────────────
+
+.audit-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+
+  // Vertical track line
+  &::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: var(--border-color);
+  }
+}
+
+.audit-item {
+  display: flex;
+  gap: 12px;
+  padding: 6px 0;
+  position: relative;
+}
+
+.audit-item__dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--action-cobalt);
+  border: 2px solid var(--surface-card);
+  flex-shrink: 0;
+  margin-top: 2px;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 0 2px var(--border-color);
+}
+
+.audit-item__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-bottom: 12px;
+}
+
+.audit-item__transition {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.audit-item__from {
+  font-size: var(--type-body-small);
+  color: var(--duana-text-muted);
+  text-decoration: line-through;
+}
+
+.audit-item__arrow {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+  color: var(--duana-text-muted);
+}
+
+.audit-item__to {
+  font-size: var(--type-body-small);
+  font-weight: var(--font-semibold);
+  color: var(--duana-text);
+}
+
+.audit-item__meta {
+  display: flex;
+  gap: 10px;
+  font-size: var(--type-body-tiny);
+  color: var(--financial-neutral);
+  font-feature-settings: 'tnum';
+}
+
+.audit-item__comment {
+  margin: 2px 0 0;
+  font-size: var(--type-body-tiny);
+  color: var(--duana-text-muted);
+  font-style: italic;
+}
+
+// ─── Empty placeholder ─────────────────────────────────────────────────────
+
+.detail-panel__placeholder {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--duana-text-muted);
+  text-align: center;
+  padding: 48px 24px;
+
+  p {
+    margin: 0;
+    font-size: var(--type-body-small);
+    max-width: 200px;
+    line-height: 1.5;
+    text-wrap: balance;
+  }
+}
+
+.detail-panel__placeholder-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: var(--border-color);
+}
+
+// ─── Reduced Motion ────────────────────────────────────────────────────────
+
+@media (prefers-reduced-motion: reduce) {
+  .detail-panel {
+    transition: opacity 150ms ease-out;
+    transform: none;
+  }
+  .progress-bar__fill { transition: none; }
+}

@@ -108,9 +108,7 @@ mat-card-header {
   font-weight: $font-semibold;
   margin: 12px 0;
   border-radius: $neuro-radius-pill;
-  box-shadow:
-    -1px -1px 3px rgba(255, 255, 255, 0.5),
-    1px 1px 3px rgba(174, 174, 192, 0.2);
+  box-shadow: none;
   mat-icon {
     font-size: 20px;
   }
@@ -140,12 +138,12 @@ mat-card-header {
   }
 
   &.approved {
-    border-left: 4px solid $financial-profit;
+    border: 1px solid$financial-profit;
   }
 
   &.rejection {
     background-color: $semaphore-rojo-bg;
-    border-left: 4px solid $semaphore-rojo-border;
+    border: 1px solid$semaphore-rojo-border;
 
     .decision-icon,
     .rejection-icon {
@@ -163,7 +161,7 @@ mat-card-header {
   gap: 12px;
   padding: 16px;
   background-color: $semaphore-amarillo-bg;
-  border-left: 4px solid $semaphore-amarillo-border;
+  border: 1px solid $semaphore-amarillo-border;
   border-radius: $neuro-radius-sm;
   box-shadow: $neuro-shadow-debossed;
 

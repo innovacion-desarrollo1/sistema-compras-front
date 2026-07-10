@@ -91,27 +91,27 @@
   
   &-verde {
     background-color: tokens.$semaphore-verde-bg;
-    border-left: 4px solid tokens.$semaphore-verde;
+    border: 1px solid tokens.$semaphore-verde;
   }
   
   &-amarillo {
     background-color: tokens.$semaphore-amarillo-bg;
-    border-left: 4px solid tokens.$semaphore-amarillo;
+    border: 1px solid tokens.$semaphore-amarillo;
   }
   
   &-naranja {
     background-color: tokens.$semaphore-naranja-bg;
-    border-left: 4px solid tokens.$semaphore-naranja;
+    border: 1px solid tokens.$semaphore-naranja;
   }
   
   &-rojo {
     background-color: tokens.$semaphore-rojo-bg;
-    border-left: 4px solid tokens.$semaphore-rojo;
+    border: 1px solid tokens.$semaphore-rojo;
   }
   
   &-negro {
     background-color: tokens.$semaphore-negro-bg;
-    border-left: 4px solid tokens.$semaphore-negro;
+    border: 1px solid tokens.$semaphore-negro;
   }
 }
 
@@ -187,7 +187,7 @@
   color: tokens.$color-gray-700;
   
   &.top-rank {
-    background: linear-gradient(135deg, tokens.$semaphore-verde-bg 0%, tokens.$semaphore-verde 100%);
+    background: tokens.$semaphore-verde;
     color: tokens.$color-white;
     box-shadow: 0 2px 8px rgba(tokens.$semaphore-verde, 0.3);
   }

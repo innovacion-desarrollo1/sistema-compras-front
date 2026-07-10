@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatMenuModule } from '@angular/material/menu';
 import { SugerenciaOrden } from '../../../services/suggestion-state.service';
 import { CartService } from '../../../../../core/services/cart.service';
 import { SemaphoreHelper } from '../../../../../shared/utils/semaphore.util';
@@ -20,7 +21,8 @@ import { SemaphoreHelper } from '../../../../../shared/utils/semaphore.util';
     MatButtonModule,
     MatChipsModule,
     MatDividerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatMenuModule
   ],
   templateUrl: './order-suggestion-card.html',
   styleUrl: './order-suggestion-card.scss',

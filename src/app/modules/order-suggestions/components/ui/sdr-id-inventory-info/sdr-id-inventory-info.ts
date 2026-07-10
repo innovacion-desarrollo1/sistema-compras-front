@@ -29,12 +29,10 @@ export class SdrIdInventoryInfo implements OnChanges {
   stockStatus: 'CRITICO' | 'BAJO' | 'OPTIMO' | 'EXCESO' = 'OPTIMO';
   stockPercentage: number = 0;
   stockOptimo: number = 0;   // nivel óptimo = ROP + SS
-  cantidadSugerida: number = 0;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['sdr'] && this.sdr) {
       this.calculateStockStatus();
-      this.calculateSuggestedOrderQuantity();
     }
   }
 
@@ -60,18 +58,14 @@ export class SdrIdInventoryInfo implements OnChanges {
     }
   }
 
-  calculateSuggestedOrderQuantity(): void {
-    const stock = this.sdr.stock_actual;
-    const rop = this.sdr.stock_minimo;
-    const ss = this.sdr.stock_seguridad;
-    const pendientes = this.sdr.pendientes_diarios;
+  /** ¿El backend entregó la cantidad sugerida oficial (Política v7.2)? */
+  get tieneCalculoOficial(): boolean {
+    return this.sdr?.cantidad_sugerida != null;
+  }
 
-    this.cantidadSugerida = Math.max(0, rop + ss - stock - pendientes);
-
-    if (this.cantidadSugerida > 0 && this.sdr.eoq > 0) {
-      const multiples = Math.ceil(this.cantidadSugerida / this.sdr.eoq);
-      this.cantidadSugerida = multiples * this.sdr.eoq;
-    }
+  /** Disparador de reposición, según el cálculo oficial del backend. */
+  get necesitaOrden(): boolean {
+    return this.sdr?.necesita_orden === true;
   }
 
   getStockSemaphoreColor(): string {
@@ -112,10 +106,10 @@ export class SdrIdInventoryInfo implements OnChanges {
 
   getFamilyName(): string {
     const familyNames: Record<number, string> = {
-      1: 'Familia 1: Rutinarios',
+      1: 'Familia 1: Estratégicos',
       2: 'Familia 2: Alta Disponibilidad',
       3: 'Familia 3: Especializados',
-      4: 'Familia 4: Estratégicos'
+      4: 'Familia 4: Rutinarios'
     };
     return familyNames[this.sdr.familia] || `Familia ${this.sdr.familia}`;
   }

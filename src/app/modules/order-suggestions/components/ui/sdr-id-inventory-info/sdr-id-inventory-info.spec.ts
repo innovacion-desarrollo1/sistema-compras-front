@@ -40,7 +40,19 @@ describe('SdrIdInventoryInfo — cards de precio', () => {
 
   it('muestra el valor de Inventario cuando el backend lo provee', async () => {
     const el = await render({ ...molecula, precio_promedio_inventario: 1234 });
+    // La card de inventario muestra su valor (otras cards pueden ser N/D de forma independiente).
     expect(el.textContent).toContain('1,234');
-    expect(el.textContent).not.toContain('N/D');
+  });
+
+  it('muestra la card de Costo Última Compra con su valor', async () => {
+    const el = await render({ ...molecula, costo_ultima_compra: 1925 });
+    expect(labels(el)).toContain('Costo Última Compra');
+    expect(el.textContent).toContain('1,925');
+  });
+
+  it('muestra N/D en Costo Última Compra cuando es null', async () => {
+    const el = await render({ ...molecula, costo_ultima_compra: null });
+    expect(labels(el)).toContain('Costo Última Compra');
+    expect(el.textContent).toContain('N/D');
   });
 });

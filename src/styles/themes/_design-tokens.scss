@@ -19,7 +19,16 @@ $color-gray-800: #1F2937;  // Dark text
 $color-gray-900: #111827;  // Primary text (dark mode)
 
 // ============================================================================
-// CORPORATE BLUE (30% usage — navigation, headers, primary actions)
+// BRAND (DESIGN.md — authoritative). Navy = identity; Cobalt = action.
+// ============================================================================
+
+$brand-navy: #001378;          // identity, nav, headers, emphasis, cost totals
+$action-cobalt: #004AAD;       // primary action: buttons, links, selected
+$action-cobalt-hover: #003A87;
+$accent-picton: #37A6EE;       // accent / chart historical — never text
+
+// ============================================================================
+// CORPORATE BLUE RAMP (generic incidental blue; brand anchors above)
 // ============================================================================
 
 $color-blue-50: #EFF6FF;   // Hover states
@@ -27,11 +36,11 @@ $color-blue-100: #DBEAFE;  // Selected backgrounds
 $color-blue-200: #BFDBFE;  // Light borders
 $color-blue-300: #93C5FD;  // Subtle accents
 $color-blue-400: #60A5FA;  // Medium buttons
-$color-blue-500: #3B82F6;  // Primary buttons (MAIN BRAND COLOR)
-$color-blue-600: #2563EB;  // Primary hover
-$color-blue-700: #1D4ED8;  // Active states
-$color-blue-800: #1E40AF;  // Headers
-$color-blue-900: #1E3A8A;  // Navigation bars
+$color-blue-500: #2563EB;  // generic mid blue (NOT brand — use $action-cobalt for actions)
+$color-blue-600: #004AAD;  // Cobalt — primary action anchor
+$color-blue-700: #003A87;  // Cobalt hover / active
+$color-blue-800: #002766;  // deep cobalt
+$color-blue-900: #001378;  // Navy — identity / navigation
 
 // ============================================================================
 // SEMAPHORE ALERT SYSTEM (10% usage — status chips, alerts)

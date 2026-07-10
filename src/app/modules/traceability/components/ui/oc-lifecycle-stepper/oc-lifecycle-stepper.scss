@@ -1,0 +1,155 @@
+:host {
+  display: block;
+}
+
+.lifecycle-stepper {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  overflow-x: auto;
+  padding: 4px 0 8px;
+
+  // Hide scrollbar but keep functionality
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+// ─── Step ─────────────────────────────────────────────────────────────────
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+  flex: 1;
+  gap: 8px;
+  position: relative;
+}
+
+// ─── Track (dot + horizontal connector) ──────────────────────────────────
+
+.step__track {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+.step__dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  background: var(--surface-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background var(--duration-slow), border-color var(--duration-slow);
+  cursor: default;
+  position: relative;
+  z-index: 1;
+
+  .step__icon {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+    color: var(--duana-text-muted);
+    transition: color var(--duration-slow);
+  }
+}
+
+// Connector line that spans between dots
+.step__connector {
+  flex: 1;
+  height: 2px;
+  background: var(--border-color);
+  transition: background var(--duration-slow);
+
+  &--filled {
+    background: var(--action-cobalt);
+  }
+}
+
+// ─── Step States ───────────────────────────────────────────────────────────
+
+.step--past {
+  .step__dot {
+    background: var(--duana-primary-light, #DBEAFE);
+    border-color: var(--action-cobalt);
+
+    .step__icon {
+      color: var(--action-cobalt);
+    }
+  }
+
+  .step__name {
+    color: var(--action-cobalt);
+    font-weight: var(--font-medium);
+  }
+}
+
+.step--current {
+  .step__dot {
+    background: var(--action-cobalt);
+    border-color: var(--action-cobalt);
+    box-shadow: 0 0 0 4px rgba(0, 74, 173, 0.15);
+
+    .step__icon {
+      color: #ffffff;
+    }
+  }
+
+  .step__name {
+    color: var(--duana-primary-dark);
+    font-weight: var(--font-semibold);
+  }
+}
+
+.step--future {
+  .step__dot {
+    opacity: 0.5;
+  }
+
+  .step__name {
+    color: var(--duana-text-muted);
+  }
+
+  .step__date {
+    display: none;
+  }
+}
+
+// ─── Label ────────────────────────────────────────────────────────────────
+
+.step__label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  text-align: center;
+}
+
+.step__name {
+  font-size: var(--type-body-tiny);
+  font-weight: var(--font-medium);
+  color: var(--duana-text-muted);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.step__date {
+  font-size: 10px;
+  font-weight: var(--font-normal);
+  color: var(--financial-neutral);
+  font-feature-settings: 'tnum';
+}
+
+// ─── Reduced Motion ────────────────────────────────────────────────────────
+
+@media (prefers-reduced-motion: reduce) {
+  .step__dot,
+  .step__connector {
+    transition: none;
+  }
+}

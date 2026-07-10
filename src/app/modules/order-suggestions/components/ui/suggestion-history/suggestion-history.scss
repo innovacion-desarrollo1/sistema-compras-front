@@ -95,9 +95,7 @@ mat-card-header {
   font-family: $font-heading;
   font-weight: $font-semibold;
   border-radius: $neuro-radius-pill;
-  box-shadow:
-    -1px -1px 3px rgba(255, 255, 255, 0.5),
-    1px 1px 3px rgba(174, 174, 192, 0.2);
+  box-shadow: none;
   mat-icon {
     font-size: 18px;
   }
@@ -153,7 +151,7 @@ mat-card-header {
     margin-top: 8px;
     padding: 8px 12px;
     background-color: $semaphore-rojo-bg;
-    border-left: 4px solid $semaphore-rojo-border;
+    border: 1px solid $semaphore-rojo-border;
     border-radius: $neuro-radius-sm;
     font-family: $font-body;
     font-size: 13px;

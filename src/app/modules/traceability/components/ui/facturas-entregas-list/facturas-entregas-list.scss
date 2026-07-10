@@ -1,0 +1,226 @@
+:host { display: block; }
+
+.facturas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+// ─── Empty state ──────────────────────────────────────────────────────────
+
+.facturas-list__empty {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 16px;
+  color: var(--duana-text-muted);
+  font-size: var(--type-body-small);
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    color: var(--border-color);
+  }
+}
+
+// ─── Factura Card ─────────────────────────────────────────────────────────
+
+.factura-card {
+  border: 1px solid var(--border-color);
+  border-radius: var(--neuro-radius-md);
+  background: var(--surface-card);
+  overflow: hidden;
+}
+
+.factura-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--neuro-bg-grey);
+  border-bottom: 1px solid var(--border-color);
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.factura-card__title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.factura-card__icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  color: var(--duana-text-muted);
+}
+
+.factura-card__num {
+  font-size: var(--type-body-small);
+  font-weight: var(--font-semibold);
+  color: var(--duana-text);
+  font-feature-settings: 'tnum';
+}
+
+// Estado badge
+.factura-card__estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: var(--neuro-radius-pill);
+  font-size: 11px;
+  font-weight: var(--font-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+
+  mat-icon { font-size: 13px; width: 13px; height: 13px; }
+
+  &--pendiente {
+    color: var(--duana-text-muted);
+    background: var(--neuro-bg-grey);
+    border: 1px solid var(--border-color);
+  }
+
+  &--en_transito {
+    color: var(--action-cobalt);
+    background: var(--bg-accent-primary);
+    border: 1px solid rgba(0, 74, 173, 0.2);
+  }
+
+  &--recibida_parcial {
+    color: var(--amarillo-text, #92400E);
+    background: var(--amarillo-bg, #FEF3C7);
+    border: 1px solid #FDE68A;
+  }
+
+  &--recibida_total {
+    color: var(--verde-text, #065F46);
+    background: var(--verde-bg, #D1FAE5);
+    border: 1px solid #6EE7B7;
+  }
+
+  &--devuelta {
+    color: var(--rojo-text, #991B1B);
+    background: var(--rojo-bg, #FEE2E2);
+    border: 1px solid #FECACA;
+  }
+}
+
+// ─── Dates row ────────────────────────────────────────────────────────────
+
+.factura-card__dates {
+  display: flex;
+  gap: 20px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-color);
+  flex-wrap: wrap;
+}
+
+.date-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.date-item__label {
+  font-size: 10px;
+  font-weight: var(--font-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--duana-text-muted);
+}
+
+.date-item time,
+.date-item__value {
+  font-size: var(--type-body-small);
+  font-weight: var(--font-medium);
+  color: var(--duana-text);
+  font-feature-settings: 'tnum';
+
+  &--late { color: var(--semaphore-rojo); font-weight: var(--font-semibold); }
+  &--ontime { color: var(--semaphore-verde); }
+  &--money { color: var(--financial-trust); font-weight: var(--font-semibold); }
+}
+
+// ─── Líneas table ─────────────────────────────────────────────────────────
+
+.factura-card__lineas {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--type-body-small);
+
+  thead {
+    th {
+      padding: 7px 14px;
+      text-align: left;
+      font-size: 10px;
+      font-weight: var(--font-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--duana-text-muted);
+      background: var(--neuro-bg-grey);
+      border-bottom: 1px solid var(--border-color);
+
+      &.text-right { text-align: right; }
+    }
+  }
+
+  tbody {
+    tr {
+      transition: background var(--duration-fast);
+      &:hover { background: var(--bg-neutral-grey); }
+      &:not(:last-child) td { border-bottom: 1px solid var(--border-color); }
+    }
+
+    td {
+      padding: 8px 14px;
+      color: var(--duana-text);
+      font-feature-settings: 'tnum';
+      vertical-align: middle;
+
+      &.text-right { text-align: right; }
+    }
+  }
+}
+
+.linea-producto {
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: var(--font-medium);
+}
+
+.linea-lote {
+  color: var(--duana-text-muted);
+  font-size: 11px;
+}
+
+// % received pill
+.linea-pct {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: var(--neuro-radius-pill);
+  font-size: 11px;
+  font-weight: var(--font-semibold);
+
+  &--full {
+    color: var(--verde-text, #065F46);
+    background: var(--verde-bg, #D1FAE5);
+  }
+  &--partial {
+    color: var(--amarillo-text, #92400E);
+    background: var(--amarillo-bg, #FEF3C7);
+  }
+  &--zero {
+    color: var(--duana-text-muted);
+    background: var(--neuro-bg-grey);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .factura-card__lineas tbody tr { transition: none; }
+}

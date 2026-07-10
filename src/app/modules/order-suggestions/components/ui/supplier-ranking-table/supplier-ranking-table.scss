@@ -96,7 +96,7 @@
 
     &.top-supplier-row {
       background-color: rgba($semaphore-verde-bg, 0.1);
-      border-left: 4px solid $semaphore-verde-border;
+      border: 1px solid$semaphore-verde-border;
     }
 
     &.expanded {
@@ -141,12 +141,10 @@
   font-weight: 700;
   font-size: 18px;
   margin-bottom: 8px;
-  box-shadow:
-    -2px -2px 5px rgba(255, 255, 255, 0.7),
-    2px 2px 5px rgba(174, 174, 192, 0.2);
+  box-shadow: none;
 
   &.top-rank {
-    background: linear-gradient(135deg, $semaphore-verde-bg 0%, $semaphore-verde-border 100%);
+    background: $semaphore-verde-bg;
     color: $semaphore-verde-text;
     box-shadow: 0 2px 8px rgba($semaphore-verde-border, 0.3);
   }
@@ -390,18 +388,12 @@
     background: $cta-primary;
     color: white;
     font-weight: $font-bold;
-    box-shadow:
-      -3px -3px 8px rgba(255, 255, 255, 0.3),
-      3px 3px 8px rgba($cta-primary, 0.4);
-    transition: all $neuro-transition-fast;
+    box-shadow: none;
+    transition: background $neuro-transition-fast;
 
     &:hover {
       background: $cta-primary-hover;
-      box-shadow:
-        -3px -3px 10px rgba(255, 255, 255, 0.4),
-        3px 3px 10px rgba($cta-primary, 0.6),
-        0 0 20px rgba($cta-primary, 0.2);
-      transform: translateY(-1px);
+      box-shadow: none;
     }
   }
 }
@@ -498,13 +490,13 @@ mat-card-subtitle {
 
 // Ranking badges
 .second-rank {
-  background: linear-gradient(135deg, #94a3b8, #64748b) !important;
+  background: #64748b !important;
   color: white !important;
   box-shadow: -1px -1px 3px rgba(255, 255, 255, 0.4), 1px 1px 3px rgba(100, 116, 139, 0.5) !important;
 }
 
 .third-rank {
-  background: linear-gradient(135deg, #d97706, #b45309) !important;
+  background: #b45309 !important;
   color: white !important;
   box-shadow: -1px -1px 3px rgba(255, 255, 255, 0.4), 1px 1px 3px rgba(180, 83, 9, 0.5) !important;
 }
@@ -514,7 +506,7 @@ mat-card-subtitle {
 // ==============================
 .expanded-row {
   background-color: $neuro-bg-light;
-  border-left: 4px solid $duana-primary;
+  border: 1px solid$duana-primary;
 }
 
 .bonificaciones-detail {

@@ -93,7 +93,7 @@
   }
 
   &.active {
-    background: rgba(59, 130, 246, 0.18);
+    background: rgba(0, 74, 173, 0.18);
     color: var(--duana-white);
 
     &::before {
@@ -149,8 +149,9 @@
   font-weight: var(--font-bold);
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  background: rgba(249, 115, 22, 0.15);
-  color: var(--cta-primary);
+  // "Próximamente" es informativo, no gobernanza → chip cobalto, no naranja
+  background: rgba(0, 74, 173, 0.10);
+  color: var(--action-cobalt);
   padding: 2px 6px;
   border-radius: var(--neuro-radius-sm);
   flex-shrink: 0;

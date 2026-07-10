@@ -84,34 +84,33 @@
       {{ isProductInCart() ? 'Ya en Carrito' : 'Agregar al Carrito' }}
     </button>
 
-    <div class="secondary-actions">
-      <button 
-        mat-stroked-button 
-        class="action-accept"
+    <button mat-icon-button
+      class="overflow-menu-btn"
+      [matMenuTriggerFor]="actionsMenu"
+      aria-label="Más acciones sobre esta sugerencia">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+
+    <mat-menu #actionsMenu="matMenu">
+      <button mat-menu-item
         (click)="onAccept()"
         [disabled]="suggestion.requiere_aprobacion_gerente && !suggestion.estado_aprobacion?.startsWith('APROBADO')"
         aria-label="Aceptar sugerencia">
         <mat-icon>check_circle</mat-icon>
         Aceptar
       </button>
-      
-      <button 
-        mat-stroked-button 
-        class="action-adjust"
+      <button mat-menu-item
         (click)="onAdjust()"
         aria-label="Ajustar cantidad">
         <mat-icon>tune</mat-icon>
         Ajustar
       </button>
-      
-      <button 
-        mat-stroked-button 
-        class="action-reject"
+      <button mat-menu-item
         (click)="onReject()"
         aria-label="Rechazar sugerencia">
         <mat-icon>cancel</mat-icon>
         Rechazar
       </button>
-    </div>
+    </mat-menu>
   </mat-card-actions>
 </mat-card>

@@ -177,7 +177,7 @@
   padding: $spacing-sm $spacing-md;
   border-radius: $neuro-radius-md;
   background: $neuro-bg-light;
-  border-left: 4px solid transparent;
+  border: 1px solid #E5E7EB;
 }
 
 .kpi-label {
@@ -200,11 +200,11 @@
   font-size: 15px;
 }
 
-.kpi-neutral  { border-left-color: rgba($duana-primary, 0.3); }
-.kpi-verde    { border-left-color: #22C55E; background: #F0FDF4; .kpi-value { color: #15803D; } }
-.kpi-amarillo { border-left-color: #F59E0B; background: #FFFBEB; .kpi-value { color: #92400E; } }
-.kpi-naranja  { border-left-color: #F97316; background: #FFF7ED; .kpi-value { color: #C2410C; } }
-.kpi-rojo     { border-left-color: #EF4444; background: #FEF2F2; .kpi-value { color: #B91C1C; } }
+.kpi-neutral  { border-color: rgba($duana-primary, 0.3); }
+.kpi-verde    { border-color: #22C55E; background: #F0FDF4; .kpi-value { color: #15803D; } }
+.kpi-amarillo { border-color: #F59E0B; background: #FFFBEB; .kpi-value { color: #92400E; } }
+.kpi-naranja  { border-color: #F97316; background: #FFF7ED; .kpi-value { color: #C2410C; } }
+.kpi-rojo     { border-color: #EF4444; background: #FEF2F2; .kpi-value { color: #B91C1C; } }
 
 // ── Dusoft banner ──
 .dusoft-banner {

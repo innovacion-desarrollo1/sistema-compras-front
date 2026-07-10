@@ -9,38 +9,37 @@
 // Neumorphic Background Colors
 // ============================================================
 
-$neuro-bg-light: #E8F0F8;      // Soft Blue (primary neumorphic surface)
-$neuro-bg-grey: #E8E8E8;       // Soft Grey (alternative surface)
-$neuro-bg-white: #FFFFFF;      // Pure white (for inset elements)
+// Flat surfaces (DESIGN.md §4): white cards on a light page, real borders.
+$neuro-bg-light: #FFFFFF;      // Card / primary surface
+$neuro-bg-grey: #F3F4F6;       // Muted alternative surface
+$neuro-bg-white: #FFFFFF;      // Pure white
 
 // ============================================================
-// Neumorphic Shadow System
+// Elevation System — FLAT by default (retired neumorphism)
+// Shadow only as a response to state; borders carry separation at rest.
 // ============================================================
 
-// Light source: Top-left (-45°)
-$neuro-shadow-soft-1: rgba(174, 174, 192, 0.2);  // Bottom-right shadow (darker)
-$neuro-shadow-soft-2: rgba(255, 255, 255, 0.9);  // Top-left highlight (lighter)
+$neuro-border: #E5E7EB;                          // hairline border (flat separation)
+$neuro-shadow-soft-1: transparent;               // retired
+$neuro-shadow-soft-2: transparent;               // retired
 
-// Embossed (raised) - Default state for cards/buttons
-$neuro-shadow-embossed: 
-  -5px -5px 15px $neuro-shadow-soft-2,
-  5px 5px 15px $neuro-shadow-soft-1;
+// Resting state: subtle low elevation (flat language, single-direction — NOT neumorphic emboss)
+$neuro-shadow-embossed: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
 
-// Embossed (hover) - Slightly more pronounced
-$neuro-shadow-embossed-hover: 
-  -6px -6px 18px $neuro-shadow-soft-2,
-  6px 6px 18px $neuro-shadow-soft-1;
+// Hover / raised: real, single-direction elevation
+$neuro-shadow-embossed-hover:
+  0 4px 6px -1px rgba(0, 0, 0, 0.1),
+  0 2px 4px -1px rgba(0, 0, 0, 0.06);
 $neuro-shadow-hover: $neuro-shadow-embossed-hover; // Alias
 
-// Debossed (inset) - For input fields, pressed buttons
-$neuro-shadow-debossed: 
-  inset -3px -3px 8px rgba(255, 255, 255, 0.7),
-  inset 3px 3px 8px rgba(174, 174, 192, 0.3);
+// Inputs use a real border, not an inset shadow
+$neuro-shadow-debossed: none;
 
-// Flat (neutral) - Minimal elevation
-$neuro-shadow-flat: 
-  -2px -2px 6px rgba(255, 255, 255, 0.7),
-  2px 2px 6px rgba(174, 174, 192, 0.2);
+// Flat: no elevation
+$neuro-shadow-flat: none;
+
+// Cobalt focus ring (DESIGN.md)
+$neuro-focus-ring: 0 0 0 3px rgba(0, 74, 173, 0.25);
 
 // ============================================================
 // Border Radius (Soft Curves)

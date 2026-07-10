@@ -1,0 +1,171 @@
+<div class="traceability-page">
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       Toolbar: título + filtros
+  ═══════════════════════════════════════════════════════════════════ -->
+  <div class="toolbar" role="toolbar" aria-label="Filtros de órdenes de compra">
+
+    <div class="toolbar__title-block">
+      <h1 class="toolbar__title">Seguimiento de Órdenes de Compra</h1>
+      <span class="toolbar__count" aria-live="polite">
+        {{ ordenes().length }} {{ ordenes().length === 1 ? 'orden' : 'órdenes' }}
+      </span>
+    </div>
+
+    <div class="toolbar__filters">
+      <!-- Buscador -->
+      <div class="search-field" role="search">
+        <mat-icon class="search-field__icon" aria-hidden="true">search</mat-icon>
+        <input
+          class="search-field__input"
+          type="search"
+          id="oc-search"
+          placeholder="Buscar por OC, molécula o proveedor..."
+          [value]="busqueda()"
+          (input)="onSearch($any($event.target).value)"
+          aria-label="Buscar órdenes de compra"
+          autocomplete="off"
+        />
+      </div>
+
+      <!-- Estado filter -->
+      <div class="estado-filter">
+        <label for="estado-select" class="sr-only">Filtrar por estado</label>
+        <select
+          id="estado-select"
+          class="estado-select"
+          [value]="estadoFiltro()"
+          (change)="onEstadoChange($any($event.target).value)"
+          aria-label="Filtrar por estado"
+        >
+          @for (opt of estadoFiltros; track opt.value) {
+            <option [value]="opt.value">{{ opt.label }}</option>
+          }
+        </select>
+        <mat-icon class="estado-filter__chevron" aria-hidden="true">expand_more</mat-icon>
+      </div>
+
+      <!-- Refresh -->
+      <button
+        class="refresh-btn"
+        (click)="loadOrdenes(); loadKpis()"
+        aria-label="Actualizar datos"
+        matTooltip="Actualizar"
+      >
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       KPI Bar (sticky)
+  ═══════════════════════════════════════════════════════════════════ -->
+  <div class="kpi-bar" role="region" aria-label="Indicadores clave del período">
+
+    @if (kpisLoading()) {
+      <!-- Skeleton KPIs -->
+      @for (i of [1,2,3,4]; track i) {
+        <div class="kpi-card kpi-card--skeleton" aria-hidden="true">
+          <div class="skeleton-line skeleton-line--sm"></div>
+          <div class="skeleton-line skeleton-line--lg"></div>
+        </div>
+      }
+    } @else if (kpis()) {
+
+      <!-- OCs Activas -->
+      <div class="kpi-card" role="group" aria-label="Órdenes activas">
+        <div class="kpi-card__label">
+          <mat-icon>local_shipping</mat-icon>
+          OCs Activas
+        </div>
+        <div class="kpi-card__value">{{ kpis()!.ocs_activas }}</div>
+        <div class="kpi-card__sub">en curso ahora</div>
+      </div>
+
+      <!-- OTIF Global -->
+      <div class="kpi-card" role="group" aria-label="OTIF global del período">
+        <div class="kpi-card__label">
+          <mat-icon>verified</mat-icon>
+          OTIF Global
+        </div>
+        <div class="kpi-card__value" [class]="otifClass">
+          {{ kpis()!.otif_global_pct }}%
+        </div>
+        <div class="kpi-card__sub" [class]="otifDeltaClass">
+          {{ otifDeltaSign }}{{ kpis()!.otif_delta_pct }}% vs período anterior
+        </div>
+      </div>
+
+      <!-- Pendientes de Entrega -->
+      <div class="kpi-card" role="group" aria-label="Órdenes pendientes de entrega">
+        <div class="kpi-card__label">
+          <mat-icon>pending_actions</mat-icon>
+          Pendientes Entrega
+        </div>
+        <div class="kpi-card__value">{{ kpis()!.pendientes_entrega }}</div>
+        <div class="kpi-card__sub">emitidas o activas</div>
+      </div>
+
+      <!-- Novedades sin resolver -->
+      <div
+        class="kpi-card"
+        [class.kpi-card--alert]="kpis()!.novedades_no_resueltas > 0"
+        role="group"
+        aria-label="Novedades sin resolver"
+      >
+        <div class="kpi-card__label">
+          <mat-icon>notifications_active</mat-icon>
+          Novedades Abiertas
+        </div>
+        <div
+          class="kpi-card__value"
+          [class.kpi-value--bad]="kpis()!.novedades_no_resueltas > 0"
+        >{{ kpis()!.novedades_no_resueltas }}</div>
+        <div class="kpi-card__sub">sin resolver</div>
+      </div>
+
+    }
+  </div>
+
+
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       Split layout: tabla + panel de detalle
+  ═══════════════════════════════════════════════════════════════════ -->
+  <div
+    class="split-view"
+    [class.split-view--panel-open]="!!selectedOc()"
+  >
+
+    <!-- Lista maestra -->
+    <div class="split-view__list" role="main">
+      @if (loading()) {
+        <div class="loading-state" role="status" aria-label="Cargando órdenes de compra">
+          <mat-spinner [diameter]="32" aria-hidden="true"></mat-spinner>
+          <span>Cargando órdenes…</span>
+        </div>
+      } @else {
+        <app-oc-list-table
+          [ordenes]="ordenes()"
+          [selectedId]="selectedOc()?.id ?? null"
+          (selected)="onOcSelected($event)"
+        />
+      }
+    </div>
+
+    <!-- Panel de detalle (slide-out) -->
+    <div
+      class="split-view__detail"
+      [class.split-view__detail--visible]="!!selectedOc()"
+      role="complementary"
+      aria-label="Detalle de orden de compra"
+    >
+      <app-oc-detail-panel
+        [oc]="selectedOc()"
+        (closed)="onPanelClosed()"
+      />
+    </div>
+
+  </div>
+
+</div>

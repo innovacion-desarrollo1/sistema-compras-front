@@ -46,8 +46,8 @@ const NAV_ITEMS: NavItem[] = [
     id: 'traceability',
     label: 'Seguimiento de Órdenes de Compra',
     icon: 'timeline',
+    route: '/traceability',
     roles: ['AUXILIAR_COMPRAS', 'JEFE_COMPRAS', 'GERENTE', 'ADMIN'],
-    comingSoon: true,
   },
   {
     id: 'settings',

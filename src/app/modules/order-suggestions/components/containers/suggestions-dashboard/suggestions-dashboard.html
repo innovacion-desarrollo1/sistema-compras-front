@@ -15,9 +15,10 @@
       matBadgeColor="warn" 
       matBadgeSize="small"
       [matBadgeHidden]="cartService.getItemCount() === 0"
+      (click)="cartExpanded = !cartExpanded"
       aria-label="Ver carrito de compras"
       class="cart-btn"
-      matTooltip="El carrito siempre es visible a la derecha">
+      matTooltip="Ver carrito (barra inferior)">
       <mat-icon>shopping_cart</mat-icon>
     </button>
     <button mat-icon-button aria-label="Cuenta de usuario" class="account-btn">
@@ -82,7 +83,7 @@
           <span class="step-number step-active">2</span>
           <span class="step-label">Inventario Actual</span>
           <span class="trust-badge">
-            <mat-icon>verified</mat-icon>
+            <mat-icon>update</mat-icon>
             Datos actualizados
           </span>
         </div>
@@ -203,12 +204,36 @@
 
     </main>
 
-    <!-- ════════════ RIGHT PANEL: Cart Sidebar (always visible) ════════════ -->
-    <aside class="cart-sidebar" role="complementary" aria-label="Carrito de compras">
-      <div class="cart-sidebar-inner">
-        <app-cart-view></app-cart-view>
-      </div>
-    </aside>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- CARRITO ACOPLADO AL FONDO — barra fija (resumen) + panel expandible -->
+  <!-- Solo aparece cuando hay productos; ancho completo (ya no apretado). -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- Fondo oscurecido al abrir: separa visualmente el carrito del resto -->
+  <div class="cart-dock-scrim" *ngIf="cartExpanded" (click)="cartExpanded = false" aria-hidden="true"></div>
+
+  <div class="cart-dock" [class.cart-dock-open]="cartExpanded">
+
+    <!-- Panel completo (tabla + acciones), scrollable, sobre la barra -->
+    <div class="cart-dock-panel" *ngIf="cartExpanded">
+      <app-cart-view></app-cart-view>
+    </div>
+
+    <!-- Barra resumen, siempre visible -->
+    <button type="button" class="cart-dock-bar"
+            (click)="cartExpanded = !cartExpanded"
+            [attr.aria-expanded]="cartExpanded"
+            aria-label="Mostrar u ocultar el carrito de compras">
+      <mat-icon class="dock-icon">shopping_cart</mat-icon>
+      <span class="dock-count">{{ cart?.total_productos ?? 0 }} productos</span>
+      <span class="dock-sep">·</span>
+      <span class="dock-suppliers">{{ cart?.proveedores_unicos ?? 0 }} proveedores</span>
+      <span class="dock-spacer"></span>
+      <span class="dock-total">{{ formatCurrency(cart?.total_costo ?? 0) }}</span>
+      <mat-icon class="dock-toggle">{{ cartExpanded ? 'expand_more' : 'expand_less' }}</mat-icon>
+      <span class="dock-toggle-label">{{ cartExpanded ? 'Ocultar' : 'Ver carrito' }}</span>
+    </button>
 
   </div>
 </div>

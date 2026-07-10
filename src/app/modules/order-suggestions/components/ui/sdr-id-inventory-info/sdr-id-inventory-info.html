@@ -119,6 +119,25 @@
         <div class="metric-sublabel">costo unitario en inventario</div>
       </div>
 
+      <!-- Costo Última Compra -->
+      <div class="metric-card">
+        <div class="metric-header">
+          <mat-icon
+            matTooltip="Costo de la última compra registrada (ponderado por existencia)"
+            matTooltipPosition="above">
+            receipt_long
+          </mat-icon>
+          <span class="metric-label">Costo Última Compra</span>
+        </div>
+        <div class="metric-value">
+          <ng-container *ngIf="sdr.costo_ultima_compra != null; else ndUltimaCompra">
+            ${{ sdr.costo_ultima_compra | number:'1.0-0' }}
+          </ng-container>
+          <ng-template #ndUltimaCompra>N/D</ng-template>
+        </div>
+        <div class="metric-sublabel">último costo de compra</div>
+      </div>
+
       <!-- Cobertura en Días -->
       <div class="metric-card">
         <div class="metric-header">
@@ -160,41 +179,77 @@
 
     <mat-divider></mat-divider>
 
-    <!-- Suggested Order Calculation -->
+    <!-- Cantidad sugerida OFICIAL (Política 2026 v7.2) — calculada por el backend -->
     <div class="calculation-section">
-      <h4>
-        <mat-icon>calculate</mat-icon>
-        Cálculo de Cantidad Sugerida
-      </h4>
-      <div class="formula">
-        <div class="formula-line">
-          <span class="formula-label">Cantidad Sugerida = </span>
-          <span class="formula-value">ROP + SS - Stock Actual - Pendientes</span>
+
+      @if (tieneCalculoOficial) {
+        <!-- 1) Punto de Reorden — disparador ("cuándo pedir") -->
+        <div class="calc-block">
+          <div class="calc-block-head">
+            <mat-icon>notifications_active</mat-icon>
+            <span class="calc-block-title">Punto de Reorden · ¿cuándo pedir?</span>
+          </div>
+          <div class="calc-trigger">
+            <span class="calc-trigger-value">ROP = {{ sdr.stock_minimo | number:'1.0-0' }} ud</span>
+            <span class="calc-sep">·</span>
+            <span class="calc-trigger-stock">Inv. disponible: {{ sdr.stock_actual | number:'1.0-0' }} ud</span>
+            @if (necesitaOrden) {
+              <mat-chip class="semaphore-chip-naranja">
+                <mat-icon>priority_high</mat-icon> Pedir ahora
+              </mat-chip>
+            } @else {
+              <mat-chip class="semaphore-chip-verde">
+                <mat-icon>check</mat-icon> Nivel OK · aún no
+              </mat-chip>
+            }
+          </div>
         </div>
-        <div class="formula-line">
-          <span class="formula-label"></span>
-          <span class="formula-value">
-            = {{ sdr.stock_minimo | number:'1.0-0' }}
-            + {{ sdr.stock_seguridad | number:'1.0-0' }}
-            - {{ sdr.stock_actual | number:'1.0-0' }}
-            - {{ sdr.pendientes_diarios | number:'1.0-0' }}
-          </span>
+
+        <!-- 2) Cantidad Sugerida — valor oficial del backend -->
+        <div class="calc-block">
+          <div class="calc-block-head">
+            <mat-icon>calculate</mat-icon>
+            <span class="calc-block-title">Cantidad Sugerida · ¿cuánto pedir?</span>
+            <span class="calc-familia-tag">{{ getFamilyName() }}</span>
+          </div>
+
+          @if (sdr.formula_usada) {
+            <p class="calc-formula">{{ sdr.formula_usada }}</p>
+          }
+
+          <div class="calc-result">
+            <span class="calc-result-value">{{ sdr.cantidad_sugerida | number:'1.0-0' }}</span>
+            <span class="calc-result-unit">unidades</span>
+            @if ((sdr.cantidad_sugerida ?? 0) > 0) {
+              <mat-chip class="semaphore-chip-verde">
+                <mat-icon>shopping_cart_checkout</mat-icon> Cantidad a ordenar
+              </mat-chip>
+            } @else {
+              <mat-chip class="semaphore-chip-gris">
+                <mat-icon>check</mat-icon> No requiere orden
+              </mat-chip>
+            }
+          </div>
+
+          @if (sdr.razon) {
+            <p class="calc-note">
+              <mat-icon>verified</mat-icon>
+              {{ sdr.razon }}
+            </p>
+          }
+          <p class="calc-official">
+            <mat-icon>shield</mat-icon>
+            Cálculo oficial · Política 2026 v7.2
+          </p>
         </div>
-        <div class="formula-line result">
-          <span class="formula-label">Resultado: </span>
-          <span class="formula-value highlight">
-            {{ cantidadSugerida | number:'1.0-0' }} unidades
-            <mat-chip class="semaphore-chip-verde" *ngIf="cantidadSugerida > 0">
-              <mat-icon>notifications_active</mat-icon>
-              Ordenar Ahora
-            </mat-chip>
-            <mat-chip class="semaphore-chip-gris" *ngIf="cantidadSugerida === 0">
-              <mat-icon>check</mat-icon>
-              No Requiere Orden
-            </mat-chip>
-          </span>
+      } @else {
+        <!-- Sin cálculo oficial disponible (backend no respondió o sin política/datos) -->
+        <div class="calc-block calc-empty">
+          <mat-icon class="calc-empty-icon">running_with_errors</mat-icon>
+          <h4>Cantidad sugerida no disponible</h4>
+          <p>El servicio de cálculo no respondió, o no hay política / datos suficientes para este producto.</p>
         </div>
-      </div>
+      }
     </div>
   </mat-card-content>
 </mat-card>

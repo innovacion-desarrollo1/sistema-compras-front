@@ -95,25 +95,25 @@
 
   &.status-verde {
     background-color: rgba($semaphore-verde-bg, 0.2);
-    border-left: 4px solid $semaphore-verde-border;
+    border: 1px solid$semaphore-verde-border;
     color: $semaphore-verde-text;
   }
 
   &.status-amarillo {
     background-color: rgba($semaphore-amarillo-bg, 0.2);
-    border-left: 4px solid $semaphore-amarillo-border;
+    border: 1px solid$semaphore-amarillo-border;
     color: $semaphore-amarillo-text;
   }
 
   &.status-naranja {
     background-color: rgba($semaphore-naranja-bg, 0.2);
-    border-left: 4px solid $semaphore-naranja-border;
+    border: 1px solid$semaphore-naranja-border;
     color: $semaphore-naranja-text;
   }
 
   &.status-rojo {
     background-color: rgba($semaphore-rojo-bg, 0.2);
-    border-left: 4px solid $semaphore-rojo-border;
+    border: 1px solid$semaphore-rojo-border;
     color: $semaphore-rojo-text;
   }
 
@@ -152,9 +152,7 @@
   border-radius: $neuro-radius-md;
   padding: 16px;
   transition: all $neuro-transition-normal;
-  box-shadow:
-    -3px -3px 8px rgba(255, 255, 255, 0.6),
-    3px 3px 8px rgba(174, 174, 192, 0.15);
+  box-shadow: none;
 
   &:hover {
     box-shadow: $neuro-shadow-hover;
@@ -214,70 +212,181 @@
 // CALCULATION SECTION
 // ==============================
 .calculation-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   margin-top: 24px;
-  padding: 20px;
-  background-color: rgba($duana-primary, 0.04);
-  border-radius: $neuro-radius-md;
-  box-shadow: $neuro-shadow-debossed;
+}
 
-  h4 {
+// Cada bloque: plano, borde completo 1px (sin fringe border-left), fondo blanco
+.calc-block {
+  padding: 16px 20px;
+  background-color: $neuro-bg-white;
+  border: 1px solid $color-gray-200;
+  border-radius: $neuro-radius-md;
+
+  .calc-block-head {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin: 0 0 16px 0;
-    font-family: $font-heading;
-    color: $duana-dark;
-    font-weight: $font-semibold;
-    font-size: 16px;
+    margin-bottom: 10px;
 
     mat-icon {
       color: $duana-primary;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    .calc-block-title {
+      font-family: $font-heading;
+      font-weight: $font-semibold;
+      font-size: 15px;
+      color: $duana-dark;
+    }
+
+    .calc-familia-tag {
+      margin-left: auto;
+      font-family: $font-body;
+      font-size: 12px;
+      font-weight: $font-medium;
+      color: $duana-primary;
+      background: rgba($duana-primary, 0.08);
+      padding: 2px 10px;
+      border-radius: $neuro-radius-pill;
     }
   }
 }
 
-.formula {
+// Fórmula simbólica (tenue) y sustitución numérica (mono)
+.calc-formula {
+  margin: 0 0 6px 0;
+  font-family: $font-body;
+  font-size: 13px;
+  color: $financial-neutral;
+}
+
+// Disparador ROP: valor + estado
+.calc-trigger {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
   font-family: $font-data;
+  font-size: 14px;
+  color: $duana-text;
 
-  .formula-line {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    background-color: $neuro-bg-white;
-    border-left: 3px solid $color-gray-300;
-    border-radius: $neuro-radius-sm;
+  .calc-trigger-stock {
+    color: $financial-neutral;
+  }
+}
 
-    .formula-label {
-      font-weight: $font-semibold;
-      color: $financial-neutral;
-      min-width: 160px;
-    }
+.calc-sep {
+  color: $color-gray-300;
+}
 
-    .formula-value {
-      color: $duana-text;
-      flex: 1;
+// Resultado prominente
+.calc-result {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid $color-gray-200;
 
-      &.highlight {
-        font-size: 18px;
-        font-weight: 700;
-        color: $duana-primary;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-    }
+  .calc-result-value {
+    font-family: $font-data;
+    font-weight: 700;
+    font-size: 34px;
+    line-height: 1;
+    color: $duana-primary;
+  }
 
-    &.result {
-      background: linear-gradient(90deg, rgba($duana-primary, 0.08) 0%, rgba($duana-primary, 0.02) 100%);
-      border-left: 3px solid $duana-primary;
-      padding: 12px 16px;
-      margin-top: 8px;
-      box-shadow: $neuro-shadow-flat;
-    }
+  .calc-result-unit {
+    font-family: $font-body;
+    font-size: 14px;
+    color: $financial-neutral;
+  }
+
+  mat-chip {
+    align-self: center;
+    margin-left: auto;
+  }
+}
+
+// Explicación (razon) que devuelve el backend
+.calc-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 12px 0 0 0;
+  font-family: $font-body;
+  font-size: 12px;
+  line-height: 1.4;
+  color: $financial-neutral;
+
+  mat-icon {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+    color: $financial-profit;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+}
+
+// Sello de "cálculo oficial"
+.calc-official {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 10px 0 0 0;
+  font-family: $font-body;
+  font-size: 11px;
+  font-weight: $font-semibold;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: $duana-primary;
+
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    color: $duana-primary;
+  }
+}
+
+// Estado vacío: sin cálculo oficial disponible
+.calc-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  padding: 28px 20px;
+
+  .calc-empty-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+    color: $color-gray-300;
+  }
+
+  h4 {
+    margin: 0;
+    font-family: $font-heading;
+    font-size: 15px;
+    font-weight: $font-semibold;
+    color: $duana-text;
+  }
+
+  p {
+    margin: 0;
+    font-family: $font-body;
+    font-size: 13px;
+    color: $financial-neutral;
+    max-width: 420px;
   }
 }
 
@@ -304,12 +413,7 @@
     }
   }
 
-  .formula .formula-line {
-    flex-direction: column;
-    align-items: flex-start;
-
-    .formula-label {
-      min-width: auto;
-    }
+  .calc-result .calc-result-value {
+    font-size: 28px;
   }
 }

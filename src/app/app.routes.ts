@@ -27,7 +27,12 @@ export const routes: Routes = [
             .then(m => m.GerenciaReviewPanel),
       },
       { path: 'centinela',   component: PlaceholderComponent },
-      { path: 'traceability', component: PlaceholderComponent },
+      {
+        path: 'traceability',
+        loadComponent: () =>
+          import('./modules/traceability/components/containers/traceability-dashboard/traceability-dashboard')
+            .then(m => m.TraceabilityDashboard),
+      },
       { path: 'settings',    component: PlaceholderComponent },
     ],
   },

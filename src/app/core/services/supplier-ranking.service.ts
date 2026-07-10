@@ -37,6 +37,15 @@ export interface ProveedorRanking {
 
 interface CalculateResponse {
   proveedores: ProveedorRanking[];
+  cantidad_sugerida: number;
+  necesita_orden: boolean;
+}
+
+/** Resultado del ranking: proveedores + la cantidad sugerida OFICIAL del producto. */
+export interface RankingResult {
+  proveedores: ProveedorRanking[];
+  cantidad_sugerida: number;
+  necesita_orden: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -45,14 +54,19 @@ export class SupplierRankingService {
 
   constructor(private http: HttpClient) {}
 
-  getRanking(productoId: number | string, empresa: string = 'DUANA'): Observable<ProveedorRanking[]> {
+  getRanking(productoId: number | string, empresa: string = 'DUANA'): Observable<RankingResult> {
     // Sin fallback a mock: los errores se propagan para que la UI muestre la causa real.
+    // La cantidad sugerida es del producto (no por proveedor): el backend la calcula por familia.
     return this.http.post<CalculateResponse>(this.apiUrl, {
       producto_id: String(productoId),
       empresa,
       id_region: 1,
     }).pipe(
-      map(response => response.proveedores),
+      map(response => ({
+        proveedores: response.proveedores,
+        cantidad_sugerida: response.cantidad_sugerida,
+        necesita_orden: response.necesita_orden,
+      })),
     );
   }
 }

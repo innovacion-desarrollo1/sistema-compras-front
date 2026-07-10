@@ -20,6 +20,7 @@ describe('ProductService.sdrDetailToMolecula — precios', () => {
     precio_promedio_inventario: null, precio_promedio_adquisicion: 500,
     pendientes: 5, familia: 4, eoq: 100, lt_sistema_dias: 7,
     clasificacion_abc: null, clasificacion_ved: null, clasificacion_hml: null,
+    costo_ultima_compra: null,
   };
 
   it('mapea precio_promedio_inventario cuando el backend lo entrega', () => {
@@ -35,5 +36,10 @@ describe('ProductService.sdrDetailToMolecula — precios', () => {
   it('conserva precio_promedio (adquisición) desde precio_promedio_adquisicion', () => {
     const m = svc.sdrDetailToMolecula(base, { ...baseDetail, precio_promedio_adquisicion: 850 });
     expect(m.precio_promedio).toBe(850);
+  });
+
+  it('mapea costo_ultima_compra desde la respuesta', () => {
+    const m = svc.sdrDetailToMolecula(base, { ...baseDetail, costo_ultima_compra: 990 } as any);
+    expect(m.costo_ultima_compra).toBe(990);
   });
 });

@@ -59,7 +59,7 @@ export interface ApprovalActionDialogData {
     .dialog-icon { font-size: 22px; width: 22px; height: 22px; }
     .icon-warn   { color: #EF4444; }
     .icon-return { color: #F59E0B; }
-    .icon-ok     { color: #3B82F6; }
+    .icon-ok     { color: #004AAD; }
     .dialog-message { margin-bottom: 16px; line-height: 1.6; }
     .comentario-field { width: 100%; }
   `],

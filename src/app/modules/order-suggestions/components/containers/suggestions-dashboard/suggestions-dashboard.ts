@@ -1,5 +1,6 @@
-﻿import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+﻿import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
@@ -20,7 +21,7 @@ import { SdrIdInventoryInfo } from '../../ui/sdr-id-inventory-info/sdr-id-invent
 import { CartView } from '../../ui/cart-view/cart-view';
 import { Producto, SugerenciaOrden, SuggestionStateService } from '../../../services/suggestion-state.service';
 import { Molecula } from '../../../../../core/services/molecula.service';
-import { CartService } from '../../../../../core/services/cart.service';
+import { Cart, CartService } from '../../../../../core/services/cart.service';
 import { ProductService } from '../../../../../core/services/product.service';
 
 @Component({
@@ -47,7 +48,7 @@ import { ProductService } from '../../../../../core/services/product.service';
   styleUrl: './suggestions-dashboard.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SuggestionsDashboard {
+export class SuggestionsDashboard implements OnInit, OnDestroy {
   // Navegación lateral (shell)
   protected navState = inject(SidenavStateService);
   private bpo = inject(BreakpointObserver);
@@ -73,6 +74,31 @@ export class SuggestionsDashboard {
   isLoading = false;
   inventoryLoading = false;
   inventoryError = false;
+
+  // Carrito acoplado al fondo: colapsado por defecto, expandible
+  cartExpanded = false;
+  cart: Cart | null = null;
+  private cartSub?: Subscription;
+
+  ngOnInit(): void {
+    this.cartSub = this.cartService.cart$.subscribe(cart => {
+      this.cart = cart;
+      this.cdr.markForCheck();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.cartSub?.unsubscribe();
+  }
+
+  formatCurrency(value: number): string {
+    return new Intl.NumberFormat('es-CO', {
+      style: 'currency',
+      currency: 'COP',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(value);
+  }
 
   constructor(
     private stateService: SuggestionStateService,
@@ -134,12 +160,14 @@ export class SuggestionsDashboard {
     const familia: number = this.selectedSdr?.familia ?? 4;
     const requiereGerente = familia === 1 || precioUnitario > 50_000;
 
-    // TODO: reemplazar con llamada real a POST /api/v1/suggestions/calculate (HIS-001/HIS-002)
+    // Cantidad OFICIAL (Política v7.2): viene de POST /api/v1/suggestions/calculate vía
+    // supplierData.cantidad_calculada (sembrada desde la cantidad del backend en
+    // supplier-ranking-table). Ya no se usa el placeholder 300.
     const suggestion: SugerenciaOrden = {
       id: ++this._nextSuggestionId,
       producto_id: this.selectedSdr?.codigo_sdr ?? this.selectedSdr?.codigo ?? '',
       producto_nombre: this.selectedSdr?.nombre || '',
-      cantidad_sugerida: supplierData.cantidad_calculada || 300,
+      cantidad_sugerida: supplierData.cantidad_calculada ?? 0,
       unidad_medida: 'unidades',
       proveedor_id: supplierData.proveedor_id,
       proveedor_nombre: supplierData.proveedor_nombre,

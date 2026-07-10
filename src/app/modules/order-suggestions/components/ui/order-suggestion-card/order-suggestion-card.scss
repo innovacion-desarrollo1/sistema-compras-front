@@ -9,7 +9,7 @@
 
 .suggestion-card {
   .product-header {
-    background: linear-gradient(135deg, rgba($duana-primary, 0.06) 0%, $neuro-bg-white 100%);
+    background: $neuro-bg-white;
     padding: $spacing-md;
     border-radius: $neuro-radius-lg $neuro-radius-lg 0 0;
 
@@ -76,7 +76,7 @@
 
     &.metric-total {
       grid-column: 1 / -1;
-      background: linear-gradient(135deg, rgba($duana-primary, 0.04) 0%, $neuro-bg-light 100%);
+      background: $neuro-bg-light;
       border: 1px solid rgba($duana-primary, 0.1);
     }
   }
@@ -125,7 +125,7 @@
     gap: $spacing-sm;
     padding: $spacing-md;
     background-color: $semaphore-naranja-bg;
-    border-left: 4px solid $semaphore-naranja;
+    border: 1px solid $semaphore-naranja;
     border-radius: $neuro-radius-sm;
 
     .governance-icon {
@@ -157,7 +157,7 @@
     .estado-chip {
       font-family: $font-heading;
       font-weight: $font-semibold;
-      font-size: 11px;
+      font-size: $type-body-tiny;
       height: 28px;
     }
   }
@@ -180,10 +180,8 @@
       padding: 0 $spacing-lg;
       height: 44px;
       border-radius: $neuro-radius-md;
-      box-shadow:
-        -3px -3px 8px rgba(255, 255, 255, 0.3),
-        3px 3px 8px rgba($cta-primary, 0.4);
-      transition: all $neuro-transition-fast;
+      box-shadow: none;
+      transition: background $neuro-transition-fast;
       display: flex;
       align-items: center;
       gap: $spacing-xs;
@@ -191,11 +189,7 @@
 
       &:hover {
         background: $cta-primary-hover;
-        box-shadow:
-          -3px -3px 10px rgba(255, 255, 255, 0.4),
-          3px 3px 10px rgba($cta-primary, 0.6),
-          0 0 20px rgba($cta-primary, 0.2);
-        transform: translateY(-1px);
+        box-shadow: none;
       }
 
       mat-icon {
@@ -205,57 +199,9 @@
       }
     }
 
-    // Secondary actions (muted)
-    .secondary-actions {
-      display: flex;
-      gap: $spacing-xs;
+    .overflow-menu-btn {
       margin-left: auto;
-
-      button {
-        font-family: $font-body;
-        font-size: 13px;
-        height: 36px;
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        transition: all $neuro-transition-fast;
-
-        mat-icon {
-          font-size: 16px;
-          height: 16px;
-          width: 16px;
-        }
-      }
-
-      .action-accept {
-        color: $financial-profit;
-        border-color: rgba($financial-profit, 0.3);
-
-        &:hover {
-          background: rgba($financial-profit, 0.06);
-          border-color: $financial-profit;
-        }
-      }
-
-      .action-adjust {
-        color: $duana-primary;
-        border-color: rgba($duana-primary, 0.3);
-
-        &:hover {
-          background: rgba($duana-primary, 0.06);
-          border-color: $duana-primary;
-        }
-      }
-
-      .action-reject {
-        color: $financial-loss;
-        border-color: rgba($financial-loss, 0.3);
-
-        &:hover {
-          background: rgba($financial-loss, 0.06);
-          border-color: $financial-loss;
-        }
-      }
+      color: $financial-neutral;
     }
   }
 }

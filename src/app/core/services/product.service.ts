@@ -25,7 +25,8 @@ export interface SdrDetailApiResponse {
   rop:                         number | null;   // → Molecula.stock_minimo
   demanda_promedio_diaria:     number | null;
   cobertura_dias:              number | null;
-  precio_promedio_inventario:  number | null;   // siempre null en v1 (HIS-018)
+  precio_promedio_inventario:  number | null;
+  costo_ultima_compra:         number | null;   // → Molecula.costo_ultima_compra
   precio_promedio_adquisicion: number | null;   // → Molecula.precio_promedio
   pendientes:                  number | null;   // → Molecula.pendientes_diarios
   familia:                     number | null;
@@ -34,6 +35,11 @@ export interface SdrDetailApiResponse {
   clasificacion_abc:           string | null;
   clasificacion_ved:           string | null;
   clasificacion_hml:           string | null;
+  // Cantidad sugerida OFICIAL (Política v7.2) — null si no disponible
+  cantidad_sugerida:           number | null;
+  necesita_orden:              boolean | null;
+  formula_usada:               string | null;
+  razon:                       string | null;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -99,6 +105,7 @@ export class ProductService {
       stock_seguridad:        d.stock_seguridad         ?? base.stock_seguridad,
       precio_promedio:        d.precio_promedio_adquisicion ?? base.precio_promedio,
       precio_promedio_inventario: d.precio_promedio_inventario ?? base.precio_promedio_inventario ?? null,
+      costo_ultima_compra:        d.costo_ultima_compra ?? base.costo_ultima_compra ?? null,
       cobertura_dias:         d.cobertura_dias          ?? base.cobertura_dias,
       demanda_promedio_diaria: d.demanda_promedio_diaria ?? base.demanda_promedio_diaria,
       lt_sistema_dias:        d.lt_sistema_dias         ?? base.lt_sistema_dias,
@@ -110,6 +117,11 @@ export class ProductService {
       clasificacion_abc:      d.clasificacion_abc       ?? base.clasificacion_abc,
       clasificacion_ved:      d.clasificacion_ved       ?? base.clasificacion_ved,
       clasificacion_hml:      d.clasificacion_hml       ?? base.clasificacion_hml,
+      // Cantidad oficial: se toma tal cual del backend (null = no disponible → el panel lo indica)
+      cantidad_sugerida:      d.cantidad_sugerida,
+      necesita_orden:         d.necesita_orden,
+      formula_usada:          d.formula_usada,
+      razon:                  d.razon,
     };
   }
 }

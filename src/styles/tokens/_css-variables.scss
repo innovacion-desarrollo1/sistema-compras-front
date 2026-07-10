@@ -9,8 +9,16 @@
   /* ========================================
      DUANA Brand Colors
      ======================================== */
-  --duana-primary: #3B82F6;
-  --duana-primary-dark: #1E3A8A;
+  /* Canonical brand tokens (DESIGN.md) */
+  --brand-navy: #001378;        /* identity, nav, headers, emphasis, cost totals */
+  --action-cobalt: #004AAD;     /* primary action: buttons, links, selected */
+  --action-cobalt-hover: #003A87;
+  --accent-picton: #37A6EE;     /* accent / chart historical only — never text */
+  --focus-ring: 0 0 0 3px rgba(0, 74, 173, 0.25);
+
+  /* Reconciled to DESIGN.md: primary = cobalt action, primary-dark = navy */
+  --duana-primary: #004AAD;
+  --duana-primary-dark: #001378;
   --duana-primary-light: #DBEAFE;
   --duana-white: #FFFFFF;
   --duana-text: #0F172A;
@@ -36,38 +44,37 @@
   /* ========================================
      CTA Colors
      ======================================== */
-  --cta-primary: #F97316;
-  --cta-primary-hover: #EA580C;
-  --cta-secondary: #3B82F6;
+  /* Primary action is cobalt. Orange (#F97316) is reserved for Clase C governance ONLY. */
+  --cta-primary: #004AAD;
+  --cta-primary-hover: #003A87;
+  --cta-secondary: #004AAD;
   
   /* ========================================
      Neumorphic Backgrounds
      ======================================== */
-  --neuro-bg-light: #E8F0F8;
-  --neuro-bg-grey: #E8E8E8;
+  /* Flat surfaces (DESIGN.md §4): white cards on a light page */
+  --neuro-bg-light: #FFFFFF;
+  --neuro-bg-grey: #F3F4F6;
   --neuro-bg-white: #FFFFFF;
-  
+
   /* ========================================
-     Neumorphic Shadows
+     Elevation — FLAT by default (retired neumorphism)
+     Borders carry separation at rest; shadow is a state response.
      ======================================== */
-  --neuro-shadow-soft-1: rgba(174, 174, 192, 0.2);
-  --neuro-shadow-soft-2: rgba(255, 255, 255, 0.9);
-  
-  --neuro-shadow-embossed: 
-    -5px -5px 15px var(--neuro-shadow-soft-2),
-    5px 5px 15px var(--neuro-shadow-soft-1);
-  
-  --neuro-shadow-embossed-hover: 
-    -6px -6px 18px var(--neuro-shadow-soft-2),
-    6px 6px 18px var(--neuro-shadow-soft-1);
-  
-  --neuro-shadow-debossed: 
-    inset -3px -3px 8px rgba(255, 255, 255, 0.7),
-    inset 3px 3px 8px rgba(174, 174, 192, 0.3);
-  
-  --neuro-shadow-flat: 
-    -2px -2px 6px rgba(255, 255, 255, 0.7),
-    2px 2px 6px rgba(174, 174, 192, 0.2);
+  --border-color: #E5E7EB;
+  --surface-card: #FFFFFF;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+  --neuro-shadow-soft-1: transparent; /* retired */
+  --neuro-shadow-soft-2: transparent; /* retired */
+
+  --neuro-shadow-embossed: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04); /* subtle resting elevation */
+  --neuro-shadow-embossed-hover: var(--shadow-md);
+  --neuro-shadow-debossed: none;                 /* inputs use a border */
+  --neuro-shadow-flat: none;
   
   /* ========================================
      Border Radius
@@ -91,15 +98,18 @@
   /* ========================================
      Typography
      ======================================== */
-  --font-heading: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-body: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-data: 'Inter', 'SF Mono', 'Consolas', monospace;
-  
-  --type-display: clamp(2.5rem, 4vw, 3.5rem);
-  --type-h1: clamp(2rem, 3vw, 2.5rem);
-  --type-h2: clamp(1.5rem, 2.5vw, 2rem);
-  --type-h3: clamp(1.25rem, 2vw, 1.5rem);
-  --type-h4: 1.125rem;
+  /* Single family: Inter carries the whole UI (DESIGN.md §3). No text webfont CDN. */
+  --font-heading: 'Inter', 'Segoe UI', Roboto, system-ui, sans-serif;
+  --font-body: 'Inter', 'Segoe UI', Roboto, system-ui, sans-serif;
+  --font-data: 'Inter', 'Segoe UI', Roboto, system-ui, sans-serif;
+
+  /* Fixed rem scale — no clamp in product UI */
+  --type-display: 2.25rem;
+  --type-kpi: 1.75rem;
+  --type-h1: 1.5rem;
+  --type-h2: 1.25rem;
+  --type-h3: 1.125rem;
+  --type-h4: 1rem;
   --type-body-large: 1.125rem;
   --type-body: 1rem;
   --type-body-small: 0.875rem;
@@ -127,9 +137,9 @@
   /* ========================================
      Chart Colors (Chart.js)
      ======================================== */
-  --chart-historical: #3B82F6;
-  --chart-predicted: #1E3A8A;
-  --chart-confidence: rgba(59, 130, 246, 0.15);
+  --chart-historical: #37A6EE;
+  --chart-predicted: #001378;
+  --chart-confidence: rgba(0, 74, 173, 0.15);
   --chart-anomaly: #EF4444;
   
   /* ========================================
@@ -144,11 +154,35 @@
      ======================================== */
   --bg-neutral-white: #FFFFFF;
   --bg-neutral-grey: #F8FAFC;
-  --bg-accent-primary: rgba(59, 130, 246, 0.05);
-  --bg-accent-primary-strong: rgba(59, 130, 246, 0.1);
+  --bg-accent-primary: rgba(0, 74, 173, 0.05);
+  --bg-accent-primary-strong: rgba(0, 74, 173, 0.1);
   --bg-alert-success: rgba(16, 185, 129, 0.1);
   --bg-alert-warning: rgba(249, 115, 22, 0.1);
   --bg-alert-danger: rgba(239, 68, 68, 0.1);
+  /* ========================================
+     Semaphore Triplets (bg + text per state)
+     Used in chips, alerts, badges across modules.
+     Each follows DESIGN.md: bg-light + text-dark for WCAG AAA contrast.
+     ======================================== */
+  --verde-bg:     #D1FAE5;
+  --verde-text:   #065F46;
+  --verde-border: #6EE7B7;
+
+  --amarillo-bg:     #FEF3C7;
+  --amarillo-text:   #92400E;
+  --amarillo-border: #FDE68A;
+
+  --naranja-bg:     #FFEDD5;
+  --naranja-text:   #9A3412;
+  --naranja-border: #FDBA74;
+
+  --rojo-bg:     #FEE2E2;
+  --rojo-text:   #991B1B;
+  --rojo-border: #FECACA;
+
+  --negro-bg:     #F3F4F6;
+  --negro-text:   #111827;
+  --negro-border: #D1D5DB;
 }
 
 /* ========================================

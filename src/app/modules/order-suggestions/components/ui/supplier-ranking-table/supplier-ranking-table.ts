@@ -102,13 +102,15 @@ export class SupplierRankingTableComponent implements OnInit, OnChanges {
     this.errorMessage = null;
     this.rankingService.getRanking(this.productoId).subscribe({
       next: (data) => {
-        this.suppliers = data;
-        if (data.length === 0) {
+        this.suppliers = data.proveedores;
+        if (data.proveedores.length === 0) {
           this.errorMessage = 'No hay proveedores disponibles para este producto.';
         }
-        data.forEach(s => {
+        // La cantidad es del producto (oficial, Política v7.2), no por proveedor: se
+        // usa como cantidad inicial editable para cada proveedor.
+        data.proveedores.forEach(s => {
           if (!this.cantidades.has(s.proveedor_id)) {
-            this.cantidades.set(s.proveedor_id, this.calculateCantidadSugerida(s));
+            this.cantidades.set(s.proveedor_id, data.cantidad_sugerida);
           }
         });
         this.isLoading = false;
@@ -203,12 +205,6 @@ export class SupplierRankingTableComponent implements OnInit, OnChanges {
       costo_total: costo_total,
       bonificaciones_aplicadas: supplier.bonificaciones_aplicadas || []
     });
-  }
-
-  private calculateCantidadSugerida(supplier: ProveedorRanking): number {
-    // Simulación: 50 unidades por semana
-    const demanda_semanal = 50;
-    return demanda_semanal * this.periodoSemanas;
   }
 
   getSemaphoreColor(supplier: ProveedorRanking, index: number): string {

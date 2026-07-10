@@ -79,16 +79,12 @@
     transition: box-shadow $neuro-transition-normal;
 
     &:hover {
-      box-shadow:
-        inset -3px -3px 8px rgba(255, 255, 255, 0.8),
-        inset 3px 3px 8px rgba(174, 174, 192, 0.25);
+      border-color: #D1D5DB;
     }
   }
 
   ::ng-deep .mdc-text-field--focused {
-    box-shadow:
-      $neuro-shadow-debossed,
-      0 0 0 3px rgba($duana-primary, 0.2) !important;
+    box-shadow: 0 0 0 3px rgba($duana-primary, 0.25) !important;
   }
 
   ::ng-deep input {
@@ -169,9 +165,7 @@
   font-weight: $font-semibold;
   height: 20px !important;
 
-  box-shadow:
-    -1px -1px 3px rgba(255, 255, 255, 0.5),
-    1px 1px 3px rgba(174, 174, 192, 0.2);
+  box-shadow: none;
 
   mat-icon {
     font-size: 14px;

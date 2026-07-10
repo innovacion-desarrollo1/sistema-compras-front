@@ -9,8 +9,8 @@
 // DUANA Brand Colors (Azure/Blue Theme)
 // ============================================================
 
-$duana-primary: #3B82F6;          // Azure Blue (buttons, links, primary actions)
-$duana-primary-dark: #1E3A8A;     // Dark Blue (emphasis, chart predictions)
+$duana-primary: #004AAD;          // Cobalt (buttons, links, primary actions) — DESIGN.md
+$duana-primary-dark: #001378;     // Navy (identity, headers, emphasis, chart predictions) — DESIGN.md
 $duana-primary-light: #DBEAFE;    // Light Blue (backgrounds, highlights)
 $duana-dark: $duana-primary-dark;  // Alias for convenience
 
@@ -25,7 +25,7 @@ $duana-text-muted: #475569;       // Slate 600 (secondary text)
 $financial-profit: #22C55E;       // Green (positive indicators, savings)
 $financial-loss: #EF4444;         // Red (negative indicators, alerts)
 $financial-neutral: #6B7280;      // Gray (neutral data)
-$financial-trust: #003366;        // Deep Blue (trustworthy data, totals)
+$financial-trust: #001378;        // Navy DUANA (trustworthy data, totals) — folded into brand navy
 
 // ============================================================
 // Semaphore System (DUANA Legacy - Preserved)
@@ -41,9 +41,9 @@ $semaphore-negro: #1F2937;        // Black (Critical + High Cost)
 // CTA (Call-to-Action) High Contrast
 // ============================================================
 
-$cta-primary: #F97316;            // Orange (conversion-optimized CTA)
-$cta-primary-hover: #EA580C;      // Darker Orange (hover)
-$cta-secondary: $duana-primary;   // Azure Blue (secondary actions)
+$cta-primary: #004AAD;            // Cobalt — primary action (orange #F97316 is Clase C governance ONLY)
+$cta-primary-hover: #003A87;      // Cobalt hover
+$cta-secondary: $duana-primary;   // Cobalt (secondary actions)
 
 // ============================================================
 // Background Neutrals (60-30-10 Rule)
@@ -54,8 +54,8 @@ $bg-neutral-white: #FFFFFF;
 $bg-neutral-grey: #F8FAFC;        // Slate 50 (page background)
 
 // 30% - Azure/Blue accents
-$bg-accent-primary: rgba(59, 130, 246, 0.05);
-$bg-accent-primary-strong: rgba(59, 130, 246, 0.1);
+$bg-accent-primary: rgba(0, 74, 173, 0.05);
+$bg-accent-primary-strong: rgba(0, 74, 173, 0.1);
 
 // 10% - Semaphore alerts (sparingly)
 $bg-alert-success: rgba(16, 185, 129, 0.1);
@@ -66,9 +66,9 @@ $bg-alert-danger: rgba(239, 68, 68, 0.1);
 // Data Visualization (Chart.js Financial Colors)
 // ============================================================
 
-$chart-historical: $duana-primary;          // Historical data (solid line)
-$chart-predicted: $duana-primary-dark;      // ML predictions (dashed line)
-$chart-confidence: rgba(59, 130, 246, 0.15); // Confidence interval (shaded area)
+$chart-historical: #37A6EE;                 // Picton accent (historical solid line)
+$chart-predicted: $duana-primary-dark;      // Navy (ML predictions, dashed line)
+$chart-confidence: rgba(0, 74, 173, 0.15);  // Cobalt confidence interval (shaded area)
 $chart-anomaly: $financial-loss;            // Anomaly markers (red points)
 
 // ============================================================

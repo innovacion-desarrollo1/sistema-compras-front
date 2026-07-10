@@ -88,8 +88,8 @@ export class DemandForecastChart implements OnInit, AfterViewInit, OnDestroy {
         {
           label: 'Historical Demand',
           data: data.historical.map(d => ({ x: d.fecha.getTime(), y: d.cantidad })),
-          borderColor: '#3B82F6', // Azure (Dusoft blue)
-          backgroundColor: 'rgba(59, 130, 246, 0.1)',
+          borderColor: '#37A6EE', // Picton — historical (DESIGN.md chart-historical)
+          backgroundColor: 'rgba(55, 166, 238, 0.1)',
           borderWidth: 2,
           pointRadius: 3,
           pointHoverRadius: 5,
@@ -99,8 +99,8 @@ export class DemandForecastChart implements OnInit, AfterViewInit, OnDestroy {
         {
           label: 'ML Prediction',
           data: data.predicted.map(d => ({ x: d.fecha.getTime(), y: d.cantidad })),
-          borderColor: '#1E3A8A', // Dark blue
-          backgroundColor: 'rgba(30, 58, 138, 0.05)',
+          borderColor: '#001378', // Navy — ML prediction (DESIGN.md chart-predicted)
+          backgroundColor: 'rgba(0, 19, 120, 0.05)',
           borderWidth: 2,
           borderDash: [5, 5], // Dashed line
           pointRadius: 4,
@@ -112,8 +112,8 @@ export class DemandForecastChart implements OnInit, AfterViewInit, OnDestroy {
         {
           label: '90% Confidence Interval',
           data: data.predicted.map(d => ({ x: d.fecha.getTime(), y: d.confidence_upper! })),
-          borderColor: 'rgba(59, 130, 246, 0.3)',
-          backgroundColor: 'rgba(59, 130, 246, 0.15)',
+          borderColor: 'rgba(0, 74, 173, 0.3)',
+          backgroundColor: 'rgba(0, 74, 173, 0.15)',
           fill: '+1', // Fill to next dataset
           pointRadius: 0,
           borderWidth: 1
@@ -122,8 +122,8 @@ export class DemandForecastChart implements OnInit, AfterViewInit, OnDestroy {
         {
           label: 'CI Lower',
           data: data.predicted.map(d => ({ x: d.fecha.getTime(), y: d.confidence_lower! })),
-          borderColor: 'rgba(59, 130, 246, 0)',
-          backgroundColor: 'rgba(59, 130, 246, 0.15)',
+          borderColor: 'rgba(0, 74, 173, 0)',
+          backgroundColor: 'rgba(0, 74, 173, 0.15)',
           pointRadius: 0
         }
       ]

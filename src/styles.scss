@@ -65,7 +65,7 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-// Headings use Poppins
+// Headings use the single Inter family (via --font-heading)
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   line-height: var(--line-height-tight);
@@ -234,7 +234,7 @@ body {
 // ============================================================================
 
 :focus-visible {
-  outline: 2px solid $color-blue-500;
+  outline: 2px solid $action-cobalt;
   outline-offset: 2px;
 }
 

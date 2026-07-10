@@ -208,17 +208,17 @@ export interface AgregarBonificacionData {
         align-items: center;
         gap: 8px;
         padding: 12px;
-        background-color: rgba(59, 130, 246, 0.1);
-        border-left: 3px solid #3b82f6;
+        background-color: rgba(0, 74, 173, 0.08);
+        border: 1px solid rgba(0, 74, 173, 0.3);
         border-radius: 4px;
         margin: 0;
 
         mat-icon {
-          color: #3b82f6;
+          color: #004AAD;
         }
 
         strong {
-          color: #1e40af;
+          color: #001378;
         }
       }
     }
@@ -237,7 +237,7 @@ export interface AgregarBonificacionData {
       display: flex;
       align-items: center;
       gap: 8px;
-      color: #1e40af;
+      color: #001378;
     }
 
     mat-dialog-actions {

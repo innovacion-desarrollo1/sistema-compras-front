@@ -15,6 +15,7 @@ export interface Molecula {
   stock_seguridad: number; // SS (Safety Stock)
   precio_promedio: number; // Precio promedio de ADQUISICIÓN (compra a proveedores)
   precio_promedio_inventario?: number | null; // Costo prom. ponderado del stock en CEDI; null hasta integrar backend
+  costo_ultima_compra?: number | null; // Costo de la última compra (inventarios.costo_ultima_compra), ponderado
   cobertura_dias: number; // Days of coverage at current demand
   demanda_promedio_diaria: number;
   lt_sistema_dias: number; // Lead time in days
@@ -23,6 +24,12 @@ export interface Molecula {
   clasificacion_abc?: string; // "A", "B", "C"
   clasificacion_ved?: string; // "V", "E", "D"
   clasificacion_hml?: string; // "H", "M", "L"
+  // Cantidad sugerida OFICIAL (backend QuantityCalculationService, Política v7.2).
+  // undefined/null si el backend no la entregó (sin política / datos insuficientes / error).
+  cantidad_sugerida?: number | null;
+  necesita_orden?: boolean | null;
+  formula_usada?: string | null;
+  razon?: string | null;
 }
 
 @Injectable({

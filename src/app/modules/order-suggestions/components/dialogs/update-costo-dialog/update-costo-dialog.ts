@@ -340,7 +340,7 @@ export interface ActualizarCostoData {
       gap: 8px;
       margin: 0;
       padding: 16px;
-      background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+      background: linear-gradient(135deg, #001378 0%, #004AAD 100%);
       color: white;
     }
 
@@ -362,11 +362,11 @@ export interface ActualizarCostoData {
     .section-card {
       margin-bottom: 16px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      border-left: 4px solid #3b82f6;
+      border: 1px solid #E5E7EB;
       padding: 4px;  /* Padding adicional en la card */
 
       &.precio-lista-section {
-        border-left-color: #3b82f6;
+        border-color: #004AAD;
       }
 
       &.bonif-section {
@@ -387,7 +387,7 @@ export interface ActualizarCostoData {
         gap: 12px;
 
         mat-icon {
-          color: #1e40af;
+          color: #001378;
           font-size: 28px;
           width: 28px;
           height: 28px;
@@ -436,12 +436,12 @@ export interface ActualizarCostoData {
       gap: 12px;
       padding: 16px;
       background: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%);
-      border: 2px solid #3b82f6;
+      border: 2px solid #004AAD;
       border-radius: 8px;
       margin-top: 12px;
 
       .example-icon {
-        color: #1e40af;
+        color: #001378;
         font-size: 28px;
         width: 28px;
         height: 28px;
@@ -453,7 +453,7 @@ export interface ActualizarCostoData {
         line-height: 1.5;
 
         strong {
-          color: #1e40af;
+          color: #001378;
         }
 
         .do-dont {
@@ -550,7 +550,7 @@ export interface ActualizarCostoData {
       font-size: 13px;
 
       mat-icon {
-        color: #3b82f6;
+        color: #004AAD;
       }
     }
 
@@ -708,7 +708,7 @@ export interface ActualizarCostoData {
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 
       &.suspicion-alert {
-        border-left: 5px solid #dc2626;
+        border: 1px solid #dc2626;
         background-color: rgba(220, 38, 38, 0.05);
 
         .alert-content {
@@ -746,7 +746,7 @@ export interface ActualizarCostoData {
       margin: 16px 0;
 
       .error-card {
-        border-left: 5px solid #dc2626;
+        border: 1px solid #dc2626;
         background-color: rgba(220, 38, 38, 0.1);
 
         .error-header {

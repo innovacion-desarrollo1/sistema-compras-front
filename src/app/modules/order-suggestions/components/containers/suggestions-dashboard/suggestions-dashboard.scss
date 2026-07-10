@@ -88,11 +88,11 @@
   }
 
   &.kpi-warning {
-    border-left: 3px solid $semaphore-naranja;
+    border: 1px solid $semaphore-naranja;
   }
 
   &.kpi-savings {
-    border-left: 3px solid $financial-profit;
+    border: 1px solid $financial-profit;
   }
 
   .kpi-icon {
@@ -132,20 +132,13 @@
 }
 
 // ============================================================
-// SPLIT-PANE LAYOUT — Workflow (left) + Cart Sidebar (right)
+// LAYOUT — Workflow a ancho completo (carrito movido al fondo)
 // ============================================================
 
 .split-pane {
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 0;
   max-width: 1600px;
   margin: 0 auto;
   min-height: calc(100vh - 128px); // below toolbar + KPI header
-
-  @media (max-width: $breakpoint-lg) {
-    grid-template-columns: 1fr;
-  }
 }
 
 .workflow-panel {
@@ -153,25 +146,108 @@
   flex-direction: column;
   gap: $spacing-lg;
   padding: $spacing-lg;
+  padding-bottom: 96px; // espacio para la barra fija del carrito
   overflow-y: auto;
 }
 
-.cart-sidebar {
-  border-left: 1px solid rgba($duana-primary, 0.08);
-  background: $neuro-bg-light;
+// ============================================================
+// CARRITO ACOPLADO AL FONDO
+// ============================================================
 
-  @media (max-width: $breakpoint-lg) {
-    border-left: none;
-    border-top: 1px solid rgba($duana-primary, 0.08);
+// Fondo oscurecido cuando el carrito está abierto (separa del resto de la página)
+.cart-dock-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 140;
+  background: rgba(15, 23, 42, 0.45);
+  animation: fadeIn 0.2s ease-out;
+}
+
+// Sticky (no fixed): así queda dentro del área de contenido y respeta la
+// barra lateral en vez de quedar debajo de ella.
+.cart-dock {
+  position: sticky;
+  bottom: 0;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-dock-panel {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: $spacing-lg $spacing-md;
+  background: $neuro-bg-light;
+  border: 1px solid rgba($duana-primary, 0.35); // acento sutil de "carrito abierto"
+  border-radius: $neuro-radius-lg $neuro-radius-lg 0 0;
+  box-shadow: 0 -12px 32px rgba(0, 0, 0, 0.22);
+
+  // el carrito ocupa el ancho disponible (ya no queda apretado en 380px)
+  app-cart-view {
+    display: block;
+    max-width: 1600px;
+    margin: 0 auto;
   }
 }
 
-.cart-sidebar-inner {
-  position: sticky;
-  top: 128px; // toolbar (64px) + KPI header (~64px)
-  max-height: calc(100vh - 128px);
-  overflow-y: auto;
-  padding: $spacing-md;
+.cart-dock-bar {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  padding: $spacing-sm $spacing-lg;
+  background: $neuro-bg-white;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+  font-family: $font-body;
+  font-size: $type-body;
+  color: $duana-text;
+  transition: background $neuro-transition-fast;
+
+  // fondo opaco en hover (antes se volvía translúcido y se veía el contenido detrás)
+  &:hover {
+    background: $neuro-bg-light;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $duana-primary;
+    outline-offset: -2px;
+  }
+
+  .dock-icon {
+    color: $duana-primary;
+  }
+
+  .dock-sep {
+    color: $color-gray-400;
+  }
+
+  .dock-spacer {
+    flex: 1 1 auto;
+  }
+
+  .dock-total {
+    font-family: $font-data;
+    font-weight: $font-bold;
+    color: $duana-primary;
+  }
+
+  .dock-toggle {
+    color: $financial-neutral;
+  }
+
+  .dock-toggle-label {
+    font-weight: $font-semibold;
+    color: $duana-primary;
+  }
+
+  @media (max-width: 600px) {
+    .dock-suppliers,
+    .dock-sep {
+      display: none;
+    }
+  }
 }
 
 // ============================================================
@@ -388,13 +464,12 @@ mat-card {
   &.step-active {
     color: white;
     background: $duana-primary;
-    box-shadow: 0 2px 8px rgba($duana-primary, 0.4);
+    box-shadow: var(--shadow-sm, 0 1px 2px rgba(0,0,0,0.05));
   }
 
   &.step-done {
     color: white;
     background: $financial-profit;
-    box-shadow: 0 2px 8px rgba($financial-profit, 0.4);
 
     mat-icon {
       font-size: 18px;
@@ -406,7 +481,6 @@ mat-card {
   &.step-governance {
     color: white;
     background: $semaphore-naranja;
-    box-shadow: 0 2px 8px rgba($semaphore-naranja, 0.4);
 
     mat-icon {
       font-size: 18px;
@@ -444,19 +518,19 @@ mat-card {
   align-items: center;
   gap: 4px;
   padding: 4px 10px;
-  background: rgba($financial-profit, 0.08);
+  background: rgba($duana-primary, 0.06);
   border-radius: $neuro-radius-pill;
   font-family: $font-body;
   font-size: $type-body-tiny;
   font-weight: $font-medium;
-  color: $financial-profit;
+  color: $duana-primary;
   margin-left: auto;
 
   mat-icon {
     font-size: 14px;
     width: 14px;
     height: 14px;
-    color: $financial-profit;
+    color: $duana-primary;
   }
 }
 
@@ -535,8 +609,8 @@ mat-card {
 // ============================================================
 
 .governance-section {
-  border-left: 3px solid $semaphore-naranja;
-  padding-left: $spacing-md;
+  border: 1px solid $semaphore-naranja;
+  padding: $spacing-sm $spacing-md;
   border-radius: $neuro-radius-sm;
 }
 

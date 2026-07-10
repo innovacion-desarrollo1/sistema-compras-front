@@ -161,7 +161,7 @@ export interface GestionarBonificacionesData {
       display: flex;
       align-items: center;
       gap: 12px;
-      color: #1e40af;
+      color: #001378;
       font-size: 22px;
       font-weight: 600;
       margin-bottom: 8px;
@@ -184,13 +184,13 @@ export interface GestionarBonificacionesData {
       display: flex;
       gap: 12px;
       padding: 16px;
-      background: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%);
-      border-left: 4px solid #3b82f6;
+      background: rgba(0, 74, 173, 0.06);
+      border: 1px solid rgba(0, 74, 173, 0.3);
       border-radius: 8px;
       margin-bottom: 20px;
 
       mat-icon {
-        color: #1e40af;
+        color: #001378;
         font-size: 24px;
         width: 24px;
         height: 24px;
@@ -203,7 +203,7 @@ export interface GestionarBonificacionesData {
 
       p {
         margin: 0 0 8px 0;
-        color: #1e3a8a;
+        color: #001378;
         font-size: 14px;
         line-height: 1.5;
 
@@ -221,7 +221,7 @@ export interface GestionarBonificacionesData {
     /* ===== BONIFICACIONES SECTION ===== */
     .bonif-section {
       margin-bottom: 20px;
-      border-left: 4px solid #059669;
+      border: 1px solid #059669;
 
       mat-card-header {
         margin-bottom: 16px;
@@ -371,7 +371,7 @@ export interface GestionarBonificacionesData {
 
           &.tipo-unidades_gratis {
             background-color: #dbeafe;
-            color: #1e40af;
+            color: #001378;
           }
         }
 
@@ -405,8 +405,8 @@ export interface GestionarBonificacionesData {
 
     /* ===== SUMMARY SECTION ===== */
     .summary-section {
-      background: linear-gradient(135deg, #dcfce7 0%, #d1fae5 100%);
-      border-left: 4px solid #10b981;
+      background: #dcfce7;
+      border: 1px solid #10b981;
 
       .summary-content {
         display: flex;
