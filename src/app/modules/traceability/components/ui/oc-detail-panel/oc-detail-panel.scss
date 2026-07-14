@@ -13,11 +13,8 @@
   overflow: hidden;
   box-shadow: var(--shadow-lg);
 
-  // Sticky so the panel stays visible as the user scrolls through table rows
-  position: sticky;
-  top: 57px;                        // matches toolbar height
-  max-height: calc(100vh - 57px - 32px); // viewport minus toolbar minus vertical padding
-  overflow-y: auto;
+  // Sticky moved to parent .split-view__detail to avoid overflow:hidden conflict
+  // that caused the table to overlap the detail panel.
 
   // Entrance slide (right-to-left)
   transform: translateX(16px);

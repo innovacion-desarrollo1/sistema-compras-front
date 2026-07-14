@@ -115,6 +115,23 @@
             <td mat-cell *matCellDef="let item">{{ item.proveedor_nombre }}</td>
           </ng-container>
 
+          <!-- Empresa Column -->
+          <ng-container matColumnDef="empresa_destino">
+            <th mat-header-cell *matHeaderCellDef>Empresa</th>
+            <td mat-cell *matCellDef="let item">
+              <mat-button-toggle-group
+                [value]="item.empresa_destino"
+                (change)="onEmpresaChange(item.proveedor_id, $event.value)"
+                [disabled]="!isEmpresaEditable()"
+                class="empresa-toggle empresa-toggle--compact"
+                hideSingleSelectionIndicator
+                aria-label="Empresa compradora">
+                <mat-button-toggle value="DUANA">{{ empresaLabels['DUANA'] }}</mat-button-toggle>
+                <mat-button-toggle value="COSMITET">{{ empresaLabels['COSMITET'] }}</mat-button-toggle>
+              </mat-button-toggle-group>
+            </td>
+          </ng-container>
+
           <!-- Cantidad Column -->
           <ng-container matColumnDef="cantidad">
             <th mat-header-cell *matHeaderCellDef>Cantidad</th>
@@ -204,6 +221,18 @@
               <mat-icon>store</mat-icon>
               <strong>{{ group.proveedor_nombre }}</strong>
             </div>
+
+            <mat-button-toggle-group
+              [value]="group.empresa_destino"
+              (change)="onEmpresaChange(group.proveedor_id, $event.value)"
+              [disabled]="!isEmpresaEditable()"
+              class="empresa-toggle"
+              hideSingleSelectionIndicator
+              aria-label="Empresa compradora">
+              <mat-button-toggle value="DUANA">{{ empresaLabels['DUANA'] }}</mat-button-toggle>
+              <mat-button-toggle value="COSMITET">{{ empresaLabels['COSMITET'] }}</mat-button-toggle>
+            </mat-button-toggle-group>
+
             <span class="group-summary">
               {{ group.items.length }} productos · {{ formatCurrency(group.total) }}
             </span>

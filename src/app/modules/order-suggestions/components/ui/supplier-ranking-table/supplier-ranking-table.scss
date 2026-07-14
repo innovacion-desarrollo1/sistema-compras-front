@@ -879,14 +879,33 @@ mat-card-subtitle {
       font-size: 12px;
     }
   }
-  
+
   .proveedor-cell {
     min-width: 150px;
   }
-  
+
   .costos-cell,
   .kpis-cell,
   .bonif-cell {
     min-width: 120px;
   }
+}
+
+// ==============================
+// EMPRESA COMPRADORA BADGES
+// ==============================
+.empresa-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  &--duana    { background: #1565C0; color: #fff; }
+  &--cosmitet { background: #2E7D32; color: #fff; }
+  &--ambas    { background: #546E7A; color: #fff; }
+  &--ninguna  { background: #ECEFF1; color: #546E7A; }
 }

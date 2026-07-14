@@ -14,12 +14,14 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { SupplierRankingService, ProveedorRanking } from '../../../../../core/services/supplier-ranking.service';
 import { CostoProveedorService } from '../../../../../core/services/costo-proveedor.service';
 import { CartService } from '../../../../../core/services/cart.service';
 import { UpdateCostoDialog } from '../../dialogs/update-costo-dialog/update-costo-dialog';
 import { GestionarBonificacionesDialog } from '../../dialogs/gestionar-bonificaciones-dialog/gestionar-bonificaciones-dialog';
 import { SemaphoreHelper } from '../../../../../shared/utils/semaphore.util';
+import { EmpresaCompradora } from '../../../../../core/models/empresa.types';
 
 @Component({
   selector: 'app-supplier-ranking-table',
@@ -39,7 +41,8 @@ import { SemaphoreHelper } from '../../../../../shared/utils/semaphore.util';
     MatDialogModule,
     MatSnackBarModule,
     MatInputModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatButtonToggleModule,
   ],
   templateUrl: './supplier-ranking-table.html',
   styleUrls: ['./supplier-ranking-table.scss'],
@@ -51,13 +54,33 @@ export class SupplierRankingTableComponent implements OnInit, OnChanges {
   @Input() moleculaNombre: string = '';
   @Input() moleculaFamilia: number = 1;
   @Input() esClaseC: boolean = false;
+  @Input() empresa: EmpresaCompradora = 'DUANA';
   @Output() supplierSelected = new EventEmitter<any>();
   @Output() addedToCart = new EventEmitter<void>();
+  @Output() empresaChange = new EventEmitter<EmpresaCompradora>();
 
   suppliers: ProveedorRanking[] = [];
   selectedSupplier: ProveedorRanking | null = null;
   isLoading = true;
   errorMessage: string | null = null;
+
+  /** null = mostrar todos; valor = filtrar por empresa en UI (sin llamada al backend) */
+  filtroEmpresa: EmpresaCompradora | null = null;
+
+  get suppliersFiltrados(): ProveedorRanking[] {
+    if (!this.filtroEmpresa) return this.suppliers;
+    return this.suppliers.filter(p =>
+      this.filtroEmpresa === 'DUANA' ? p.vende_a_duana === true : p.vende_a_cosmitet === true
+    );
+  }
+
+  onFiltroEmpresaChange(empresa: EmpresaCompradora | null): void {
+    this.filtroEmpresa = empresa;
+    if (empresa) {
+      this.empresaChange.emit(empresa);
+    }
+    this.cdr.markForCheck();
+  }
 
   /** Cantidad editable por proveedor (proveedor_id → cantidad) */
   cantidades: Map<number, number> = new Map();
@@ -65,6 +88,7 @@ export class SupplierRankingTableComponent implements OnInit, OnChanges {
   displayedColumns: string[] = [
     'ranking',
     'proveedor',
+    'empresa',
     'costos',
     'kpis',
     'bonificaciones',
@@ -92,7 +116,7 @@ export class SupplierRankingTableComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['productoId'] && !changes['productoId'].firstChange) {
+    if ((changes['productoId'] || changes['empresa']) && !changes['productoId']?.firstChange) {
       this.loadRanking();
     }
   }
@@ -100,7 +124,7 @@ export class SupplierRankingTableComponent implements OnInit, OnChanges {
   loadRanking(): void {
     this.isLoading = true;
     this.errorMessage = null;
-    this.rankingService.getRanking(this.productoId).subscribe({
+    this.rankingService.getRanking(this.productoId, this.empresa).subscribe({
       next: (data) => {
         this.suppliers = data.proveedores;
         if (data.proveedores.length === 0) {
@@ -174,7 +198,8 @@ export class SupplierRankingTableComponent implements OnInit, OnChanges {
       precio_lista: supplier.precio_lista,
       bonificaciones: supplier.bonificaciones_total,
       costo_real_neto: supplier.costo_real_neto,
-      es_clase_c: this.esClaseC || supplier.requiere_aprobacion
+      es_clase_c: this.esClaseC || supplier.requiere_aprobacion,
+      empresa_destino: this.empresa
     }).subscribe({
       next: () => {
         this.snackBar.open(

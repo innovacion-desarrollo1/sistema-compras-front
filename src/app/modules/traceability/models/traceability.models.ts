@@ -4,6 +4,7 @@
  *
  * Refleja el ciclo de vida 1 OC = N Facturas con estados auditados.
  */
+import { EmpresaCompradora } from '../../../core/models/empresa.types';
 
 // ─── Estado del ciclo de vida de la OC ─────────────────────────────────────
 
@@ -123,6 +124,7 @@ export interface OrdenCompra {
   audit_trail: OcAuditEvent[];
   es_clase_c: boolean;
   aprobado_por?: string;
+  empresa_compradora: EmpresaCompradora;
 }
 
 // ─── KPIs del módulo ───────────────────────────────────────────────────────

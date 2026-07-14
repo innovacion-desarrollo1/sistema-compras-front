@@ -32,7 +32,24 @@
 
     <!-- Suppliers Comparison Table -->
     <div *ngIf="!isLoading && suppliers.length > 0" class="table-container">
-      <table mat-table [dataSource]="suppliers" multiTemplateDataRows class="suppliers-table">
+      <!-- Filtro de empresa (UI-only, sin llamada al backend) -->
+      <div class="empresa-filter-row">
+        <mat-button-toggle-group
+          [value]="filtroEmpresa"
+          (change)="onFiltroEmpresaChange($event.value)"
+          hideSingleSelectionIndicator
+          aria-label="Filtrar proveedores por empresa">
+          <mat-button-toggle [value]="null">Todos</mat-button-toggle>
+          <mat-button-toggle value="DUANA">DUANA</mat-button-toggle>
+          <mat-button-toggle value="COSMITET">COSMITET</mat-button-toggle>
+        </mat-button-toggle-group>
+        <span class="filter-count">{{ suppliersFiltrados.length }} de {{ suppliers.length }}</span>
+      </div>
+      <div *ngIf="suppliersFiltrados.length === 0" class="empty-filter-state">
+        <mat-icon>filter_list_off</mat-icon>
+        <span>Sin proveedores confirmados para {{ filtroEmpresa }} — datos de empresa no disponibles aún.</span>
+      </div>
+      <table *ngIf="suppliersFiltrados.length > 0" mat-table [dataSource]="suppliersFiltrados" multiTemplateDataRows class="suppliers-table">
         
         <!-- Ranking Column -->
         <ng-container matColumnDef="ranking">
@@ -70,6 +87,39 @@
                 Clase C
               </mat-chip>
             </div>
+          </td>
+        </ng-container>
+
+        <!-- Empresa compradora badges -->
+        <ng-container matColumnDef="empresa">
+          <th mat-header-cell *matHeaderCellDef>Empresa</th>
+          <td mat-cell *matCellDef="let p">
+            <ng-container *ngIf="p.vende_a_duana !== null && p.vende_a_cosmitet !== null">
+              <span
+                *ngIf="p.vende_a_duana && p.vende_a_cosmitet"
+                class="empresa-badge empresa-badge--ambas"
+                matTooltip="Vende a DUANA y a COSMITET">
+                Ambas
+              </span>
+              <span
+                *ngIf="p.vende_a_duana && !p.vende_a_cosmitet"
+                class="empresa-badge empresa-badge--duana"
+                matTooltip="Solo vende a DUANA">
+                DUANA
+              </span>
+              <span
+                *ngIf="!p.vende_a_duana && p.vende_a_cosmitet"
+                class="empresa-badge empresa-badge--cosmitet"
+                matTooltip="Solo vende a COSMITET">
+                COSMITET
+              </span>
+              <span
+                *ngIf="!p.vende_a_duana && !p.vende_a_cosmitet"
+                class="empresa-badge empresa-badge--ninguna"
+                matTooltip="Sin órdenes de compra registradas">
+                Sin OC
+              </span>
+            </ng-container>
           </td>
         </ng-container>
 
@@ -257,7 +307,7 @@
         <tr mat-row 
             *matRowDef="let supplier; columns: displayedColumns"
             class="supplier-row"
-            [class.top-supplier-row]="supplier.proveedor_id === suppliers[0]?.proveedor_id">
+            [class.top-supplier-row]="supplier.proveedor_id === suppliersFiltrados[0]?.proveedor_id">
         </tr>
       </table>
     </div>

@@ -33,6 +33,10 @@ export interface ProveedorRanking {
 
   precio_disponible: boolean;
   mensaje_alerta: string | null;
+
+  // Empresa compradora flags — null means supplier not seen in OC history yet
+  vende_a_duana: boolean | null;
+  vende_a_cosmitet: boolean | null;
 }
 
 interface CalculateResponse {

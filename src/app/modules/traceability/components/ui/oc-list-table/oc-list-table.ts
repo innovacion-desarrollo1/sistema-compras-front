@@ -15,6 +15,7 @@ import {
   OC_ESTADO_ICONS,
   Novedad,
 } from '../../../models/traceability.models';
+import { EmpresaCompradora } from '../../../../../core/models/empresa.types';
 
 @Component({
   selector: 'app-oc-list-table',
@@ -37,6 +38,7 @@ import {
               <th scope="col">Estado</th>
               <th scope="col">Producto / Molécula</th>
               <th scope="col">Proveedor</th>
+              <th scope="col">Empresa</th>
               <th scope="col" class="text-right">Monto</th>
               <th scope="col" class="text-right">Entrega</th>
               <th scope="col" class="text-right">OTIF</th>
@@ -89,6 +91,16 @@ import {
                 <!-- Proveedor -->
                 <td class="oc-table__cell oc-table__cell--proveedor">
                   {{ oc.proveedor_nombre }}
+                </td>
+
+                <!-- Empresa -->
+                <td class="oc-table__cell">
+                  <span
+                    class="empresa-badge"
+                    [class.empresa-badge--duana]="oc.empresa_compradora === 'DUANA'"
+                    [class.empresa-badge--cosmitet]="oc.empresa_compradora === 'COSMITET'">
+                    {{ oc.empresa_compradora }}
+                  </span>
                 </td>
 
                 <!-- Monto -->

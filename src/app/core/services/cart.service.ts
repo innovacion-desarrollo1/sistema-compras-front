@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
+import { EmpresaCompradora } from '../models/empresa.types';
 
 // ============================================================================
 // INTERFACES
@@ -25,6 +26,7 @@ export interface CartItem {
   costo_total: number;
 
   es_clase_c: boolean;
+  empresa_destino: EmpresaCompradora;
   fecha_agregado: Date;
   agregado_por_usuario_id: number;
   agregado_por_usuario_nombre: string;
@@ -112,6 +114,7 @@ export class CartService {
     bonificaciones: number;
     costo_real_neto: number;
     es_clase_c: boolean;
+    empresa_destino?: EmpresaCompradora;
   }): Observable<Cart> {
     let cart = this.cartSubject.value;
 
@@ -136,6 +139,7 @@ export class CartService {
       id: this.nextItemId++,
       ...item,
       costo_total: item.cantidad * item.costo_real_neto,
+      empresa_destino: item.empresa_destino ?? 'DUANA',
       fecha_agregado: new Date(),
       agregado_por_usuario_id: this.currentUserId,
       agregado_por_usuario_nombre: this.currentUserName,
@@ -328,6 +332,18 @@ export class CartService {
     });
 
     return grouped;
+  }
+
+  setEmpresaDestino(proveedorId: number, empresa: EmpresaCompradora): void {
+    const cart = this.cartSubject.value;
+    if (!cart) return;
+    this.cartSubject.next({
+      ...cart,
+      items: cart.items.map(i =>
+        i.proveedor_id === proveedorId ? { ...i, empresa_destino: empresa } : i
+      ),
+      fecha_ultima_modificacion: new Date(),
+    });
   }
 
   // ============================================================================

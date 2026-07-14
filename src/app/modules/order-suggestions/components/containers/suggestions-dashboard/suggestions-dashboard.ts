@@ -7,6 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
@@ -23,6 +24,7 @@ import { Producto, SugerenciaOrden, SuggestionStateService } from '../../../serv
 import { Molecula } from '../../../../../core/services/molecula.service';
 import { Cart, CartService } from '../../../../../core/services/cart.service';
 import { ProductService } from '../../../../../core/services/product.service';
+import { EmpresaCompradora, EMPRESA_LABELS } from '../../../../../core/models/empresa.types';
 
 @Component({
   selector: 'app-suggestions-dashboard',
@@ -35,6 +37,7 @@ import { ProductService } from '../../../../../core/services/product.service';
     MatProgressSpinnerModule,
     MatButtonModule,
     MatBadgeModule,
+    MatButtonToggleModule,
     ProductSearch,
     OrderSuggestionCard,
     CostSimulationTable,
@@ -64,6 +67,14 @@ export class SuggestionsDashboard implements OnInit, OnDestroy {
   selectedProduct: Producto | null = null;
   currentSuggestion: SugerenciaOrden | null = null;
   approvalRequestId: number | null = null;
+
+  // Empresa compradora activa — fluye al ranking y al carrito (CA-1, CA-4 HIS-019)
+  empresa: EmpresaCompradora = 'DUANA';
+  readonly empresaLabels = EMPRESA_LABELS;
+
+  onEmpresaChange(empresa: EmpresaCompradora): void {
+    this.empresa = empresa;
+  }
 
   // View states
   showSupplierRanking = false;

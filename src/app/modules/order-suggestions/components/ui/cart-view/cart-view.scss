@@ -561,6 +561,33 @@
   }
 }
 
+.empresa-toggle {
+  height: 32px;
+
+  .mat-button-toggle {
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  ::ng-deep .mat-button-toggle-checked[value="DUANA"] {
+    background-color: #1565C0;
+    color: white;
+  }
+
+  ::ng-deep .mat-button-toggle-checked[value="COSMITET"] {
+    background-color: #2E7D32;
+    color: white;
+  }
+
+  &--compact {
+    height: 28px;
+
+    .mat-button-toggle {
+      padding: 0 8px;
+    }
+  }
+}
+
 // Actions Card
 .cart-actions-card {
   .actions-row {

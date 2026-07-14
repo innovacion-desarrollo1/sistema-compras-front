@@ -8,6 +8,7 @@ import {
   Factura,
   Novedad,
 } from '../models/traceability.models';
+import { EmpresaCompradora } from '../../../core/models/empresa.types';
 
 /**
  * TraceabilityService — EP-003 Módulo 3
@@ -47,6 +48,7 @@ export class TraceabilityService {
       fecha_entrega_esperada: new Date('2025-07-10'),
       otif_pct: 78,
       es_clase_c: false,
+      empresa_compradora: 'DUANA' as EmpresaCompradora,
       facturas: [
         {
           id: 'F-001',
@@ -144,6 +146,7 @@ export class TraceabilityService {
       otif_pct: 55,
       es_clase_c: true,
       aprobado_por: 'Director General',
+      empresa_compradora: 'DUANA' as EmpresaCompradora,
       facturas: [
         {
           id: 'F-003',
@@ -220,6 +223,7 @@ export class TraceabilityService {
       fecha_cierre: new Date('2025-06-14'),
       otif_pct: 100,
       es_clase_c: false,
+      empresa_compradora: 'DUANA' as EmpresaCompradora,
       facturas: [
         {
           id: 'F-004',
@@ -274,6 +278,7 @@ export class TraceabilityService {
       fecha_entrega_esperada: new Date('2025-07-25'),
       otif_pct: 0,
       es_clase_c: false,
+      empresa_compradora: 'DUANA' as EmpresaCompradora,
       facturas: [],
       novedades: [],
       audit_trail: [
@@ -300,6 +305,7 @@ export class TraceabilityService {
       fecha_entrega_esperada: new Date('2025-08-01'),
       otif_pct: 0,
       es_clase_c: false,
+      empresa_compradora: 'COSMITET' as EmpresaCompradora,
       facturas: [],
       novedades: [],
       audit_trail: [
@@ -325,6 +331,7 @@ export class TraceabilityService {
       fecha_entrega_esperada: new Date('2025-08-10'),
       otif_pct: 0,
       es_clase_c: true,
+      empresa_compradora: 'COSMITET' as EmpresaCompradora,
       facturas: [],
       novedades: [],
       audit_trail: [

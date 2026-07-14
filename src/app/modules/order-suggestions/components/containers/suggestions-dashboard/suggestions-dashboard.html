@@ -128,6 +128,8 @@
           [moleculaNombre]="selectedSdr.nombre"
           [moleculaFamilia]="selectedSdr.familia"
           [esClaseC]="selectedSdr.familia === 1"
+          [empresa]="empresa"
+          (empresaChange)="onEmpresaChange($event)"
           (addedToCart)="onCartUpdated()"
           (supplierSelected)="onSupplierSelected($event)">
         </app-supplier-ranking-table>

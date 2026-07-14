@@ -21,6 +21,7 @@ describe('ProductService.sdrDetailToMolecula — precios', () => {
     pendientes: 5, familia: 4, eoq: 100, lt_sistema_dias: 7,
     clasificacion_abc: null, clasificacion_ved: null, clasificacion_hml: null,
     costo_ultima_compra: null,
+    cantidad_sugerida: null, necesita_orden: null, formula_usada: null, razon: null,
   };
 
   it('mapea precio_promedio_inventario cuando el backend lo entrega', () => {

@@ -16,6 +16,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { Cart, CartItem, CartEstado, CartService, SendOrdersResult } from '../../../../../core/services/cart.service';
+import { EmpresaCompradora, EMPRESA_LABELS } from '../../../../../core/models/empresa.types';
 
 @Component({
   selector: 'app-cart-view',
@@ -46,6 +47,7 @@ export class CartView implements OnInit, OnDestroy {
   displayedColumns = [
     'producto',
     'proveedor',
+    'empresa_destino',
     'cantidad',
     'costo_unitario',
     'costo_total',
@@ -56,7 +58,13 @@ export class CartView implements OnInit, OnDestroy {
 
   // Order splitting preview
   showSupplierGrouping = false;
-  supplierGroups: { proveedor_id: number; proveedor_nombre: string; items: CartItem[]; total: number }[] = [];
+  supplierGroups: {
+    proveedor_id: number;
+    proveedor_nombre: string;
+    items: CartItem[];
+    total: number;
+    empresa_destino: EmpresaCompradora;
+  }[] = [];
 
   onViewModeChange(value: string): void {
     this.showSupplierGrouping = value === 'supplier';
@@ -213,7 +221,24 @@ export class CartView implements OnInit, OnDestroy {
       proveedor_nombre: items[0].proveedor_nombre,
       items,
       total: items.reduce((s, i) => s + i.costo_total, 0),
+      empresa_destino: items[0].empresa_destino,
     }));
+  }
+
+  onEmpresaChange(proveedorId: number, empresa: EmpresaCompradora): void {
+    this.cartService.setEmpresaDestino(proveedorId, empresa);
+    this.buildSupplierGroups();
+    this.cdr.markForCheck();
+  }
+
+  readonly empresaLabels = EMPRESA_LABELS;
+
+  // Auxiliar edits empresa in DRAFT; Jefe can still correct it in PENDING_REVIEW.
+  // isEditable() (DRAFT-only) guards quantity/delete separately — do not merge.
+  isEmpresaEditable(): boolean {
+    const estado = this.cart?.estado;
+    return estado === 'DRAFT' ||
+      (this.userRole === 'JEFE_COMPRAS' && estado === 'PENDING_REVIEW');
   }
 
   // ============================================================================
