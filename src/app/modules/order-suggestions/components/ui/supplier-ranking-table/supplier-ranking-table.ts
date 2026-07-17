@@ -50,6 +50,7 @@ import { EmpresaCompradora } from '../../../../../core/models/empresa.types';
 })
 export class SupplierRankingTableComponent implements OnInit, OnChanges {
   @Input() productoId!: string;   // código SDR — el backend agrega todos sus equivalentes
+  @Input() productoCodigo: string = '';
   @Input() periodoSemanas: number = 4;
   @Input() moleculaNombre: string = '';
   @Input() moleculaFamilia: number = 1;
@@ -87,6 +88,7 @@ export class SupplierRankingTableComponent implements OnInit, OnChanges {
 
   displayedColumns: string[] = [
     'ranking',
+    'producto',
     'proveedor',
     'empresa',
     'costos',
@@ -259,6 +261,10 @@ export class SupplierRankingTableComponent implements OnInit, OnChanges {
 
   isTopSupplier(index: number): boolean {
     return index === 0;
+  }
+
+  precioEmpaque(precio: number, pack_size: number): number | null {
+    return pack_size > 1 ? precio * pack_size : null;
   }
 
   /**

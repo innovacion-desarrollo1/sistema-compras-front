@@ -8,12 +8,18 @@ export interface ProveedorRanking {
   proveedor_id: number;
   proveedor_nombre: string;
 
+  // Producto específico que ofrece este proveedor
+  codigo_producto_dusoft: string;
+  producto_nombre: string;
+  producto_dci: string | null;
+
   // Costos
   precio_lista: number;
   bonificaciones_total: number;
   costo_real_neto: number;
   costo_unitario: number;
   ultimo_costo: number;
+  pack_size: number;
 
   // Análisis de costos
   costo_promedio_inventario: number;

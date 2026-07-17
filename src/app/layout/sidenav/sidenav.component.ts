@@ -35,6 +35,13 @@ const NAV_ITEMS: NavItem[] = [
     roles: ['JEFE_COMPRAS', 'GERENTE', 'ADMIN'],
   },
   {
+    id: 'proveedores',
+    label: 'Proveedores',
+    icon: 'business',
+    route: '/proveedores',
+    roles: ['JEFE_COMPRAS', 'GERENTE', 'ADMIN'],
+  },
+  {
     id: 'centinela',
     label: 'Centinela',
     icon: 'sensors',

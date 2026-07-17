@@ -26,6 +26,12 @@ export const routes: Routes = [
           import('./modules/approvals/gerencia-review-panel/gerencia-review-panel')
             .then(m => m.GerenciaReviewPanel),
       },
+      {
+        path: 'proveedores',
+        loadComponent: () =>
+          import('./modules/proveedores/proveedores-dashboard.component')
+            .then(m => m.ProveedoresDashboardComponent),
+      },
       { path: 'centinela',   component: PlaceholderComponent },
       {
         path: 'traceability',

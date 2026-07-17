@@ -1,0 +1,400 @@
+@import '../../../styles/themes/design-tokens';
+@import '../../../styles/tokens/neuro-tokens';
+@import '../../../styles/tokens/financial-colors';
+@import '../../../styles/tokens/typography';
+
+// CSS custom properties — keep var() refs working in template
+:host {
+  --ink:           #{$duana-text};
+  --ink-muted:     #{$duana-text-muted};
+  --cobalt:        #{$duana-primary};
+  --cobalt-hover:  #{$cta-primary-hover};
+  --navy:          #{$duana-primary-dark};
+  --surface-page:  #{$bg-neutral-grey};
+  --surface-card:  #{$duana-white};
+  --border:        #{$color-gray-200};
+  --border-strong: #{$color-gray-300};
+  --verde-bg:      #{$semaphore-verde-bg};
+  --verde-text:    #{$semaphore-verde-text};
+  --rojo-bg:       #{$semaphore-rojo-bg};
+  --rojo-text:     #{$semaphore-rojo-text};
+  display: block;
+}
+
+// ============================================================
+// PAGE LAYOUT
+// ============================================================
+
+.page-wrap {
+  padding: $spacing-lg;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+// ============================================================
+// PAGE HEADER — icon + title, matches mat-card-title in sugerencias
+// ============================================================
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-lg;
+}
+
+.page-header-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: $neuro-radius-md;
+  background: rgba($duana-primary, 0.08);
+  flex-shrink: 0;
+  margin-top: 2px;
+
+  mat-icon {
+    color: $duana-primary;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.page-title {
+  margin: 0;
+  font-size: $type-h1;
+  font-weight: $font-bold;
+  color: $duana-text;
+  letter-spacing: -0.01em;
+  line-height: $line-height-tight;
+}
+
+.page-subtitle {
+  margin: 0;
+  font-size: $type-body-small;
+  color: $duana-text-muted;
+}
+
+// ============================================================
+// FILTERS CARD — card elevation matching mat-card in sugerencias
+// ============================================================
+
+.filters-card {
+  background: $neuro-bg-white;
+  border-radius: $neuro-radius-md;
+  box-shadow: $neuro-shadow-embossed;
+  padding: $spacing-md;
+  margin-bottom: $spacing-md;
+}
+
+.filters-bar {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-md;
+  margin-top: $spacing-sm;
+  flex-wrap: wrap;
+}
+
+.filter-groups-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  flex-wrap: wrap;
+
+  .filter-group {
+    padding: 0 $spacing-md;
+
+    &:first-child { padding-left: 0; }
+    &:last-child  { padding-right: 0; }
+    &:not(:last-child) { border-right: 1px solid $color-gray-200; }
+  }
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.filter-label {
+  font-size: $type-body-tiny;
+  font-weight: $font-semibold;
+  letter-spacing: 0.04em;
+  color: $duana-text-muted;
+  text-transform: uppercase;
+}
+
+.chip-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 4px 12px;
+  border-radius: $neuro-radius-pill;
+  border: 1px solid $color-gray-300;
+  background: $color-gray-50;
+  color: $duana-text;
+  font-family: $font-body;
+  font-size: $type-body-tiny;
+  font-weight: $font-semibold;
+  cursor: pointer;
+  line-height: 1;
+  transition:
+    background $neuro-transition-fast,
+    color $neuro-transition-fast,
+    border-color $neuro-transition-fast;
+  white-space: nowrap;
+
+  &:hover {
+    background: rgba($duana-primary, 0.05);
+    border-color: $duana-primary;
+    color: $duana-primary;
+  }
+
+  &.active {
+    background: $duana-primary;
+    border-color: $duana-primary;
+    color: $duana-white;
+  }
+}
+
+.filter-chip-clear {
+  border-color: $color-gray-200;
+  background: transparent;
+  color: $duana-text-muted;
+
+  &:hover {
+    background: $color-gray-50;
+    border-color: $color-gray-300;
+  }
+}
+
+.chip-icon {
+  font-size: $type-body-tiny;
+  width: $type-body-tiny;
+  height: $type-body-tiny;
+}
+
+.search-field {
+  width: 100%;
+  max-width: 320px;
+}
+
+// ============================================================
+// TABLE CARD — shadow elevation + fadeIn (matches mat-card)
+// ============================================================
+
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: $neuro-radius-md;
+  background: $neuro-bg-white;
+  box-shadow: $neuro-shadow-embossed;
+  transition: box-shadow $neuro-transition-normal;
+  animation: proveedores-fadeIn 0.3s ease-out;
+
+  &:hover {
+    box-shadow: $neuro-shadow-hover;
+  }
+}
+
+table { width: 100%; }
+
+th.mat-header-cell {
+  background: $color-gray-50 !important;
+  border-bottom: 2px solid $color-gray-200 !important;
+}
+
+// Excluye .sort-icon (la flecha direccional) — solo aplica al icono de columna
+th.mat-header-cell mat-icon:not(.sort-icon) {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  opacity: 0.65;
+  color: $duana-text-muted;
+  flex-shrink: 0;
+}
+
+// Wrapper flex para headers sin sort — alinea icono y texto
+.col-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+// Sub-label para headers de dos líneas (OCs)
+.col-sublabel {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: $font-normal;
+  color: $duana-text-muted;
+  opacity: 0.8;
+  letter-spacing: 0;
+  line-height: 1.2;
+}
+
+td.mat-cell,
+th.mat-header-cell { padding: 10px 14px !important; }
+
+tr.mat-mdc-row {
+  transition: background $neuro-transition-fast;
+
+  &:hover { background: rgba($duana-primary, 0.03) !important; }
+}
+
+// Sort header
+.sort-th {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+
+  &:hover { color: $duana-primary; }
+}
+
+.sort-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+  color: $duana-text-muted;
+  opacity: 0.3;
+  transition: opacity $neuro-transition-normal;
+}
+
+.sort-th:hover .sort-icon,
+.sort-th.is-sorted .sort-icon { opacity: 1; }
+.sort-th.is-sorted .sort-icon  { color: $duana-primary; }
+
+// ============================================================
+// BADGES & EMPRESA CHIPS
+// ============================================================
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 9px;
+  border-radius: $neuro-radius-pill;
+  font-size: $type-body-tiny;
+  font-weight: $font-semibold;
+}
+
+.badge-icon    { font-size: 12px; width: 12px; height: 12px; }
+.badge-activo   { background: $semaphore-verde-bg;    color: $semaphore-verde-text;    }
+.badge-inactivo { background: $semaphore-rojo-bg;     color: $semaphore-rojo-text;     }
+.badge-bloqueado{ background: $semaphore-naranja-bg;  color: $semaphore-naranja-text;  }
+
+.empresa-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  border-radius: $neuro-radius-pill;
+  font-size: $type-body-tiny;
+  font-weight: $font-semibold;
+  white-space: nowrap;
+}
+
+.empresa-duana    { background: rgba($duana-primary, 0.1);      color: $duana-primary;      }
+.empresa-cosmitet { background: rgba($duana-text-muted, 0.1);   color: $duana-text-muted;   }
+
+// Mini-pills para columna OCs — coherente con empresa-chip y badge
+.oc-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 7px;
+  border-radius: $neuro-radius-pill;
+  font-size: $type-body-tiny;
+  font-weight: $font-semibold;
+  font-variant-numeric: tabular-nums;
+
+  & + & { margin-left: 4px; }
+}
+
+.oc-duana    { background: rgba($duana-primary, 0.08);    color: $duana-primary;    }
+.oc-cosmitet { background: rgba($duana-text-muted, 0.1);  color: $duana-text-muted; }
+
+// ============================================================
+// SKELETON — shimmer gradient with cobalt tint (matches sugerencias)
+// ============================================================
+
+.skeleton-row {
+  display: flex;
+  gap: 12px;
+  padding: 13px 16px;
+  border-bottom: 1px solid $color-gray-200;
+  align-items: center;
+
+  &:last-child { border-bottom: none; }
+
+  &.skeleton-header-row { background: $color-gray-50; }
+}
+
+.sk {
+  height: 13px;
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    $color-gray-100 25%,
+    rgba($duana-primary, 0.06) 50%,
+    $color-gray-100 75%
+  );
+  background-size: 200% 100%;
+  animation: proveedores-shimmer 1.5s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+// ============================================================
+// STATE PANELS
+// ============================================================
+
+.state-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 52px 24px;
+  text-align: center;
+}
+
+// Cobalt tint — matches .empty-state-card mat-icon in sugerencias
+.state-icon {
+  font-size: 2.25rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  color: rgba($duana-primary, 0.35);
+}
+
+.state-msg {
+  margin: 0;
+  font-size: $type-body-small;
+  color: $duana-text-muted;
+}
+
+// ============================================================
+// ANIMATIONS
+// ============================================================
+
+@keyframes proveedores-fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes proveedores-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk            { animation: none; background: $color-gray-100; }
+  .filter-chip   { transition: none; }
+  .table-wrapper { animation: none; transition: none; }
+  tr.mat-mdc-row { transition: none; }
+}

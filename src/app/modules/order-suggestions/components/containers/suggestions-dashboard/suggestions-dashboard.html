@@ -124,6 +124,7 @@
         </div>
         <app-supplier-ranking-table
           [productoId]="selectedSdr.codigo_sdr ?? selectedSdr.codigo"
+          [productoCodigo]="selectedSdr.codigo ?? ''"
           [periodoSemanas]="periodoSemanas"
           [moleculaNombre]="selectedSdr.nombre"
           [moleculaFamilia]="selectedSdr.familia"
